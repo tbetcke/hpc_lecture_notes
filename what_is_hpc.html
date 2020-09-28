@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What is High-Performance Computing? &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.d431a4ee1c1efae0e38bdfebc22debff.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/sphinx-book-theme.bfb7730f9caf2ec0b46a44615585038c.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.30270b6e4c972e43c488.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Techniques of High-Performance Computing" href="intro.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   What is High-Performance Computing?
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/what_is_hpc.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#floating-point-numbers">
+   Floating point numbers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-many-flops-s-do-i-have">
+   How many Flops/s do I have?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-top-500">
+   The Top 500
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="what-is-high-performance-computing">
+<h1>What is High-Performance Computing?<a class="headerlink" href="#what-is-high-performance-computing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="floating-point-numbers">
+<h2>Floating point numbers<a class="headerlink" href="#floating-point-numbers" title="Permalink to this headline">¶</a></h2>
+<p>Most applications in High-Performance Computing rely on floating point operations. These are
+operations such as <code class="docutils literal notranslate"><span class="pre">1.2</span> <span class="pre">+</span> <span class="pre">3.7</span></code>, or <code class="docutils literal notranslate"><span class="pre">2.8</span> <span class="pre">*</span> <span class="pre">5.7</span></code>. Most large scale computational simulations rely
+on these operations. Floating point numbers are defined in the <a class="reference external" href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754 standard</a>. This is one of the most famous standards in numerical computing. Here, we will not go into all the details of this
+standard but just consider the two most important types: <strong>single precision</strong> and <strong>double precision</strong> floating point numbers.</p>
+<p>We will define floating point numbers using the following slightly simplified model. The floating point numbers are the set</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{F} = \left\{(-1)^s\cdot b^e \cdot \frac{m}{b^{p-1}} :\right.
+\left. s = 0,1; e_{min}\leq e \leq e_{max}; b^{p-1}\leq m\leq b^{p}-1\right\}.
+\]</div>
+<p>The number <span class="math notranslate nohighlight">\(b\)</span> is the base, which is always <span class="math notranslate nohighlight">\(2\)</span> on modern computers, <span class="math notranslate nohighlight">\(m\)</span> denotes the mantissa, <span class="math notranslate nohighlight">\(e\)</span> the exponent, and <span class="math notranslate nohighlight">\(p\)</span> determines the available precision.</p>
+<p>Floating point numbers are not equally spaced on the number line. To understand the spacing consider the term <span class="math notranslate nohighlight">\(\frac{m}{b^{p-1}}\)</span>. We have</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{m}{b^{p-1}} = 1, 1 + 2^{1-p}, 1 + 2\times 2^{1-p}, \dots, 2 - 2^{1-p}.
+\]</div>
+<p>These are all the possible floating point numbers between <span class="math notranslate nohighlight">\(1\)</span> and <span class="math notranslate nohighlight">\(2\)</span>. To obtain the floating point numbers between <span class="math notranslate nohighlight">\(2\)</span> and <span class="math notranslate nohighlight">\(4\)</span> we multiply these numbers by <span class="math notranslate nohighlight">\(2\)</span>, and so on. Hence, the floating point numbers become coarser spaced the higher we go. This makes sense.</p>
+<p>The two most important classes of floating point numbers are the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IEEE</span> <span class="pre">double</span> <span class="pre">precision</span></code>: <span class="math notranslate nohighlight">\(e_{min} = -1022, e_{max} = 1023, p=53\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IEEE</span> <span class="pre">single</span> <span class="pre">precision</span></code>: <span class="math notranslate nohighlight">\(e_{min} = -126, e_{max} = 127, p=24\)</span></p></li>
+</ul>
+<p>Roughly, double precision numbers give around 16 digits accuracy, while single precision numbers give around 8 digits accuracy.</p>
+<p>An important number is <span class="math notranslate nohighlight">\(\epsilon_{rel} = 2^{1-p}\)</span>. This is the smallest number in floating point arithmetic such that <span class="math notranslate nohighlight">\(1 + \epsilon_{rel}\neq 1\)</span>. In double precision we have <span class="math notranslate nohighlight">\(\epsilon_{rel}\approx 2.2E-16\)</span> and in single precision <span class="math notranslate nohighlight">\(\epsilon_{rel}\approx 1.2E-7\)</span>.</p>
+</div>
+<div class="section" id="how-many-flops-s-do-i-have">
+<h2>How many Flops/s do I have?<a class="headerlink" href="#how-many-flops-s-do-i-have" title="Permalink to this headline">¶</a></h2>
+<p>One of the most important measures for the performance of a computing device in High-Performance Computing is the number of floating point operations per second are possible. Below are a couple of performance numbers for different types of CPUs/GPUs.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Peak Performance (GFlops/s)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intel i9-9980HK (8 Cores)</p></td>
+<td><p>307</p></td>
+<td><p>The CPU in my laptop</p></td>
+</tr>
+<tr class="row-odd"><td><p>Intel Xeon Platinum 8280M (28 Cores)</p></td>
+<td><p>1612.8</p></td>
+<td><p>One of the fastest CPUs on the market</p></td>
+</tr>
+<tr class="row-even"><td><p>Raspberry PI 4 Model B</p></td>
+<td><p>24</p></td>
+<td><p>A very cheap and fun to code for ARM CPU</p></td>
+</tr>
+<tr class="row-odd"><td><p>Nvidia RTX 3080</p></td>
+<td><p>29768</p></td>
+<td><p>Single precision peak for Nvidia’s new GPU generation</p></td>
+</tr>
+<tr class="row-even"><td><p>PS5 GPU</p></td>
+<td><p>10280</p></td>
+<td><p>Single precision peak of the new GPU for the PS5</p></td>
+</tr>
+<tr class="row-odd"><td><p>XBOX Series X GPU</p></td>
+<td><p>12500</p></td>
+<td><p>Single precision peak of the new GPU for the XBOX Series X</p></td>
+</tr>
+</tbody>
+</table>
+<p>The measure here is in GFlops/s, which is <span class="math notranslate nohighlight">\(10^9\)</span> floating point operations per second. This table has some very different systems. The first entry is my own Laptop CPU, which is what you would expect in a high-end desktop or workstation laptop. The next one is one of the fastest Server CPUs that Intel currently offers with 28 CPU cores. On the other end of the spectrum we have the Raspberry Pi with just 24 GFlops/s peak performance. It is a representative of a typical low-powered cheap ARM CPU. The ARM CPU in an IPhone 11 is many times faster and comparable with Intel desktop systems.</p>
+<p>The table also contains numbers for the processing power of GPUs, graphics processing units. They are not only good for displaying great graphics but also highly parallel compute devices. We will later learn more about the differences of CPUs and GPUs. The new Nvidia RTX 3080 manages up to 30TFlops/s for single precision operations. While CPUs are good at single and double precision operations, GPUs are usually optimised for single precision operations since for graphics the reduced precision does not matter. However, one can also buy specialised compute devices from Nvidia that are optimised for double precision as well. Finally, we have the PS5 and XBOX Series X with around 10 and 12 TFlops/s in GPU performance, both of which are running AMD’s new RDNA 2 architecture, which has not yet officially been released.</p>
+</div>
+<div class="section" id="the-top-500">
+<h2>The Top 500<a class="headerlink" href="#the-top-500" title="Permalink to this headline">¶</a></h2>
+<p>For really large machines there is a regularly updated list of the world’s fastest supercomputers. The <a class="reference external" href="https://top500.org/">Top 500</a> shows which machines are the fastest in the world. The current number one is Fugaku, with a peak performance of 514 PFlops/s (1 PFlop/s is 1000 TFlops/s). Interestingly, this computer uses ARM CPUs, the same architecture that also powers almost all mobile phones in the world. It is interesting to consider the <a class="reference external" href="https://top500.org/statistics/perfdevel/">performance over time</a>.</p>
+<p><img alt="Performance over time" src="_images/top500development.png" /></p>
+<p>Only 20 years ago a PS5 would have been the world’s fastest supercomputer. This hides an important message. What we consider as supercomputers now, will be standard desktop systems in the not too distant future.</p>
+<p>It therefore makes little sense to talk about High-Performance Computing only if we develop on very big systems. What we have under our desk now, was a big system just a few years ago. My personal definition of High-Performance Computing is the following:</p>
+<p><strong>High-Performance Computing is concernced with developing tools, algorithms, and applications that can make optimal use of a given hardware environment.</strong></p>
+<p>In this sense, we can perform High-Performance Computing also on a Raspberry Pi or a mobile phone. And indeed, the trend goes to scalable development environments that allow us to make optimal use of hardware from a small low-powered ARM device up to the fastest supercomputers in the world.</p>
+<p>While the software landscape is fast moving, there are certain development principles that have shown to be useful on any kind of device. In this module we want to discuss these techniques and how to achieve high-performing code on current CPU and GPU systems.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="intro.html" title="previous page">Welcome to Techniques of High-Performance Computing</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.30270b6e4c972e43c488.js"></script>
+
+
+    
+  </body>
+</html>
