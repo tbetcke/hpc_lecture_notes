@@ -3,4 +3,5 @@
 - part: High-Performance Computing with Python
   chapters:
     - file: what_is_hpc
+    - file: hpc_languages
 

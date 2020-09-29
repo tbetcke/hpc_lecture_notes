@@ -31,7 +31,7 @@ The two most important classes of floating point numbers are the following:
 
 Roughly, double precision numbers give around 16 digits accuracy, while single precision numbers give around 8 digits accuracy.
 
-An important number is $\epsilon_{rel} = 2^{1-p}$. This is the smallest number in floating point arithmetic such that $1 + \epsilon_{rel}\neq 1$. In double precision we have $\epsilon_{rel}\approx 2.2E-16$ and in single precision $\epsilon_{rel}\approx 1.2E-7$.
+An important number is $\epsilon_{rel} = 2^{1-p}$. This is the smallest number in floating point arithmetic such that $1 + \epsilon_{rel}\neq 1$. In double precision we have $\epsilon_{rel}\approx 2.2\times 10^{-16}$ and in single precision $\epsilon_{rel}\approx 1.2\times 10^{-7}$.
 
 ## How many Flops/s do I have?
 
@@ -55,6 +55,8 @@ The table also contains numbers for the processing power of GPUs, graphics proce
 For really large machines there is a regularly updated list of the world's fastest supercomputers. The [Top 500](https://top500.org/) shows which machines are the fastest in the world. The current number one is Fugaku, with a peak performance of 514 PFlops/s (1 PFlop/s is 1000 TFlops/s). Interestingly, this computer uses ARM CPUs, the same architecture that also powers almost all mobile phones in the world. It is interesting to consider the [performance over time](https://top500.org/statistics/perfdevel/).
 
 ![Performance over time](./img/top500development.png)
+
+## A biased definition of High-Performance Computing
 
 Only 20 years ago a PS5 would have been the world's fastest supercomputer. This hides an important message. What we consider as supercomputers now, will be standard desktop systems in the not too distant future.
 
