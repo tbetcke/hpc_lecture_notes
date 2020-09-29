@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Techniques of High-Performance Computing &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Python HPC Tools &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.d431a4ee1c1efae0e38bdfebc22debff.css">
 
@@ -57,7 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="What is High-Performance Computing?" href="what_is_hpc.html" />
+    <link rel="next" title="A short introduction to Numpy" href="numpy_introduction.html" />
+    <link rel="prev" title="Languages for High-Performance Computing" href="hpc_languages.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -92,7 +93,7 @@
 <nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <ul class="nav sidenav_l1">
  <li class="toctree-l1">
-  <a class="reference internal" href="#">
+  <a class="reference internal" href="intro.html">
    Welcome to Techniques of High-Performance Computing
   </a>
  </li>
@@ -102,7 +103,7 @@
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -113,8 +114,8 @@
    Languages for High-Performance Computing
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_hpc_tools.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Python HPC Tools
   </a>
  </li>
@@ -165,7 +166,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/intro.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/python_hpc_tools.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -189,6 +190,55 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jupyter-notebook">
+   Jupyter Notebook
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numpy-and-scipy">
+   Numpy and Scipy
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numba">
+   Numba
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#matplotlib">
+   Matplotlib
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dask">
+   Dask
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pandas">
+   Pandas
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tensorflow-pytorch-and-scikit-learn">
+   Tensorflow, PyTorch, and scikit-learn
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-tools">
+   Other tools
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -196,18 +246,40 @@
         
               <div>
                 
-  <div class="section" id="welcome-to-techniques-of-high-performance-computing">
-<h1>Welcome to Techniques of High-Performance Computing<a class="headerlink" href="#welcome-to-techniques-of-high-performance-computing" title="Permalink to this headline">¶</a></h1>
-<p>In this module we learn a number of basic techniques from High-Performance Computing.
-The module starts with an introduction and overview of parallel computing techniques and
-programming languages. We then take a deeper dive into Python, the main language for this module.
-In particular, we will get to learn libraries and programming techniques that will allow us to
-take full advantage of modern programming architectures in Python.</p>
-<p>This will be followed by an introduction to sparse linear algebra for very large linear systems of
-equations. You will get to know the basics of sparse direct solvers and sparse iterative solvers.</p>
-<p>Finally, we will turn to partial differential equations and implement some typical PDEs using the
-techniques learned in this module.</p>
-<div class="toctree-wrapper compound">
+  <div class="section" id="python-hpc-tools">
+<h1>Python HPC Tools<a class="headerlink" href="#python-hpc-tools" title="Permalink to this headline">¶</a></h1>
+<p>Python has an incredible ecosystem for scientific computing. In this chapter we provide a brief overview of some of the existing libraries before diving down much deeper in the following parts.</p>
+<div class="section" id="jupyter-notebook">
+<h2>Jupyter Notebook<a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://jupyter.org/">Jupyter</a> is a key part of the Python ecosystem. It allows the creation of Jupyter Notebook documents that mix executable code, descriptions, figures and formulas in a single file that can be viewed and edited inside a web browser. Jupyter notebooks can be used either through the Jupyter Notebook tool or the more recent Jupyterlab environment.</p>
+</div>
+<div class="section" id="numpy-and-scipy">
+<h2>Numpy and Scipy<a class="headerlink" href="#numpy-and-scipy" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://numpy.org/">Numpy</a> and <a class="reference external" href="https://www.scipy.org/">Scipy</a> are key tools for any scientific Python installation. Numpy defines a fast array data type and provides a huge amount of operations on this type including all common linear algebra operations. Moreover, Numpy beautifully handles multi-dimensional arrays and operations on them. While Numpy provides fairly low-level routines, Scipy builds on top of Numpy to provide a collection of high-level routines, including graph algorithms, optimisation, sparse matrices, ode solvers, and many more. Both, Numpy and Scipy together are one of the main reasons for the success of Python.</p>
+</div>
+<div class="section" id="numba">
+<h2>Numba<a class="headerlink" href="#numba" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://numba.pydata.org/">Numba</a> is a tool for the just-in-time compilation of Python functions. Python itself is a slow language. Each operation has considerable overhead from the Python interpreter, making especially time-critical for-loops inefficient in Python. Numba allows to just-in-time compile Python functions into direct machine code that needs not access the Python interpreter. Moreover, in doing so it allows to use simple loop parallelisations that cover a lot of use-cases for parallel computing on a single machine. In addition to all this, Numba has features to directly cross-compile code for use on GPU accelerators. Numba will be one of our main tools to write performant Python codes for CPUs and GPUs.</p>
+</div>
+<div class="section" id="matplotlib">
+<h2>Matplotlib<a class="headerlink" href="#matplotlib" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://matplotlib.org/">Matplotlib</a> is the standard on Python for data visualization in two dimensions. It is incredibly feature rich. While simple plots are easy to do, there is a huge underlying API that allows very fine-grained control for complex data visualization settings. Indeed, the complexity of this API has lead to the development of other libraries that build on Matplotlib and provide simplified interfaces for specific application areas.</p>
+</div>
+<div class="section" id="dask">
+<h2>Dask<a class="headerlink" href="#dask" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://dask.org/">Dask</a> provides a powerful environment to specify complex calculations as graph that is then optimally executed on a given parallel environment. It allows scalability for algorithms from a single desktop up to a HPC systems with thousands of nodes.</p>
+</div>
+<div class="section" id="pandas">
+<h2>Pandas<a class="headerlink" href="#pandas" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pandas.pydata.org/">Pandas</a> is the standard data-analysis library for Python. It has efficient data structures and tools to handle and process large-scale data sets in Python.</p>
+</div>
+<div class="section" id="tensorflow-pytorch-and-scikit-learn">
+<h2>Tensorflow, PyTorch, and scikit-learn<a class="headerlink" href="#tensorflow-pytorch-and-scikit-learn" title="Permalink to this headline">¶</a></h2>
+<p>Python is the preferred environment for machine learning. We will not go into the various tools as part of this module, but just mention some of them for completeness, in particular <a class="reference external" href="https://www.tensorflow.org/">Tensorflow</a>, <a class="reference external" href="https://pytorch.org/">PyTorch</a> and <a class="reference external" href="https://scikit-learn.org/stable/">scikit-learn</a>.</p>
+</div>
+<div class="section" id="other-tools">
+<h2>Other tools<a class="headerlink" href="#other-tools" title="Permalink to this headline">¶</a></h2>
+<p>There are many other tools available for scientific computing in Python, such as <a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/">mpi4py</a> for data communication on clusters using the MPI standard, <a class="reference external" href="https://pypi.org/project/petsc4py/">petsc4py</a>, an interface to the widely used PetsC library for parallel sparse matrix operations, or <a class="reference external" href="https://fenicsproject.org/">FEniCS</a>, a powerful PDE solution package using the finite element method. Many more large and small packages exist for specific application areas which are too numerous to all mention here.</p>
 </div>
 </div>
 
@@ -239,7 +311,8 @@ techniques learned in this module.</p>
     
     <div class='prev-next-bottom'>
         
-    <a class='right-next' id="next-link" href="what_is_hpc.html" title="next page">What is High-Performance Computing?</a>
+    <a class='left-prev' id="prev-link" href="hpc_languages.html" title="previous page">Languages for High-Performance Computing</a>
+    <a class='right-next' id="next-link" href="numpy_introduction.html" title="next page">A short introduction to Numpy</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
