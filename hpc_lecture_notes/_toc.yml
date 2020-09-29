@@ -4,4 +4,6 @@
   chapters:
     - file: what_is_hpc
     - file: hpc_languages
+    - file: python_hpc_tools
+    - file: numpy_introduction
 
