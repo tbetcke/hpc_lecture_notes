@@ -57,6 +57,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Languages for High-Performance Computing" href="hpc_languages.html" />
     <link rel="prev" title="Welcome to Techniques of High-Performance Computing" href="intro.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -106,6 +107,11 @@
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
   </a>
  </li>
 </ul>
@@ -194,6 +200,11 @@
    The Top 500
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-biased-definition-of-high-performance-computing">
+   A biased definition of High-Performance Computing
+  </a>
+ </li>
 </ul>
 
         </nav>
@@ -232,7 +243,7 @@ standard but just consider the two most important types: <strong>single precisio
 <li><p><code class="docutils literal notranslate"><span class="pre">IEEE</span> <span class="pre">single</span> <span class="pre">precision</span></code>: <span class="math notranslate nohighlight">\(e_{min} = -126, e_{max} = 127, p=24\)</span></p></li>
 </ul>
 <p>Roughly, double precision numbers give around 16 digits accuracy, while single precision numbers give around 8 digits accuracy.</p>
-<p>An important number is <span class="math notranslate nohighlight">\(\epsilon_{rel} = 2^{1-p}\)</span>. This is the smallest number in floating point arithmetic such that <span class="math notranslate nohighlight">\(1 + \epsilon_{rel}\neq 1\)</span>. In double precision we have <span class="math notranslate nohighlight">\(\epsilon_{rel}\approx 2.2E-16\)</span> and in single precision <span class="math notranslate nohighlight">\(\epsilon_{rel}\approx 1.2E-7\)</span>.</p>
+<p>An important number is <span class="math notranslate nohighlight">\(\epsilon_{rel} = 2^{1-p}\)</span>. This is the smallest number in floating point arithmetic such that <span class="math notranslate nohighlight">\(1 + \epsilon_{rel}\neq 1\)</span>. In double precision we have <span class="math notranslate nohighlight">\(\epsilon_{rel}\approx 2.2\times 10^{-16}\)</span> and in single precision <span class="math notranslate nohighlight">\(\epsilon_{rel}\approx 1.2\times 10^{-7}\)</span>.</p>
 </div>
 <div class="section" id="how-many-flops-s-do-i-have">
 <h2>How many Flops/s do I have?<a class="headerlink" href="#how-many-flops-s-do-i-have" title="Permalink to this headline">¶</a></h2>
@@ -278,6 +289,9 @@ standard but just consider the two most important types: <strong>single precisio
 <h2>The Top 500<a class="headerlink" href="#the-top-500" title="Permalink to this headline">¶</a></h2>
 <p>For really large machines there is a regularly updated list of the world’s fastest supercomputers. The <a class="reference external" href="https://top500.org/">Top 500</a> shows which machines are the fastest in the world. The current number one is Fugaku, with a peak performance of 514 PFlops/s (1 PFlop/s is 1000 TFlops/s). Interestingly, this computer uses ARM CPUs, the same architecture that also powers almost all mobile phones in the world. It is interesting to consider the <a class="reference external" href="https://top500.org/statistics/perfdevel/">performance over time</a>.</p>
 <p><img alt="Performance over time" src="_images/top500development.png" /></p>
+</div>
+<div class="section" id="a-biased-definition-of-high-performance-computing">
+<h2>A biased definition of High-Performance Computing<a class="headerlink" href="#a-biased-definition-of-high-performance-computing" title="Permalink to this headline">¶</a></h2>
 <p>Only 20 years ago a PS5 would have been the world’s fastest supercomputer. This hides an important message. What we consider as supercomputers now, will be standard desktop systems in the not too distant future.</p>
 <p>It therefore makes little sense to talk about High-Performance Computing only if we develop on very big systems. What we have under our desk now, was a big system just a few years ago. My personal definition of High-Performance Computing is the following:</p>
 <p><strong>High-Performance Computing is concernced with developing tools, algorithms, and applications that can make optimal use of a given hardware environment.</strong></p>
@@ -315,6 +329,7 @@ standard but just consider the two most important types: <strong>single precisio
     <div class='prev-next-bottom'>
         
     <a class='left-prev' id="prev-link" href="intro.html" title="previous page">Welcome to Techniques of High-Performance Computing</a>
+    <a class='right-next' id="next-link" href="hpc_languages.html" title="next page">Languages for High-Performance Computing</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
