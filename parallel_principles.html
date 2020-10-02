@@ -210,6 +210,28 @@
    SIMD Acceleration
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multithreading-for-parallel-loop-execution">
+   Multithreading for parallel loop execution.
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#get-to-know-the-gil">
+     Get to know the GIL
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#numba-parallel-threading-without-gil">
+     Numba - Parallel threading without GIL
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#an-alternative-solution-process-based-parallel-processing">
+     An alternative solution - Process based parallel processing
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
         </nav>
@@ -248,6 +270,72 @@
 <p>Almost all modern CPUs support SIMD (Single-Instruction-Multiple-Data) operations using vector registers. The idea is that a CPU core has internal registers that allow the execution of a command on several arguments within a single CPU cycle.We consider the figure below. Let us assume we have a SIMD register <span class="math notranslate nohighlight">\(a\)</span> and a SIMD register <span class="math notranslate nohighlight">\(b\)</span> in the CPU, each of them holding four pieces of data. Then the addition of the four pieces of data can be done all at once within a single CPU cycle.</p>
 <p><img alt="SIMD Addition" src="_images/simd_addition.png" /></p>
 <p>In principle this allows a factor four speed-up. Most modern CPUs from Intel and AMD support AVX2, a set of CPU instructions that allow to operate on vector registers up to 256 bits in length. This is enough space for four double precision numbers or eight single precision numbers. Not only addition is supported, but a number of operations, including sqrt and multiplication. The most recent standard is AVX-512, which allows simultaneous execution of certain types of 8 double precision or 16 single precision operations. However, this does not usually result in a speed-up of a factor of 8 or 16. CPUs have to reduce their clock speed significantly to execute AVX-512 operations and their invocation is also costly. The outspoken developer of Linux, Linus Torvalds, recently stated that he wishes that <a class="reference external" href="https://www.extremetech.com/computing/312673-linus-torvalds-i-hope-avx512-dies-a-painful-death">“AVX-512 dies a painful death”</a>. The reality is more balanced. For certain HPC and machine learning applications AVX-512 can bring very good speed-ups. Nevertheless, AMD has chosen not to implement AVX-512 in their CPUs and relies on highly optimised AVX2 instructions.</p>
+<p>SIMD instructions are a very low-level tool, which we cannot use directly in Python. However, several libraries provide functionality that can take advantage of SIMD instructions, in particular:</p>
+<ul class="simple">
+<li><p>Numpy benefits from SIMD if the underlying BLAS library uses SIMD instructions.</p></li>
+<li><p>The Numexpr library allows the generation of complex transformation over arrays
+that will be translated to fast SIMD instructions under certain conditions.</p></li>
+<li><p>The Numba Just-In-Time compiler for Python code can auto-compile certain for-loops into accelerated SIMD code.</p></li>
+</ul>
+<p>We will discuss each of these libraries in more detail later. While there is no direct SIMD control from Python it is important to be aware of SIMD and to use libraries and constructs that guarantee SIMD execution.</p>
+</div>
+<div class="section" id="multithreading-for-parallel-loop-execution">
+<h2>Multithreading for parallel loop execution.<a class="headerlink" href="#multithreading-for-parallel-loop-execution" title="Permalink to this headline">¶</a></h2>
+<p>SIMD is a very low-level acceleration within a single CPU core. In order to execute code over several cores we need to use a different technique. In order to understand this we first have to clarify what is meant by a process and what is meant by a thread.</p>
+<p>A <strong>process</strong> within a computer is a self-contained unit of code and associated memory that performs a certain task. Many programs consist of a single process. But some programs use multiple process such as Google Chrome, which has a process for each oben tab. Processes are strictly separated from each other via the operating system, which schedules the execution of processes. A process is not allowed to directly access data from other processes unless through mechanisms provided by the operating system. Moreover, the operating system decides how processes are scheduled onto CPU cores. If you open a task manager, no matter whether Windows, Linux or Mac, you can see dozens or sometimes even hundreds of processes running at the same time.</p>
+<p>A <strong>thread</strong> is an execution stream within a process. All threads within a process share the memory provided by the process and are freely able to read and manipulate each others data. Performant applications are highly multithreaded to take advantage of the existing CPU cores in a computer.</p>
+<p>Let us return to the for-loop above. All loop iterations are completely independent of each other. We could execute them in any order, or indeed in parallel. The question is how we can achieve this?</p>
+<p>Python provides a threading library that allows the creation of multiple threads that executes within a Python program. It is a bit of code overhead. But we could represent a multithreaded for-loop execution in the following way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">,</span> <span class="n">arr3</span><span class="p">,</span> <span class="n">chunk</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The thread worker.&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">:</span>
+        <span class="n">arr3</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr1</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="n">arr2</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+<span class="n">nthreads</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000000</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">nthreads</span><span class="p">)</span>
+
+<span class="n">all_threads</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+    <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">chunk</span><span class="p">))</span>
+    <span class="n">all_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+    <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">all_threads</span><span class="p">:</span>
+    <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>How does this code work? We define a <code class="docutils literal notranslate"><span class="pre">worker</span></code> function that takes as three arguments the arrays that we want to sum and the result array. The parameter <code class="docutils literal notranslate"><span class="pre">chunk</span></code> is an integer array of indices that specifies the indices of the elements that we want to sum.</p>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">nthreads</span></code> gets the CPU count. We always generate as many threads as there are CPUs in the system.</p>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">chunks</span></code> is a list of arrays that splits up the whole index range into chunks of approximate size <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">/</span> <span class="pre">nthreads</span></code>.</p>
+<p>For each index chunk we now generate a new thread by specifying the <code class="docutils literal notranslate"><span class="pre">worker</span></code> function as to be executed in the thread and as parameters the arrays <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, and <code class="docutils literal notranslate"><span class="pre">c</span></code> and the current index set <code class="docutils literal notranslate"><span class="pre">chunk</span></code>. The thread is then started. After calling <code class="docutils literal notranslate"><span class="pre">start</span></code> the next for-loop iteration starts without the thread having to be finished already. The threads run independently of each other.</p>
+<p>After all threads are started we are waiting for the thread execution to finish by calling the <code class="docutils literal notranslate"><span class="pre">join</span></code> function for each thread. The <code class="docutils literal notranslate"><span class="pre">join</span></code> function blocks execution until the work inside the thread has concluded.</p>
+<p>This way of specifying a thread is very typical and threads in most programming languages follow a similar pattern.</p>
+<div class="section" id="get-to-know-the-gil">
+<h3>Get to know the GIL<a class="headerlink" href="#get-to-know-the-gil" title="Permalink to this headline">¶</a></h3>
+<p>So far so good. There is only one problem. This code is actually not executing in parallel! The reason is a unique feature of Python, called the GIL (Global Interpreter Lock). When Python was first developed it was decided that only one thread at a time would be able to call into the Python interpreter. There are very good technical performance reason for this choice. But the consequence is that Python threads are not really executing in parallel since when one thread is calling into the interpreter to execute a Python command the other threads have to wait.</p>
+<p>So why does threading exist at all in Python? Python threads make sense for I/O bound applications. Consider for example a webserver that is waiting for incoming network connections. You can have one thread waiting for the network while another thread is doing actual work. As long as a thread is not using the GIL another thread can use the interpreter.</p>
+</div>
+<div class="section" id="numba-parallel-threading-without-gil">
+<h3>Numba - Parallel threading without GIL<a class="headerlink" href="#numba-parallel-threading-without-gil" title="Permalink to this headline">¶</a></h3>
+<p>Numba is a library for the Just-In-Time compilation of Python code into low-level machine code that does not require the Python interpreter. We will dive into Numba in a separate session. The beauty about Numba is that since Numba compiled functions do not require the Python interpreter, they execute without having to call into the GIL. This allows to create parallel executing threads independent of the Python interpreter, delivering optimal performance on multicore CPUs.</p>
+</div>
+<div class="section" id="an-alternative-solution-process-based-parallel-processing">
+<h3>An alternative solution - Process based parallel processing<a class="headerlink" href="#an-alternative-solution-process-based-parallel-processing" title="Permalink to this headline">¶</a></h3>
+<p>Python has an alternative solution for parallel execution. We discussed above that</p>
+</div>
 </div>
 </div>
 
