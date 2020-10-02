@@ -5,5 +5,7 @@
     - file: what_is_hpc
     - file: hpc_languages
     - file: python_hpc_tools
-    - file: numpy_introduction
+    - file: numpy_and_data_layouts
+    - file: parallel_principles
+    - file: numba_introduction
 
