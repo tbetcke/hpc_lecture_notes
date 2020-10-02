@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A short introduction to Numpy &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Memory layout and Numpy arrays &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.d431a4ee1c1efae0e38bdfebc22debff.css">
 
@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Parallel Computing Principles in Python" href="parallel_principles.html" />
+    <link rel="prev" title="Python HPC Tools" href="python_hpc_tools.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -101,7 +103,7 @@
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -117,8 +119,8 @@
    Python HPC Tools
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numpy_and_data_layouts.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Memory layout and Numpy arrays
   </a>
  </li>
@@ -174,7 +176,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/numpy_introduction.ipynb"><button type="button"
+        <a class="dropdown-buttons" href="_sources/numpy_and_data_layouts.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
@@ -198,7 +200,7 @@
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numpy_introduction.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numpy_and_data_layouts.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -206,7 +208,7 @@
         
         
         
-        <a class="colab-button" href="https://colab.research.google.com/github/executablebooks/jupyter-book/blob/master/numpy_introduction.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
+        <a class="colab-button" href="https://colab.research.google.com/github/executablebooks/jupyter-book/blob/master/numpy_and_data_layouts.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
                 title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
                     src="_static/images/logo_colab.png"
                     alt="Interact on Colab">Colab</button></a>
@@ -226,8 +228,23 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#blas-operations">
-   BLAS Operations
+  <a class="reference internal nav-link" href="#memory-layouts">
+   Memory layouts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numpy-to-the-rescue">
+   Numpy to the rescue
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#blas-and-lapack">
+   BLAS and Lapack
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started-in-numpy">
+   Getting started in Numpy
   </a>
  </li>
 </ul>
@@ -241,9 +258,56 @@
         
               <div>
                 
-  <div class="section" id="a-short-introduction-to-numpy">
-<h1>A short introduction to Numpy<a class="headerlink" href="#a-short-introduction-to-numpy" title="Permalink to this headline">¶</a></h1>
-<p>Numpy provides a fast interface to operations on Numerical Arrays. It is the most basic component of any Python Scientific Computing Stack and, depending on the underlying BLAS implementation (more about BLAS later), parallelizes certain operations efficiently.</p>
+  <div class="section" id="memory-layout-and-numpy-arrays">
+<h1>Memory layout and Numpy arrays<a class="headerlink" href="#memory-layout-and-numpy-arrays" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="memory-layouts">
+<h2>Memory layouts<a class="headerlink" href="#memory-layouts" title="Permalink to this headline">¶</a></h2>
+<p>We can imagine memory as a linear collection of consecutive memory addresses (each one representing one byte).</p>
+<p><img alt="Byte array in memory" src="_images/byte_array.png" /></p>
+<p>The key toe fficient data representations is to order data spatially local in memory. This means that the data we want to work on next should be as close to our current data as possible. The reason is that memory accesses in modern computers are extremely expensive compared to actual computations. In order to alleviate this problem all modern CPUs rely on sophisticated caches that try to read data ahead of time from the memory. This works only if the next pieces of data are close to the data that we are currently working on.</p>
+<p>Standard Python list types do not guarantee this locality. List elements can be at very different memory addresses, making standard lists are other base Python types unsuitable for numerical operations. What we require is a buffer type that guarantees us a chunk of consecutive addresses in the system memory.</p>
+<p>What happens if we have a matrix? Consider a 2 x 2 matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
+\end{split}\]</div>
+<p>We have two ways of ordering this matrix across the memory band</p>
+<ul class="simple">
+<li><p><strong>C-Style ordering:</strong> This aligns the matrix row by row in memory. Hence, our memory buffer will have four elements that read</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+1, 2, 3, 4
+\]</div>
+<ul class="simple">
+<li><p><strong>Fortran Style ordering:</strong> This aligns the matrix column by column in memory. Our memory buffer will now have four elements that read</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+1, 3, 2, 4
+\]</div>
+<p>Both memory layout styles are used across scientific computing, and it is important to know what the assumed layout in a given numerical library is. Ignoring data layouts leads to inefficiency if code has to translate on the fly between the layouts, or even bugs if the layout differences are ignored by a library.</p>
+</div>
+<div class="section" id="numpy-to-the-rescue">
+<h2>Numpy to the rescue<a class="headerlink" href="#numpy-to-the-rescue" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://numpy.org/">Numpy</a> solves all these problems by providing an array type that reserves consecutive chunks of memory and allows the user to transparently map data onto this chunk of memory, either using C-style ordering (default), or Fortran-style ordering (optional). Numpy also guarantees that operations between arrays of different orderings are executed correctly (although we should avoid this). Numpy has long established as the de facto standard for array types in Python. Indeed, many other libraries have taken over the Numpy syntax and conventions to make their data types interoperate nicely with Numpy.</p>
+<p><strong>Numpy is a major reason for the large success of Python.</strong></p>
+<p>Very recently an associated <a class="reference external" href="https://www.nature.com/articles/s41586-020-2649-2">Numpy paper</a> was published in Nature, something very rare for a software library and demonstrating how fundamental Numpy has become to any kind of science that relies on data processing. Most of these operations are implemented by calling natively into accelerated BLAS/Lapack functions.</p>
+</div>
+<div class="section" id="blas-and-lapack">
+<h2>BLAS and Lapack<a class="headerlink" href="#blas-and-lapack" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.netlib.org/blas/">BLAS (Basic Linear Algebra Subroutines)</a> defines a set of interfaces to standard linear algebra functions. There are three BLAS Variantes, Level 1, 2, and 3.</p>
+<ul class="simple">
+<li><p>BLAS Level 1 defines functions that require <span class="math notranslate nohighlight">\(O(n)\)</span> computational complexity (<span class="math notranslate nohighlight">\(n\)</span> is the number of element), such as vector addition, multiplication with scalars or dot products.</p></li>
+<li><p>BLAS Level 2 defines functions that require <span class="math notranslate nohighlight">\(O(n^2)\)</span> computational complexity, such as matrix-vector products, or triangular solves.</p></li>
+<li><p>BLAS Level 3 defines functions that require <span class="math notranslate nohighlight">\(O(n^3)\)</span> computational complexity, of which the most important one is the matrix-matrix product.</p></li>
+</ul>
+<p>There exists a reference BLAS implementation from http://www.netlib.org. However, this should never be used in practice. The key to fast BLAS operations are implementations that optimally use the CPU Cache architecture to minimize data transfer delays. There exist a number of BLAS libraries that are optimised for modern CPUs, and do not only exploit caching but also SIMD acceleration and multi-core processing (we will discuss these topics later). Examples of such libraries are <a class="reference external" href="https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library.html">Intel MKL</a>, <a class="reference external" href="https://www.openblas.net/">Openblas</a> or <a class="reference external" href="https://github.com/flame/blis">BLIS</a>.</p>
+<p><a class="reference external" href="http://netlib.org/lapack">Lapack</a> is a library of advanced linear algebra functions such as linear system solves, eigenvalue problems, singular values, least-squares problems, etc., that make use of BLAS. Lapack routines are highly optimised to use matrix-matrix Level-3 BLAS operations whenever possible. The reason is memory efficiency. The ratio of computational complexity to memory complexity for matrix-matrix products is <span class="math notranslate nohighlight">\(O(n^3)\)</span> to <span class="math notranslate nohighlight">\(O(n^2)\)</span>. Hence, for larger problems we have far more operations than memory accesses, which is what we want as memory accesses are slow.</p>
+<p>Numpy links against available BLAS and Lapack libraries to make sure to have the most efficient implementations of linear algebra operations available. If Numpy is installed from conda-forge, then by default the Openblas library is used. Alternatively, one can also use Intel MKL.</p>
+</div>
+<div class="section" id="getting-started-in-numpy">
+<h2>Getting started in Numpy<a class="headerlink" href="#getting-started-in-numpy" title="Permalink to this headline">¶</a></h2>
 <p>To get started we import Numpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -252,6 +316,15 @@
 </div>
 </div>
 </div>
+<p>The basic data type in Numpy is the array. The following creates a double precision array with three entries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">18.1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">dtype=&quot;float64&quot;</span></code> is not necessary here as Numpy automatically recognizes that the list contains two floating point numbers and therefore uses a 64 bit floating point number (double precision) as default type. To use single precision use <code class="docutils literal notranslate"><span class="pre">dtype=float32</span></code>. A list of available types can be found <a class="reference external" href="https://numpy.org/devdocs/user/basics.types.html">here</a>.</p>
 <p>Below are some ways to create an array with Numpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -264,6 +337,21 @@
 </div>
 </div>
 </div>
+<p>We can easily access the shape of an array</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">a_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_zeros</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(50,)
+(10, 10, 10)
+</pre></div>
+</div>
+</div>
+</div>
 <p>Accessing elements is easy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -272,7 +360,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.8054444759111664
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7234484131387166
 </pre></div>
 </div>
 </div>
@@ -284,7 +372,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.80544448, 0.51096399])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.72344841, 0.73537727])
 </pre></div>
 </div>
 </div>
@@ -296,7 +384,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.1569824 , 0.24907576])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.2124949 , 0.78754897])
 </pre></div>
 </div>
 </div>
@@ -352,13 +440,7 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Together with Matplotlib we can easily plot data.</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>Together with Matplotlib we can easily plot data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -374,12 +456,9 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/numpy_introduction_15_0.png" src="_images/numpy_introduction_15_0.png" />
+<img alt="_images/numpy_and_data_layouts_27_0.png" src="_images/numpy_and_data_layouts_27_0.png" />
 </div>
 </div>
-<div class="section" id="blas-operations">
-<h2>BLAS Operations<a class="headerlink" href="#blas-operations" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://www.netlib.org/blas/">BLAS</a> (Basic Linear Algebra Subprograms) is an interface standard that defines access to a range of useful linear algebra routines on vectors and matrices. BLAS is designed in Fortan. For most CPUs efficient BLAS implementations are available. BLAS is split up into BLAS1, BLAS2, and BLAS3. BLAS1 describes simple vector operations of <span class="math notranslate nohighlight">\(O(n)\)</span> cost. BLAS2 describes <span class="math notranslate nohighlight">\(O(n^2)\)</span> operations such as the matrix-vector product, while BLAS3 focuses on <span class="math notranslate nohighlight">\(O(n^3)\)</span> matrix-matrix operations (mainly matrix-matrix product). In particular, the matrix-matrix product benefits from efficient shared memory parallel implementations, and most vendors provide a corresponding multi-threaded BLAS implementation. Internally, Numpy makes use of BLAS. Hence, if Numpy was compiled with a fast BLAS library, it will also be very fast.</p>
 <p>Matrix/Matrix and Matrix/vector products in Numpy are executed as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -392,8 +471,8 @@
 </div>
 </div>
 <p>Note that the componentwise product of two matrices is written as <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">A</span> <span class="pre">*</span> <span class="pre">B</span></code> and has nothing to do with the matrix/matrix product.</p>
-<p>Numpy can also solve Linear systems of equations and perform other higher order matrix operations. These are implemented through interfacing the <span class="xref myst">LAPACK</span> library, which itself builds upon BLAS. Many vendors combine LAPACK and BLAS into a single library.</p>
-<p>To solve a linear system of equations, the following can be used.</p>
+<p>Numpy can also solve Linear systems of equations and perform other higher order matrix operations.
+To solve a linear system of equations, the following can be used.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
@@ -406,18 +485,19 @@
 <p>We can easily compute the relative residual of this solve as</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.23080298426149e-16
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.6441570972241651e-16
 </pre></div>
 </div>
 </div>
 </div>
 <p>The system was solved with an accuracy close to machine precision.</p>
+<p>This was just a small sample of Numpy functions. For a more comprehensive introduction check out the <a class="reference external" href="https://numpy.org/devdocs/user/index.html">Numpy user guide</a></p>
 </div>
 </div>
 
@@ -449,6 +529,8 @@
     
     <div class='prev-next-bottom'>
         
+    <a class='left-prev' id="prev-link" href="python_hpc_tools.html" title="previous page">Python HPC Tools</a>
+    <a class='right-next' id="next-link" href="parallel_principles.html" title="next page">Parallel Computing Principles in Python</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
