@@ -1,4 +1,5 @@
 jupyter-book
 matplotlib
 numpy
+numba
 ghp-import

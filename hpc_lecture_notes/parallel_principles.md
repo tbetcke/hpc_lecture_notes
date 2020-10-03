@@ -111,10 +111,76 @@ So why does threading exist at all in Python? Python threads make sense for I/O 
 
 ### Numba - Parallel threading without GIL
 
-Numba is a library for the Just-In-Time compilation of Python code into low-level machine code that does not require the Python interpreter. We will dive into Numba in a separate session. The beauty about Numba is that since Numba compiled functions do not require the Python interpreter, they execute without having to call into the GIL. This allows to create parallel executing threads independent of the Python interpreter, delivering optimal performance on multicore CPUs.
+Numba is a library for the Just-In-Time compilation of Python code into low-level machine code that does not require the Python interpreter. We will dive into Numba in a separate session. The beauty about Numba is that since Numba compiled functions do not require the Python interpreter, they execute without having to call into the GIL. This allows to create parallel executing threads independent of the Python interpreter, delivering optimal performance on multicore CPUs. A parallel version of the vector addition in Numba is given below.
+
+```python
+import numpy as np
+import numba
+
+n = 1000000
+a = np.random.randn(n)
+b = np.random.randn(n)
+
+c = np.empty(n, dtype='float64')
+
+numba.njit(parallel=True)
+def numba_fun(arr1, arr2, arr3):
+    """The thread worker."""
+
+    for index in numba.prange(n):
+        arr3[index] = arr1[index] + arr2[index]
+
+numba_fun(a, b, c)
+```
+
+In the above example we tell Numba to just-in-time compile the function `numba_fun`. The function `prange` tells Numba that the corresponding for-loop can be parallelised. Numba automatically splits this for-loop into threads that work independently. Since Numba compiles the function into direct machine code that does not require the Python interpreter, the GIL does not interfere.
+
 
 ### An alternative solution - Process based parallel processing
 
-Python has an alternative solution for parallel execution. We discussed above that 
+Python has an alternative solution for parallel execution. We discussed above that threading in Python is limited by the GIL. The solution is process based parallelisation. Instead of multiple threads we use multiple Python processes, each with its own GIL and memory space. The `multiprocessing` module in Python makes dealing with process based parallelisation easy. Below you find the above threading example, but using only the multiprocessing module.
+
+```python
+import numpy as np
+import multiprocessing
+import ctypes
+
+def worker(arr1, arr2, arr3, chunk):
+    """The thread worker."""
+
+    # Create Numpy arrays from the
+    # shared multiprocessing arrays
+
+    arr1_np = np.frombuffer(arr1.get_obj())
+    arr2_np = np.frombuffer(arr2.get_obj())
+    arr3_np = np.frombuffer(arr3.get_obj())
+
+    for index in chunk:
+        arr3_np[index] = arr1_np[index] + arr2_np[index]
+
+nprocesses = multiprocessing.cpu_count()
+
+n = 1000000
+
+a = multiprocessing.Array(ctypes.c_double, n)
+b = multiprocessing.Array(ctypes.c_double, n)
+c = multiprocessing.Array(ctypes.c_double, n)
 
 
+a[:] = np.random.randn(n)
+b[:] = np.random.randn(n)
+
+chunks = np.array_split(range(n), nprocesses)
+
+all_processes = []
+
+for chunk in chunks:
+    process = multiprocessing.Process(target=worker, args=(a, b, c, chunk))
+    all_processes.append(process)
+    process.start()
+
+for process in all_processes:
+    process.join()
+```
+
+This example is very similar to the threading example. The main difference is the variable initialisation. Processes do not share the same memory. The multiprocessing module can copy over variables on intialisation automatically to the different processes. However, this is inefficient for large arrays, and we cannot easily write into a large array. The solution is to create shared arrays. These are special structures that can be accessed from all processes. The `multiprocessing.Array` type serves this purpose. It is very low-level. However, we can create a view of them as a Numpy array. This is done through the `np.frombuffer` command, which creates a Numpy type array based on the shared memory.
