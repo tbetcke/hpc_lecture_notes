@@ -254,16 +254,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">58</span><span class="n">af80ebef2a</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">arange</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> 
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="c1"># jit decorator tells Numba to compile this function.</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="c1"># The argument types will be inferred by Numba when function is called.</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;numba&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>36.0
 </pre></div>
 </div>
 </div>
@@ -340,7 +331,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time to create fractal: 29.754865884780884
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time to create fractal: 22.463557243347168
 </pre></div>
 </div>
 <img alt="_images/numba_introduction_7_1.png" src="_images/numba_introduction_7_1.png" />
@@ -402,7 +393,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time to create fractal: 0.7635421752929688
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time to create fractal: 0.49761128425598145
 </pre></div>
 </div>
 <img alt="_images/numba_introduction_9_1.png" src="_images/numba_introduction_9_1.png" />
@@ -463,10 +454,14 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time to create fractal: 0.14829707145690918
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.5/x64/lib/python3.8/site-packages/numba/np/ufunc/parallel.py:363: NumbaWarning: <span class=" -Color -Color-Bold">The TBB threading layer requires TBB version 2019.5 or later i.e., TBB_INTERFACE_VERSION &gt;= 11005. Found TBB_INTERFACE_VERSION = 9107. The TBB threading layer is disabled.</span>
+  warnings.warn(problem)
 </pre></div>
 </div>
-<img alt="_images/numba_introduction_11_1.png" src="_images/numba_introduction_11_1.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time to create fractal: 0.14896512031555176
+</pre></div>
+</div>
+<img alt="_images/numba_introduction_11_2.png" src="_images/numba_introduction_11_2.png" />
 </div>
 </div>
 <p>The key to the parallelization is the <code class="docutils literal notranslate"><span class="pre">prange</span></code> command in the for-loop. This is similar to the parallel for-loop that we have seen with OpenMP and tells Numba to spread out the computation to multiple CPU cores. However, it is essential that Numba knows all data types, so that no Python calls will be performed during the parallel loop. This is ensured by the option <code class="docutils literal notranslate"><span class="pre">nopython=True</span></code> and by explicitly specifying the input and output types.</p>
