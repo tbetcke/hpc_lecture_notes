@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Languages for High-Performance Computing &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>A Numexpr example &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -57,8 +57,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Python HPC Tools" href="python_hpc_tools.html" />
-    <link rel="prev" title="What is High-Performance Computing?" href="what_is_hpc.html" />
+    <link rel="prev" title="SIMD Autovectorization in Numba" href="simd.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -109,8 +108,8 @@
    What is High-Performance Computing?
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
    Languages for High-Performance Computing
   </a>
  </li>
@@ -139,8 +138,8 @@
    SIMD Autovectorization in Numba
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numexpr.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    A Numexpr example
   </a>
  </li>
@@ -186,9 +185,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/hpc_languages.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/numexpr.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -206,54 +205,32 @@
 
         <!-- Launch buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numexpr.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <a class="colab-button" href="https://colab.research.google.com/github/executablebooks/jupyter-book/blob/master/numexpr.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
+                title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
+                    src="_static/images/logo_colab.png"
+                    alt="Interact on Colab">Colab</button></a>
+        
+        
+    </div>
+</div>
+
     </div>
 
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
-        </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#fortran">
-   Fortran
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#c-c">
-   C/C++
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#julia">
-   Julia
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#python">
-   Python
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#matlab">
-   Matlab
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#rust">
-   Rust
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#other-languages">
-   Other languages
-  </a>
- </li>
-</ul>
-
-        </nav>
         
     </div>
 </div>
@@ -262,36 +239,108 @@
         
               <div>
                 
-  <div class="section" id="languages-for-high-performance-computing">
-<h1>Languages for High-Performance Computing<a class="headerlink" href="#languages-for-high-performance-computing" title="Permalink to this headline">¶</a></h1>
-<p>There exist a zoo of programming languages. In this short section we briefly want to discuss some frequently used programming languages and their suitability for High-Performance Computing.</p>
-<div class="section" id="fortran">
-<h2>Fortran<a class="headerlink" href="#fortran" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Fortran">Fortran</a> is one of the dinosaurs of scientific computing. Fortran originated in the 1950s and its most recent incarnation is Fortran 2018. Fortran is still actively used for a lot of HPC code, especially when it comes to legacy applications. But new projects should not be started in Fortran.</p>
+  <div class="section" id="a-numexpr-example">
+<h1>A Numexpr example<a class="headerlink" href="#a-numexpr-example" title="Permalink to this headline">¶</a></h1>
+<p>Numexpr is a library for the fast execution of array transformation. One can define complex elementwise operations on array and Numexpr will generate efficient code to execute the operations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numexpr</span> <span class="k">as</span> <span class="nn">ne</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
 </div>
-<div class="section" id="c-c">
-<h2>C/C++<a class="headerlink" href="#c-c" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/C%2B%2B">C++</a> is the default language of Scientific Computing. It is mature, has a huge ecosystem and most modern heterogeneous compute environments (Cuda/Sycl, etc.) are developed for C++. Some HPC projects also still use the C programming language, in particular for library development. But C++ is the best choice for most new projects.</p>
 </div>
-<div class="section" id="julia">
-<h2>Julia<a class="headerlink" href="#julia" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Julia_(programming_language)">Julia</a> is a relatively recent programming language that has quickly built up a sizeable support community. Even though Julia is a high-level language, it has been successfully used for simulations at Petaflops scale. It should definitely be considered for new applications.</p>
 </div>
-<div class="section" id="python">
-<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Python_(programming_language)">Python</a> is the most widely used high-productivity language in Scientific Computing. Its very simple syntax and broad library support make it ideal for quickly building scalable applications. Python itself is not at all HPC capable unlike Julia. The language does not natively support the type of data structures and other features needed for fast computations. However, over the years Python interfaces to many C/C++ libraries have been developed and with the Numpy extension Python has data types and algorithms for very efficient array operations available. Python today is the number one language for machine learning and many other demanding HPC applications. In this module we will mainly use Python and deep dive into how to develop performant HPC applications in Python.</p>
+<p>Numexpr provides fast multithreaded operations on array elements. Let’s test it on some large arrays.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="matlab">
-<h2>Matlab<a class="headerlink" href="#matlab" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/MATLAB">Matlab</a> is one of the oldest high-productivity languages and has been the defacto standard for fast numerical prototyping before Python. It is still heavily used in many numerical applications, given its excellent toolbox and huge amount of legacy code that exists. While Matlab has quite favourable licenses for academic use, it is expensive for commercial use, and if possible Python as open-source alternative is preferable for new projects.</p>
 </div>
-<div class="section" id="rust">
-<h2>Rust<a class="headerlink" href="#rust" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Rust_(programming_language)">Rust</a> The Rust programming language is a very recent newcomer. Its first stable release occured in 2015. However, it is quickly become extremely popular as a direct competitor to C++. The main feature of Rust is the ownership model the memory safety model that allows to detect many errors at compile time that would lead to runtime crashes in C++. Rust does not yet have a wide HPC ecosystem and most numerical libraries are in their infancy. Nevertheless, it is feasible that Rust over time matures into a serious HPC language.</p>
 </div>
-<div class="section" id="other-languages">
-<h2>Other languages<a class="headerlink" href="#other-languages" title="Permalink to this headline">¶</a></h2>
-<p>Other modern programming languages include Go, Java, and C#. Java and C# are business languages that are not designed for demanding HPC applications. Go may be suitable for some HPC type applications. But this is not where its focus lies.</p>
+<p>Componentwise addition is easy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + 1&quot;</span><span class="p">)</span>
+<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + b&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.403454  , 1.39959848, 0.65233673, ..., 0.84090317, 0.52583421,
+       0.55533574])
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can evaluate complex expressions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False, False, False, ..., False, False, False])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s compare the performance with Numpy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mf">4.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.86 ms ± 333 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>535 µs ± 13.2 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Numexpr is a factor 10 faster compared to Numpy, a nice improvement with very little effort. Let us compare some more complex operations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;sin(a) + arcsinh(a/b)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.77 ms ± 118 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can compare it with Numpy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>33.5 ms ± 284 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -304,16 +353,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "conda-env-jupyter-book-py"
         },
         kernelOptions: {
-            kernelName: "python3",
+            kernelName: "conda-env-jupyter-book-py",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'conda-env-jupyter-book-py'</script>
 
               </div>
               
@@ -323,8 +372,7 @@
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="what_is_hpc.html" title="previous page">What is High-Performance Computing?</a>
-    <a class='right-next' id="next-link" href="python_hpc_tools.html" title="next page">Python HPC Tools</a>
+    <a class='left-prev' id="prev-link" href="simd.html" title="previous page">SIMD Autovectorization in Numba</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

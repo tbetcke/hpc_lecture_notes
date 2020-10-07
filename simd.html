@@ -1,0 +1,1895 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIMD Autovectorization in Numba &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/sphinx-book-theme.2d2078699c18a0efb88233928e1cf6ed.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="A Numexpr example" href="numexpr.html" />
+    <link rel="prev" title="Working with Numba" href="working_with_numba.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/simd.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/simd.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <a class="colab-button" href="https://colab.research.google.com/github/executablebooks/jupyter-book/blob/master/simd.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
+                title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
+                    src="_static/images/logo_colab.png"
+                    alt="Interact on Colab">Colab</button></a>
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#basic-simd">
+   Basic SIMD
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simd-and-division">
+   SIMD and Division
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simd-and-reductions">
+   SIMD and Reductions
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="simd-autovectorization-in-numba">
+<h1>SIMD Autovectorization in Numba<a class="headerlink" href="#simd-autovectorization-in-numba" title="Permalink to this headline">¶</a></h1>
+<p><strong>This Notebook has been adapted with minor changes from https://github.com/numba/numba-examples. The original is licensed undera BSD-2 license and copyrighted by Numba. See https://github.com/numba/numba-examples/blob/master/LICENSE for details.</strong></p>
+<p>Most modern CPUs have support for instructions that apply the same operation to multiple data elements simultaneously.  These are called “Single Instruction, Multiple Data” (SIMD) operations, and the LLVM backend used by Numba can generate them in some cases to execute loops more quickly.  (This process is called “autovectorization.”)</p>
+<p>For example, Intel processors have support for SIMD instruction sets like:</p>
+<ul class="simple">
+<li><p>SSE (128-bit inputs)</p></li>
+<li><p>AVX (256-bit inputs)</p></li>
+<li><p>AVX-512 (512-bit inputs, Skylake-X and later or Xeon Phi)</p></li>
+</ul>
+<p>These wide instructions typically operate on as many values as will fit into an input register.  For AVX instructions, this means that either 8 float32 values or 4 float64 values can be processed as a single input.  As a result, the NumPy dtype that you use can potentially impact performance to a greater degree than when SIMD is not in use.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It can be somewhat tricky to determine when LLVM has successfully autovectorized a loop.  The Numba team is working on exporting diagnostic information to show where the autovectorizer has generated SIMD code.  For now, we can use a fairly crude approach of searching the assembly language generated by LLVM for SIMD instructions.</p>
+<p>It is also interesting to note what kind of SIMD is used on your system.  On x86_64, the name of the registers used indicates which level of SIMD is in use:</p>
+<ul class="simple">
+<li><p>SSE: <code class="docutils literal notranslate"><span class="pre">xmmX</span></code></p></li>
+<li><p>AVX/AVX2: <code class="docutils literal notranslate"><span class="pre">ymmX</span></code></p></li>
+<li><p>AVX-512: <code class="docutils literal notranslate"><span class="pre">zmmX</span></code></p></li>
+</ul>
+<p>where X is an integer.</p>
+<p><strong>Note</strong>: The method we use below to find SIMD instructions will only work on Intel/AMD CPUs.  Other platforms have entirely different assembly language syntax for SIMD instructions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_instr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">func</span><span class="o">.</span><span class="n">inspect_asm</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">signatures</span><span class="p">[</span><span class="n">sig</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No instructions found&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="basic-simd">
+<h2>Basic SIMD<a class="headerlink" href="#basic-simd" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start with a simple function that returns the square difference between two arrays, as you might write for a least-squares optimization:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sqdiff</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">y32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">sqdiff</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.        , 0.99999976, 1.        , ..., 1.        , 1.0000002 ,
+       1.        ], dtype=float32)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x64</span> <span class="o">=</span> <span class="n">x32</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">y64</span> <span class="o">=</span> <span class="n">y32</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">sqdiff</span><span class="p">(</span><span class="n">x64</span><span class="p">,</span> <span class="n">y64</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.        , 0.99999976, 1.        , ..., 1.        , 1.00000024,
+       1.        ])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Numba has created two different implementations of the function, one for <code class="docutils literal notranslate"><span class="pre">float32</span></code> 1-D arrays, and one for <code class="docutils literal notranslate"><span class="pre">float64</span></code> 1-D arrays:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sqdiff</span><span class="o">.</span><span class="n">signatures</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(array(float32, 1d, C), array(float32, 1d, C)),
+ (array(float64, 1d, C), array(float64, 1d, C))]
+</pre></div>
+</div>
+</div>
+</div>
+<p>This allows Numba (and LLVM) to specialize the use of the SIMD instructions for each situation.  In particular, using lower precision floating point allows twice as many values to fit into a SIMD register.  We will see that for the same number of elements, the <code class="docutils literal notranslate"><span class="pre">float32</span></code> calculation goes twice as fast:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> sqdiff(x32, y32)
+<span class="o">%</span><span class="k">timeit</span> sqdiff(x64, y64)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.69 µs ± 29.2 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+3.43 µs ± 29.3 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can check for SIMD instructions in both cases.  (Due to the order of compilation above, signature 0 is the <code class="docutils literal notranslate"><span class="pre">float32</span></code> implementation and signature 1 is the <code class="docutils literal notranslate"><span class="pre">float64</span></code> implementation.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;float32:&#39;</span><span class="p">)</span>
+<span class="n">find_instr</span><span class="p">(</span><span class="n">sqdiff</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---</span><span class="se">\n</span><span class="s1">float64:&#39;</span><span class="p">)</span>
+<span class="n">find_instr</span><span class="p">(</span><span class="n">sqdiff</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>float32:
+	vsubps	(%rax,%rsi,4), %ymm0, %ymm0
+	vsubps	32(%rax,%rsi,4), %ymm1, %ymm1
+	vsubps	64(%rax,%rsi,4), %ymm2, %ymm2
+	vsubps	96(%rax,%rsi,4), %ymm3, %ymm3
+	vsubps	128(%rax,%rsi,4), %ymm0, %ymm0
+---
+float64:
+	vsubpd	(%rax,%rsi,8), %ymm0, %ymm0
+	vsubpd	32(%rax,%rsi,8), %ymm1, %ymm1
+	vsubpd	64(%rax,%rsi,8), %ymm2, %ymm2
+	vsubpd	96(%rax,%rsi,8), %ymm3, %ymm3
+	vsubpd	128(%rax,%rsi,8), %ymm0, %ymm0
+</pre></div>
+</div>
+</div>
+</div>
+<p>In x86_64 assembly, SSE uses <code class="docutils literal notranslate"><span class="pre">subps</span></code> for “subtraction packed single precision” (AVX uses <code class="docutils literal notranslate"><span class="pre">vsubps</span></code>), representing vector float32 operations.  The <code class="docutils literal notranslate"><span class="pre">subpd</span></code> instruction (AVX = <code class="docutils literal notranslate"><span class="pre">vsubpd</span></code>) stands for “subtraction packed double precision”, representing float64 operations.</p>
+</div>
+<div class="section" id="simd-and-division">
+<h2>SIMD and Division<a class="headerlink" href="#simd-and-division" title="Permalink to this headline">¶</a></h2>
+<p>In general, the autovectorizer cannot deal with branches inside loops, although this is an area where LLVM is likely to improve in the future.  Your best bet for SIMD acceleration is to only have pure math operations in the loop.</p>
+<p>As a result, you would naturally assume a function like this would be OK:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">frac_diff1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff1</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.6666667 , -0.66662216, -0.66657776, ..., -0.400032  ,
+       -0.40001604, -0.4       ], dtype=float32)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_instr</span><span class="p">(</span><span class="n">frac_diff1</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No instructions found
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">instructions</span> <span class="pre">found</span></code>?!</p>
+<p>The problem is that division by zero can behave in two different ways:</p>
+<ul class="simple">
+<li><p>In Python, division by zero raises an exception.</p></li>
+<li><p>In NumPy, division by zero results in a <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, like in C.</p></li>
+</ul>
+<p>By default, Numba <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> follows the Python convention, and <code class="docutils literal notranslate"><span class="pre">&#64;vectorize</span></code>/<code class="docutils literal notranslate"><span class="pre">&#64;guvectorize</span></code> follow the NumPy convention.  When following the Python convention, a simple division operation <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">/</span> <span class="pre">y</span></code> expands out into something like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>This branching code causes the autovectorizer to give up, and no SIMD to be generated for our example above.</p>
+<p>Fortunately, Numba allows you to override the “error model” of the function if you don’t want a <code class="docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code> to be raised:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_model</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">frac_diff2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff2</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.6666667 , -0.66662216, -0.66657776, ..., -0.400032  ,
+       -0.40001604, -0.4       ], dtype=float32)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_instr</span><span class="p">(</span><span class="n">frac_diff2</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>	vsubps	%ymm1, %ymm0, %ymm2
+	vsubps	%ymm1, %ymm0, %ymm2
+	vsubps	%ymm1, %ymm0, %ymm2
+	vsubps	%ymm1, %ymm0, %ymm2
+	vsubps	%ymm1, %ymm0, %ymm2
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have SIMD instructions again, but when we check the speed:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> frac_diff2(x32, y32)
+<span class="o">%</span><span class="k">timeit</span> frac_diff2(x64, y64)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.22 µs ± 39.6 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+5.22 µs ± 21.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is faster than the no-SIMD case, but there doesn’t seem to be a speed benefit with <code class="docutils literal notranslate"><span class="pre">float32</span></code> inputs.  What’s going on?</p>
+<p>The remaining issue is very subtle.  We can see it if we look at a type-annotated version of the function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff2</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">(</span><span class="n">pretty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/betcke/miniconda3/envs/dev/lib/python3.8/site-packages/numba/core/annotations/pretty_annotate.py:7: FutureWarning: The pretty_annotate functionality is experimental and might change API
+  warn(&quot;The pretty_annotate functionality is experimental and might change API&quot;,
+</pre></div>
+</div>
+<div class="output text_html">
+<html>
+<head>
+    <style>
+        .annotation_table {
+            color: #000000;
+            font-family: monospace;
+            margin: 5px;
+            width: 100%;
+        }
+
+        /* override JupyterLab style */
+        .annotation_table td {
+            text-align: left;
+            background-color: transparent; 
+            padding: 1px;
+        }
+
+        .annotation_table tbody tr:nth-child(even) {
+            background: white;
+        }
+
+        .annotation_table code
+        {
+            background-color: transparent; 
+            white-space: normal;
+        }
+
+        /* End override JupyterLab style */
+
+        tr:hover {
+            background-color: rgba(92, 200, 249, 0.25);
+        }
+
+        td.object_tag summary ,
+        td.lifted_tag summary{
+            font-weight: bold;
+            display: list-item;
+        }
+
+        span.lifted_tag {
+            color: #00cc33;
+        }
+
+        span.object_tag {
+            color: #cc3300;
+        }
+
+
+        td.lifted_tag {
+            background-color: #cdf7d8;
+        }
+
+        td.object_tag {
+            background-color: #fef5c8;
+        }
+
+        code.ir_code {
+            color: grey;
+            font-style: italic;
+        }
+
+        .metadata {
+            border-bottom: medium solid black;
+            display: inline-block;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .annotations {
+            padding: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .buttons {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+        <div class="metadata">
+        Function name: frac_diff2<br />
+
+            in file: &lt;ipython-input-12-115e70afe30f&gt;<br />
+
+        with signature: (array(float32, 1d, C), array(float32, 1d, C)) -&gt; array(float32, 1d, C)
+        </div>
+        <div class="annotations">
+        <table class="annotation_table tex2jax_ignore"><tr><td style=" padding-left: 22px;" class="">
+                        <code>
+                            1:
+                            <span style="color: #AA22FF">@jit</span>(nopython<span style="color: #666666">=</span><span style="color: #008000; font-weight: bold">True</span>, error_model<span style="color: #666666">=</span><span style="color: #BA2121">&#39;numpy&#39;</span>)
+                        </code>
+                    </td></tr><tr><td style=" padding-left: 22px;" class="">
+                        <code>
+                            2:
+                            <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">frac_diff2</span>(x, y):
+                        </code>
+                    </td></tr>
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                3:
+                                &nbsp;&nbsp;&nbsp;&nbsp;    out <span style="color: #666666">=</span> np<span style="color: #666666">.</span>empty_like(x)
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 0<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;x = arg(0, name=x)  :: array(float32, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;y = arg(1, name=y)  :: array(float32, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$2load_global.0 = global(np: &lt;module &#39;numpy&#39; from &#39;/home/betcke/miniconda3/envs/dev/lib/python3.8/site-packages/numpy/__init__.py&#39;&gt;)  :: Module(&lt;module &#39;numpy&#39; from &#39;/home/betcke/miniconda3/envs/dev/lib/python3.8/site-packages/numpy/__init__.py&#39;&gt;)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$4load_method.1 = getattr(value=$2load_global.0, attr=empty_like)  :: Function(&lt;function empty_like at 0x7f474029c700&gt;)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $2load_global.0<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$8call_method.3 = call $4load_method.1(x, func=$4load_method.1, args=[Var(x, &lt;ipython-input-12-115e70afe30f&gt;:3)], kws=(), vararg=None)  :: (array(float32, 1d, C),) -&gt; array(float32, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $4load_method.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;out = $8call_method.3  :: array(float32, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $8call_method.3<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                4:
+                                &nbsp;&nbsp;&nbsp;&nbsp;    <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(x<span style="color: #666666">.</span>shape[<span style="color: #666666">0</span>]):
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$12load_global.4 = global(range: &lt;class &#39;range&#39;&gt;)  :: Function(&lt;class &#39;range&#39;&gt;)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$16load_attr.6 = getattr(value=x, attr=shape)  :: UniTuple(int64 x 1)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$const18.7 = const(int, 0)  :: Literal[int](0)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$20binary_subscr.8 = static_getitem(value=$16load_attr.6, index=0, index_var=$const18.7)  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $const18.7<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $16load_attr.6<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$22call_function.9 = call $12load_global.4($20binary_subscr.8, func=$12load_global.4, args=[Var($20binary_subscr.8, &lt;ipython-input-12-115e70afe30f&gt;:4)], kws=(), vararg=None)  :: (int64,) -&gt; range_state_int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $20binary_subscr.8<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $12load_global.4<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$24get_iter.10 = getiter(value=$22call_function.9)  :: range_iter_int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $22call_function.9<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$phi26.0 = $24get_iter.10  :: range_iter_int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $24get_iter.10<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;jump 26<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 26<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$26for_iter.1 = iternext(value=$phi26.0)  :: pair&lt;int64, bool&gt;<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$26for_iter.2 = pair_first(value=$26for_iter.1)  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$26for_iter.3 = pair_second(value=$26for_iter.1)  :: bool<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$phi28.1 = $26for_iter.2  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.2<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;branch $26for_iter.3, 28, 72<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 28<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.3<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;i = $phi28.1  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $phi28.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                5:
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        out[i] <span style="color: #666666">=</span> <span style="color: #666666">2</span> <span style="color: #666666">*</span> (x[i] <span style="color: #666666">-</span> y[i]) <span style="color: #666666">/</span> (x[i] <span style="color: #666666">+</span> y[i])
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$const30.2 = const(int, 2)  :: Literal[int](2)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$36binary_subscr.5 = getitem(value=x, index=i)  :: float32<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$42binary_subscr.8 = getitem(value=y, index=i)  :: float32<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$44binary_subtract.9 = $36binary_subscr.5 - $42binary_subscr.8  :: float32<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $42binary_subscr.8<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $36binary_subscr.5<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$46binary_multiply.10 = $const30.2 * $44binary_subtract.9  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $const30.2<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $44binary_subtract.9<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$52binary_subscr.13 = getitem(value=x, index=i)  :: float32<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$58binary_subscr.16 = getitem(value=y, index=i)  :: float32<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$60binary_add.17 = $52binary_subscr.13 + $58binary_subscr.16  :: float32<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $58binary_subscr.16<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $52binary_subscr.13<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$62binary_true_divide.18 = $46binary_multiply.10 / $60binary_add.17  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $60binary_add.17<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $46binary_multiply.10<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;out[i] = $62binary_true_divide.18  :: (array(float32, 1d, C), int64, float64) -&gt; none<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del i<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $62binary_true_divide.18<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;jump 26<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                6:
+                                &nbsp;&nbsp;&nbsp;&nbsp;    <span style="color: #008000; font-weight: bold">return</span> out
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 72<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del y<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del x<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $phi28.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $phi26.0<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.3<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$74return_value.1 = cast(value=out)  :: array(float32, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del out<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;return $74return_value.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+                </table>
+        </div>
+
+        <div class="metadata">
+        Function name: frac_diff2<br />
+
+            in file: &lt;ipython-input-12-115e70afe30f&gt;<br />
+
+        with signature: (array(float64, 1d, C), array(float64, 1d, C)) -&gt; array(float64, 1d, C)
+        </div>
+        <div class="annotations">
+        <table class="annotation_table tex2jax_ignore"><tr><td style=" padding-left: 22px;" class="">
+                        <code>
+                            1:
+                            <span style="color: #AA22FF">@jit</span>(nopython<span style="color: #666666">=</span><span style="color: #008000; font-weight: bold">True</span>, error_model<span style="color: #666666">=</span><span style="color: #BA2121">&#39;numpy&#39;</span>)
+                        </code>
+                    </td></tr><tr><td style=" padding-left: 22px;" class="">
+                        <code>
+                            2:
+                            <span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">frac_diff2</span>(x, y):
+                        </code>
+                    </td></tr>
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                3:
+                                &nbsp;&nbsp;&nbsp;&nbsp;    out <span style="color: #666666">=</span> np<span style="color: #666666">.</span>empty_like(x)
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 0<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;x = arg(0, name=x)  :: array(float64, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;y = arg(1, name=y)  :: array(float64, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$2load_global.0 = global(np: &lt;module &#39;numpy&#39; from &#39;/home/betcke/miniconda3/envs/dev/lib/python3.8/site-packages/numpy/__init__.py&#39;&gt;)  :: Module(&lt;module &#39;numpy&#39; from &#39;/home/betcke/miniconda3/envs/dev/lib/python3.8/site-packages/numpy/__init__.py&#39;&gt;)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$4load_method.1 = getattr(value=$2load_global.0, attr=empty_like)  :: Function(&lt;function empty_like at 0x7f474029c700&gt;)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $2load_global.0<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$8call_method.3 = call $4load_method.1(x, func=$4load_method.1, args=[Var(x, &lt;ipython-input-12-115e70afe30f&gt;:3)], kws=(), vararg=None)  :: (array(float64, 1d, C),) -&gt; array(float64, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $4load_method.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;out = $8call_method.3  :: array(float64, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $8call_method.3<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                4:
+                                &nbsp;&nbsp;&nbsp;&nbsp;    <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(x<span style="color: #666666">.</span>shape[<span style="color: #666666">0</span>]):
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$12load_global.4 = global(range: &lt;class &#39;range&#39;&gt;)  :: Function(&lt;class &#39;range&#39;&gt;)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$16load_attr.6 = getattr(value=x, attr=shape)  :: UniTuple(int64 x 1)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$const18.7 = const(int, 0)  :: Literal[int](0)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$20binary_subscr.8 = static_getitem(value=$16load_attr.6, index=0, index_var=$const18.7)  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $const18.7<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $16load_attr.6<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$22call_function.9 = call $12load_global.4($20binary_subscr.8, func=$12load_global.4, args=[Var($20binary_subscr.8, &lt;ipython-input-12-115e70afe30f&gt;:4)], kws=(), vararg=None)  :: (int64,) -&gt; range_state_int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $20binary_subscr.8<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $12load_global.4<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$24get_iter.10 = getiter(value=$22call_function.9)  :: range_iter_int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $22call_function.9<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$phi26.0 = $24get_iter.10  :: range_iter_int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $24get_iter.10<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;jump 26<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 26<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$26for_iter.1 = iternext(value=$phi26.0)  :: pair&lt;int64, bool&gt;<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$26for_iter.2 = pair_first(value=$26for_iter.1)  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$26for_iter.3 = pair_second(value=$26for_iter.1)  :: bool<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$phi28.1 = $26for_iter.2  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.2<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;branch $26for_iter.3, 28, 72<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 28<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.3<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;i = $phi28.1  :: int64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $phi28.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                5:
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        out[i] <span style="color: #666666">=</span> <span style="color: #666666">2</span> <span style="color: #666666">*</span> (x[i] <span style="color: #666666">-</span> y[i]) <span style="color: #666666">/</span> (x[i] <span style="color: #666666">+</span> y[i])
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$const30.2 = const(int, 2)  :: Literal[int](2)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$36binary_subscr.5 = getitem(value=x, index=i)  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$42binary_subscr.8 = getitem(value=y, index=i)  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$44binary_subtract.9 = $36binary_subscr.5 - $42binary_subscr.8  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $42binary_subscr.8<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $36binary_subscr.5<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$46binary_multiply.10 = $const30.2 * $44binary_subtract.9  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $const30.2<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $44binary_subtract.9<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$52binary_subscr.13 = getitem(value=x, index=i)  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$58binary_subscr.16 = getitem(value=y, index=i)  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$60binary_add.17 = $52binary_subscr.13 + $58binary_subscr.16  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $58binary_subscr.16<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $52binary_subscr.13<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$62binary_true_divide.18 = $46binary_multiply.10 / $60binary_add.17  :: float64<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $60binary_add.17<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $46binary_multiply.10<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;out[i] = $62binary_true_divide.18  :: (array(float64, 1d, C), int64, float64) -&gt; none<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del i<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $62binary_true_divide.18<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;jump 26<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+
+                    <tr><td class="">
+                        <details>
+                            <summary>
+                                <code>
+                                6:
+                                &nbsp;&nbsp;&nbsp;&nbsp;    <span style="color: #008000; font-weight: bold">return</span> out
+                                </code>
+                            </summary>
+                            <table class="annotation_table">
+                                <tbody>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            label 72<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del y<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del x<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $phi28.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $phi26.0<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del $26for_iter.3<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;$74return_value.1 = cast(value=out)  :: array(float64, 1d, C)<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;del out<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr>
+                                        <tr class="ir_code">
+                                            <td><code>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;return $74return_value.1<span class="object_tag"></span>
+                                            </code>
+                                            </td>
+                                        </tr></tbody>
+                            </table>
+                            </details>
+                    </td></tr>
+                </table>
+        </div>
+
+</body>
+</html>
+</div></div>
+</div>
+<p>If you expand out line 5 in the float32 version of the function, you will see the following bit of Numba IR:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$const28.2 = const(float, 2.0) :: float64
+$28.5 = getitem(value=x, index=i) :: float32
+$28.8 = getitem(value=y, index=i) :: float32
+$28.9 = $28.5 - $28.8 :: float32
+del $28.8
+del $28.5
+$28.10 = $const28.2 * $28.9 :: float64
+</pre></div>
+</div>
+<p>Notice that the constant <code class="docutils literal notranslate"><span class="pre">2</span></code> has been typed as a float64 value.  Later, this causes the multiplication <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">(x[i]</span> <span class="pre">-</span> <span class="pre">y[i]</span></code> to promote up to float64, and then the rest of the calculation becomes float64.  This is a situation where Numba is being overly conservative (and should be fixed at some point), but we can tweak this behavior by casting the constant to the type we want:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_model</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">frac_diff3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="c1"># Cast the constant using the dtype of the input</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="c1"># Could also use np.float32(2) to always use same type, regardless of input</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff3</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.6666667 , -0.66662216, -0.66657776, ..., -0.400032  ,
+       -0.40001604, -0.4       ], dtype=float32)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> frac_diff3(x32, y32)
+<span class="o">%</span><span class="k">timeit</span> frac_diff3(x64, y64)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.13 µs ± 11.6 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+5.23 µs ± 14.3 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now our float32 version is nice and speedy (and 6x faster than what we started with, if we only care about float32).</p>
+</div>
+<div class="section" id="simd-and-reductions">
+<h2>SIMD and Reductions<a class="headerlink" href="#simd-and-reductions" title="Permalink to this headline">¶</a></h2>
+<p>The autovectorizer can also optimize reduction loops, but only with permission.  Normally, compilers are very careful not to reorder floating point instructions because floating point arithmetic is approximate, so mathematically allowed transformations do not always give the same result.  For example, it is not generally true for floating point numbers that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">))</span> <span class="o">==</span> <span class="p">((</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For many situations, the round-off error that causes the difference between the left and the right is not important, so changing the order of additions is acceptable for a performance increase.</p>
+<p>To allow reordering of operations, we need to tell Numba to enable <code class="docutils literal notranslate"><span class="pre">fastmath</span></code> optimizations:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">do_sum</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="c1"># without fastmath, this loop must accumulate in strict order</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">acc</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastmath</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">do_sum_fast</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="c1"># with fastmath, the reduction can be vectorized as floating point</span>
+    <span class="c1"># reassociation is permitted.</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+        <span class="n">acc</span> <span class="o">+=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">acc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">do_sum</span><span class="p">(</span><span class="n">x32</span><span class="p">)</span>
+<span class="n">find_instr</span><span class="p">(</span><span class="n">do_sum</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;mulp&#39;</span><span class="p">)</span>  <span class="c1"># look for vector multiplication</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No instructions found
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">do_sum_fast</span><span class="p">(</span><span class="n">x32</span><span class="p">)</span>
+<span class="n">find_instr</span><span class="p">(</span><span class="n">do_sum_fast</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;mulp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>	vmulps	%xmm1, %xmm1, %xmm1
+	vmulps	%xmm7, %xmm7, %xmm4
+	vmulps	%xmm6, %xmm6, %xmm1
+	vmulps	%xmm5, %xmm5, %xmm1
+	vmulps	%xmm1, %xmm1, %xmm1
+</pre></div>
+</div>
+</div>
+</div>
+<p>The fast version is 2x faster:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> do_sum(x32)
+<span class="o">%</span><span class="k">timeit</span> do_sum_fast(x32)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.33 µs ± 56.9 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+4.76 µs ± 11.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="working_with_numba.html" title="previous page">Working with Numba</a>
+    <a class='right-next' id="next-link" href="numexpr.html" title="next page">A Numexpr example</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
