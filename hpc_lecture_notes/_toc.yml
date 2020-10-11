@@ -11,4 +11,6 @@
     - file: simd
     - file: numexpr
 
-
+- part: Assignments
+  chapters:
+    - file: assignment_1
