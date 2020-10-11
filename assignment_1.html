@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment 1 &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/sphinx-book-theme.2d2078699c18a0efb88233928e1cf6ed.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="A Numexpr example" href="numexpr.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Assignment 1
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/assignment_1.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/assignment_1.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        <a class="colab-button" href="https://colab.research.google.com/github/executablebooks/jupyter-book/blob/master/assignment_1.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
+                title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
+                    src="_static/images/logo_colab.png"
+                    alt="Interact on Colab">Colab</button></a>
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#part-1-basic-python">
+   Part 1 (basic Python)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#part-2-numba-acceleration-and-parallelisation">
+   Part 2 (Numba acceleration and parallelisation)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#part-3-visualisation">
+   Part 3 (Visualisation)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#advanced-problem">
+   Advanced Problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assessment-of-the-coursework">
+   Assessment of the coursework
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="assignment-1">
+<h1>Assignment 1<a class="headerlink" href="#assignment-1" title="Permalink to this headline">¶</a></h1>
+<p>We are given a 2-dimensional grid with points <span class="math notranslate nohighlight">\((i, j)\)</span>, <span class="math notranslate nohighlight">\(i, j = 0, \dots, N+1\)</span>. In this assignment we want to simulate a discrete diffusion process on the grid. We are starting with a distribution <span class="math notranslate nohighlight">\(u_0(i, j)\)</span> of function values on the grid points. The distribution process follows the following recurrence relation:</p>
+<div class="math notranslate nohighlight">
+\[
+u_{n+1}(i, j) = \frac{1}{4}\left[u_n(i+1, j) + u_n(i-1, j) + u_n(i, j+1) + u_n(i, j-1)\right],~i,j=1,\dots, N
+\]</div>
+<p>In other words, we are simply taking the average of the neighbouring grid points. We still need to fix the boundary values. Here, we just use the condition that the boundary values should remain constant, that is</p>
+<div class="math notranslate nohighlight">
+\[
+u_n(0, j) = u_0(0, j),\quad u_n(i, 0) = u_0(i, 0)
+\]</div>
+<div class="section" id="part-1-basic-python">
+<h2>Part 1 (basic Python)<a class="headerlink" href="#part-1-basic-python" title="Permalink to this headline">¶</a></h2>
+<p>We define the following skeleton of a Python function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">diffusion_iteration</span><span class="p">(</span><span class="n">un</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform one diffusion step for all given grid points.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    un : numpy.ndarray</span>
+<span class="sd">        Numpy array of type `float64` and dimension (N + 1, N + 1) that stores the</span>
+<span class="sd">        function values at step n.</span>
+<span class="sd">        </span>
+<span class="sd">    This function returns a Numpy array of dimension (N + 1, N + 1) of type `float64`</span>
+<span class="sd">    that contains the function values after performing one step of the above diffusion</span>
+<span class="sd">    iteration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Implement the function <code class="docutils literal notranslate"><span class="pre">diffusion_iteration</span></code> using pure Python without Numba acceleration. Benchmark the runtime of this function for growing dimensions N and plot the runtime against N. What overall complexity of the runtime with respect to the parameter N do you expect?</p>
+</div>
+<div class="section" id="part-2-numba-acceleration-and-parallelisation">
+<h2>Part 2 (Numba acceleration and parallelisation)<a class="headerlink" href="#part-2-numba-acceleration-and-parallelisation" title="Permalink to this headline">¶</a></h2>
+<p>Now optimise the function <code class="docutils literal notranslate"><span class="pre">diffusion_iteration</span></code> using Numba. In the first step develop a serial Numba implementation that does not use parallelisation. Repeat the benchmarking from the first part and compare the Numba compiled function against the pure Python version. What speed-up do you achieve with Numba? Once you have done this parallelise the function using <code class="docutils literal notranslate"><span class="pre">numba.prange</span></code>. Explain your parallelisation strategy and benchmark the resulting function. The function should parallelise almost perfectly. The optimal speed-up is roughly given by the number of physical CPU cores that you have. What is the actual speed-up that you measure compared to the theoretical speed-up?</p>
+</div>
+<div class="section" id="part-3-visualisation">
+<h2>Part 3 (Visualisation)<a class="headerlink" href="#part-3-visualisation" title="Permalink to this headline">¶</a></h2>
+<p>Assume we have some kind of material distribution <span class="math notranslate nohighlight">\(u_0\)</span>. Furthermore, we assume that all boundary values are <span class="math notranslate nohighlight">\(0\)</span>. We now want to visualize the diffusion process by generating a nice animation.
+We assume the grid size parameter <span class="math notranslate nohighlight">\(N\)</span> to be large enough such that by the discrete time <span class="math notranslate nohighlight">\(n\)</span> when diffusion process arrives at the boundary, the function values <span class="math notranslate nohighlight">\(u_n\)</span> are negligibly small.
+Think about a nice initial distribution <span class="math notranslate nohighlight">\(u_0\)</span> of values. Create a nice animation of 5 to 10 seconds in length that plots the iterates <span class="math notranslate nohighlight">\(u_n\)</span> one after another. In order to do this you can use the matplotlib function <code class="docutils literal notranslate"><span class="pre">imshow</span></code> to draw individual frames and the <code class="docutils literal notranslate"><span class="pre">FuncAnimation</span></code> class in Matplotlib to generate the animation. Some details about creating such a matplotlib animation is discussed in a <a class="reference external" href="https://stackoverflow.com/questions/17212722/matplotlib-imshow-how-to-animate">Stackoverflow thread</a>.</p>
+</div>
+<div class="section" id="advanced-problem">
+<h2>Advanced Problem<a class="headerlink" href="#advanced-problem" title="Permalink to this headline">¶</a></h2>
+<p>We could make the diffusion process more complicated by defining an index set <span class="math notranslate nohighlight">\(S = \{(i_0, j_0), (i_1, j_1), \dots \}\)</span> of interior indices at which we are keeping the interior iteration values constant, that is we set <span class="math notranslate nohighlight">\(u_n(i, j) = u_0(i, j)\)</span> for <span class="math notranslate nohighlight">\((i, j)\in S\)</span>. Implement a parallel Numba accelerated diffusion step that implements this additional condition and again create a nice visualisation. You need to change the interface of your <code class="docutils literal notranslate"><span class="pre">diffusion_interface</span></code> function to take an additional parameter <code class="docutils literal notranslate"><span class="pre">constant_indices</span></code> where you can pass the information about which indices should be kept constant. Explain the data structure you choose for this condition and how you implement it.</p>
+</div>
+<div class="section" id="assessment-of-the-coursework">
+<h2>Assessment of the coursework<a class="headerlink" href="#assessment-of-the-coursework" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The submission deadline for the coursework is <strong>Monday 19 October, 10am</strong>.</p></li>
+<li><p>Up to 80% of the coursework can be achieved by a perfect solution for Parts 1 to 3. The Advanced Problem is worth an additional 20%.</p></li>
+<li><p>The assignment does not require much code writing. But a strong emphasis is put on good explanations. Putting a few comment lines in your code is not sufficient as explanation. Use the Jupyter notebook capabilities and write good explanations about what you are doing and why you are doing it as markdown cells.</p></li>
+<li><p>Your code must be executable without any errors from scratch in Jupyter by choosing “Restart kernel and run all cells.” If this produces any errors, any code and explanations after the error occurs will be ignored for the marking. It is not the task of the markers to debug your code.</p></li>
+<li><p>The code should not run for much longer than 2 minutes on a typical laptop/desktop. This is a soft limit. If your notebook runs too long we reserve the right to reject it.</p></li>
+<li><p>In addition to core Python packages you are allowed to use Numpy, Numba, and matplotlib. No other packages are allowed and any such request will be rejected.</p></li>
+<li><p>Any matplotlib output must appear inside your notebook. For more information on how to do this see here: https://medium.com/&#64;1522933668924/using-matplotlib-in-jupyter-notebooks-comparing-methods-and-some-tips-python-c38e85b40ba1. A tutorial on embedding animations is shown here:
+http://louistiao.me/posts/notebooks/embedding-matplotlib-animations-in-jupyter-as-interactive-javascript-widgets/</p></li>
+<li><p>You must submit your solution as a single Jupyter Notebook file with ending <code class="docutils literal notranslate"><span class="pre">*.ipynb</span></code>. <strong>Any other submission will lead to 0 marks automatically. Make sure you submit a correct Notebook file with the right ending.</strong>.</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="numexpr.html" title="previous page">A Numexpr example</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>

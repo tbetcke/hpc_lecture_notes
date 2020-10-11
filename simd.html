@@ -145,6 +145,18 @@
   </a>
  </li>
 </ul>
+<p class="caption">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_1.html">
+   Assignment 1
+  </a>
+ </li>
+</ul>
 
 </nav>
 
@@ -376,8 +388,8 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.69 µs ± 29.2 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
-3.43 µs ± 29.3 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.95 µs ± 101 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+3.81 µs ± 73.8 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 </pre></div>
 </div>
 </div>
@@ -457,7 +469,7 @@ float64:
 <p>The problem is that division by zero can behave in two different ways:</p>
 <ul class="simple">
 <li><p>In Python, division by zero raises an exception.</p></li>
-<li><p>In NumPy, division by zero results in a <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, like in C.</p></li>
+<li><p>In NumPy, division by zero results in a <code class="docutils literal notranslate"><span class="pre">NaN</span></code> or <code class="docutils literal notranslate"><span class="pre">inf</span></code>, like in C.</p></li>
 </ul>
 <p>By default, Numba <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> follows the Python convention, and <code class="docutils literal notranslate"><span class="pre">&#64;vectorize</span></code>/<code class="docutils literal notranslate"><span class="pre">&#64;guvectorize</span></code> follow the NumPy convention.  When following the Python convention, a simple division operation <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">/</span> <span class="pre">y</span></code> expands out into something like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
@@ -519,8 +531,8 @@ float64:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.22 µs ± 39.6 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
-5.22 µs ± 21.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.84 µs ± 45.3 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+5.83 µs ± 61.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 </pre></div>
 </div>
 </div>
@@ -684,7 +696,7 @@ float64:
                                         <tr class="ir_code">
                                             <td><code>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            &nbsp;&nbsp;$4load_method.1 = getattr(value=$2load_global.0, attr=empty_like)  :: Function(&lt;function empty_like at 0x7f474029c700&gt;)<span class="object_tag"></span>
+                                            &nbsp;&nbsp;$4load_method.1 = getattr(value=$2load_global.0, attr=empty_like)  :: Function(&lt;function empty_like at 0x7f829875c700&gt;)<span class="object_tag"></span>
                                             </code>
                                             </td>
                                         </tr>
@@ -1223,7 +1235,7 @@ float64:
                                         <tr class="ir_code">
                                             <td><code>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            &nbsp;&nbsp;$4load_method.1 = getattr(value=$2load_global.0, attr=empty_like)  :: Function(&lt;function empty_like at 0x7f474029c700&gt;)<span class="object_tag"></span>
+                                            &nbsp;&nbsp;$4load_method.1 = getattr(value=$2load_global.0, attr=empty_like)  :: Function(&lt;function empty_like at 0x7f829875c700&gt;)<span class="object_tag"></span>
                                             </code>
                                             </td>
                                         </tr>
@@ -1707,16 +1719,17 @@ float64:
 </div></div>
 </div>
 <p>If you expand out line 5 in the float32 version of the function, you will see the following bit of Numba IR:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$const28.2 = const(float, 2.0) :: float64
-$28.5 = getitem(value=x, index=i) :: float32
-$28.8 = getitem(value=y, index=i) :: float32
-$28.9 = $28.5 - $28.8 :: float32
-del $28.8
-del $28.5
-$28.10 = $const28.2 * $28.9 :: float64
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            $const30.2 = const(int, 2) :: Literal[int](2)
+            $36binary_subscr.5 = getitem(value=x, index=i) :: float32
+            $42binary_subscr.8 = getitem(value=y, index=i) :: float32
+            $44binary_subtract.9 = $36binary_subscr.5 - $42binary_subscr.8 :: float32
+            del $42binary_subscr.8
+            del $36binary_subscr.5
+            $46binary_multiply.10 = $const30.2 * $44binary_subtract.9 :: float64```
+
+Notice that the constant `2` has been typed as an int value.  Later, this causes the multiplication `2 * (x[i] - y[i]` to promote up to float64, and then the rest of the calculation becomes float64.  This is a situation where Numba is being overly conservative (and should be fixed at some point), but we can tweak this behavior by casting the constant to the type we want:
 </pre></div>
 </div>
-<p>Notice that the constant <code class="docutils literal notranslate"><span class="pre">2</span></code> has been typed as a float64 value.  Later, this causes the multiplication <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">(x[i]</span> <span class="pre">-</span> <span class="pre">y[i]</span></code> to promote up to float64, and then the rest of the calculation becomes float64.  This is a situation where Numba is being overly conservative (and should be fixed at some point), but we can tweak this behavior by casting the constant to the type we want:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_model</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
@@ -1752,8 +1765,8 @@ $28.10 = $const28.2 * $28.9 :: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.13 µs ± 11.6 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
-5.23 µs ± 14.3 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.27 µs ± 17.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+5.84 µs ± 99.8 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 </pre></div>
 </div>
 </div>
@@ -1829,8 +1842,8 @@ $28.10 = $const28.2 * $28.9 :: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.33 µs ± 56.9 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
-4.76 µs ± 11.4 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.96 µs ± 135 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+5.11 µs ± 68 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 </pre></div>
 </div>
 </div>
