@@ -295,7 +295,7 @@ u_{n+1}(i, j) = \frac{1}{4}\left[u_n(i+1, j) + u_n(i-1, j) + u_n(i, j+1) + u_n(i
 <p>In other words, we are simply taking the average of the neighbouring grid points. We still need to fix the boundary values. Here, we just use the condition that the boundary values should remain constant, that is</p>
 <div class="math notranslate nohighlight">
 \[
-u_n(0, j) = u_0(0, j),\quad u_n(i, 0) = u_0(i, 0)
+u_n(0, j) = u_0(0, j),\quad u_n(i, 0) = u_0(i, 0), \quad u_n(N + 1, j) = u_0(N + 1, j), \quad u_n(i, N + 1) = u_0(i, N + 1)
 \]</div>
 <div class="section" id="part-1-basic-python">
 <h2>Part 1 (basic Python)<a class="headerlink" href="#part-1-basic-python" title="Permalink to this headline">¶</a></h2>
