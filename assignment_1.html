@@ -57,7 +57,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="A Numexpr example" href="numexpr.html" />
+    <link rel="prev" title="An Introduction to GPU Computing" href="gpu_introduction.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -141,6 +141,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="numexpr.html">
    A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
   </a>
  </li>
 </ul>
@@ -309,10 +314,10 @@ u_n(0, j) = u_0(0, j),\quad u_n(i, 0) = u_0(i, 0), \quad u_n(N + 1, j) = u_0(N +
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    un : numpy.ndarray</span>
-<span class="sd">        Numpy array of type `float64` and dimension (N + 1, N + 1) that stores the</span>
+<span class="sd">        Numpy array of type `float64` and dimension (N + 2, N + 2) that stores the</span>
 <span class="sd">        function values at step n.</span>
 <span class="sd">        </span>
-<span class="sd">    This function returns a Numpy array of dimension (N + 1, N + 1) of type `float64`</span>
+<span class="sd">    This function returns a Numpy array of dimension (N + 2, N + 2) of type `float64`</span>
 <span class="sd">    that contains the function values after performing one step of the above diffusion</span>
 <span class="sd">    iteration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -381,7 +386,7 @@ http://louistiao.me/posts/notebooks/embedding-matplotlib-animations-in-jupyter-a
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="numexpr.html" title="previous page">A Numexpr example</a>
+    <a class='left-prev' id="prev-link" href="gpu_introduction.html" title="previous page">An Introduction to GPU Computing</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
