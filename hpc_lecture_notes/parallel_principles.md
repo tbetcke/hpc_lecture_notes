@@ -123,7 +123,7 @@ b = np.random.randn(n)
 
 c = np.empty(n, dtype='float64')
 
-numba.njit(parallel=True)
+@numba.njit(parallel=True)
 def numba_fun(arr1, arr2, arr3):
     """The thread worker."""
 

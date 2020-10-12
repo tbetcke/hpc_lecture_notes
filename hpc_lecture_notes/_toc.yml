@@ -10,6 +10,7 @@
     - file: working_with_numba
     - file: simd
     - file: numexpr
+    - file: gpu_introduction
 
 - part: Assignments
   chapters:
