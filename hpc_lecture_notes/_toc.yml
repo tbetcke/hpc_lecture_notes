@@ -11,6 +11,7 @@
     - file: simd
     - file: numexpr
     - file: gpu_introduction
+    - file: cuda_introduction
 
 - part: Assignments
   chapters:
