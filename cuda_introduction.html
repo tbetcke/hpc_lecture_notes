@@ -239,8 +239,8 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#structure-of-nvidia-gpu-accelerators">
-   Structure of Nvidia GPU accelerators
+  <a class="reference internal nav-link" href="#cuda-device-model">
+   CUDA Device Model
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -254,11 +254,16 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#a-simple-example">
-     A simple example
+    <a class="reference internal nav-link" href="#memory-hierarchy">
+     Memory Hierarchy
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#an-example">
+   An example
+  </a>
  </li>
 </ul>
 
@@ -274,8 +279,8 @@
   <div class="section" id="a-tour-of-cuda">
 <h1>A tour of CUDA<a class="headerlink" href="#a-tour-of-cuda" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we will dive into CUDA, the standard GPU development model for Nvidia devices. To understand the basics of CUDA we first need to understand how GPU devices are organised.</p>
-<div class="section" id="structure-of-nvidia-gpu-accelerators">
-<h2>Structure of Nvidia GPU accelerators<a class="headerlink" href="#structure-of-nvidia-gpu-accelerators" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cuda-device-model">
+<h2>CUDA Device Model<a class="headerlink" href="#cuda-device-model" title="Permalink to this headline">¶</a></h2>
 <p>At its most basic level, GPU accelerators are massively parallel compute devices that can run a huge number of threads concurrently. Compute devices have global memory, shared memory and local memory for threads. Moreover, threads are grouped into thread blocks that allow shared memory access. We will discuss all these points in more detail below.</p>
 <div class="section" id="threads-cuda-cores-warps-and-streaming-multiprocessors">
 <h3>Threads, Cuda Cores, Warps and Streaming Multiprocessors<a class="headerlink" href="#threads-cuda-cores-warps-and-streaming-multiprocessors" title="Permalink to this headline">¶</a></h3>
@@ -290,8 +295,63 @@
 <p><img alt="Thread Numbering" src="_images/thread_numbering.png" /></p>
 <p>As mentioned above, threads are organised in thread blocks. All thread blocks together form a thread grid. The thread grid does not need to be one-dimensional. It can also be two or three dimensional. This is convenient if the computational domain is better represented in two or three dimensions. The figure demonstrates how for one dimension the global thread number of a thread block is computed.</p>
 </div>
-<div class="section" id="a-simple-example">
-<h3>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="memory-hierarchy">
+<h3>Memory Hierarchy<a class="headerlink" href="#memory-hierarchy" title="Permalink to this headline">¶</a></h3>
+<p>CUDA knows three types of memory</p>
+<ul class="simple">
+<li><p>The <strong>global memory</strong> is a block of memory accessible by all threads in a device. This is the largest chunk of memory and the place where we create GPU buffers to store our input to computations and output results. While a GPU typically has a few Gigabytes of global memory, access to it is relatively slow from the individual threads.</p></li>
+<li><p>All threads within a given block have access to local <strong>shared memory</strong>. This shared memory is fast and available within the lifetime of the thread block. Together with local synchronisation it can be efficiently used to process workload within a given thread block without having to write back and forth to the global memory.</p></li>
+<li><p>Each thread has its own <strong>private memory</strong>. This is very fast and used to store local intermediate results that are only needed in the current thread.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="an-example">
+<h2>An example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h2>
+<p>The following example from the <a class="reference external" href="https://numba.pydata.org/numba-doc/dev/cuda/examples.html#matrix-multiplication">official Numba documentation</a> uses all of the above mentioned principles. It is an implementation of a matrix-matrix product that makes use of shared memory for block-wise multiplication.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>from numba import cuda, float32
+
+# Controls threads per block and shared memory usage.
+# The computation will be done on blocks of TPBxTPB elements.
+TPB = 16
+
+@cuda.jit
+def fast_matmul(A, B, C):
+    # Define an array in the shared memory
+    # The size and type of the arrays must be known at compile time
+    sA = cuda.shared.array(shape=(TPB, TPB), dtype=float32)
+    sB = cuda.shared.array(shape=(TPB, TPB), dtype=float32)
+
+    x, y = cuda.grid(2)
+
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bpg = cuda.gridDim.x    # blocks per grid
+
+    if x &gt;= C.shape[0] and y &gt;= C.shape[1]:
+        # Quit if (x, y) is outside of valid C boundary
+        return
+
+    # Each thread computes one element in the result matrix.
+    # The dot product is chunked into dot products of TPB-long vectors.
+    tmp = 0.
+    for i in range(bpg):
+        # Preload data into shared memory
+        sA[tx, ty] = A[x, ty + i * TPB]
+        sB[tx, ty] = B[tx + i * TPB, y]
+
+        # Wait until all threads finish preloading
+        cuda.syncthreads()
+
+        # Computes partial product on the shared memory
+        for j in range(TPB):
+            tmp += sA[tx, j] * sB[j, ty]
+
+        # Wait until all threads finish computing
+        cuda.syncthreads()
+
+    C[x, y] = tmp
+    ```
+</pre></div>
 </div>
 </div>
 </div>

@@ -423,7 +423,14 @@ it depends on Nvidia’s proprietary Cuda drivers and is restricted to Nvida har
 <div class="section" id="numba-and-cuda">
 <h2>Numba and Cuda<a class="headerlink" href="#numba-and-cuda" title="Permalink to this headline">¶</a></h2>
 <p>In this module we will dive into GPU computing using Numba. Numba allows the JIT Compilation of Python code to Cuda devices. It is very easy to use and supports almost all modern Cuda features. A simple taster example is given below. It is a Cuda accelerated Numba version of the Mandelbrot example from <a class="reference external" href="https://developer.nvidia.com/blog/numba-python-cuda-acceleration/">https://developer.nvidia.com/blog/numba-python-cuda-acceleration/</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">imshow</span>
+
+
+<span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">mandel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">max_iters</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Given the real and imaginary parts of a complex number,</span>
@@ -462,13 +469,9 @@ it depends on Nvidia’s proprietary Cuda drivers and is restricted to Nvida har
 <span class="n">blockdim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 <span class="n">griddim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
 
-<span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 <span class="n">d_image</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">gimage</span><span class="p">)</span>
 <span class="n">mandel_kernel</span><span class="p">[</span><span class="n">griddim</span><span class="p">,</span> <span class="n">blockdim</span><span class="p">](</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">d_image</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> 
 <span class="n">d_image</span><span class="o">.</span><span class="n">to_host</span><span class="p">()</span>
-<span class="n">dt</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
-
-<span class="nb">print</span> <span class="s2">&quot;Mandelbrot created on GPU in </span><span class="si">%f</span><span class="s2"> s&quot;</span> <span class="o">%</span> <span class="n">dt</span>
 
 <span class="n">imshow</span><span class="p">(</span><span class="n">gimage</span><span class="p">)</span>
 </pre></div>
