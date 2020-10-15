@@ -138,6 +138,13 @@ In the following we provide simple examples from the PyCUDA and PyOpenCL documen
 In this module we will dive into GPU computing using Numba. Numba allows the JIT Compilation of Python code to Cuda devices. It is very easy to use and supports almost all modern Cuda features. A simple taster example is given below. It is a Cuda accelerated Numba version of the Mandelbrot example from [https://developer.nvidia.com/blog/numba-python-cuda-acceleration/](https://developer.nvidia.com/blog/numba-python-cuda-acceleration/).
 
 ```python
+%matplotlib inline
+
+import numpy as np
+from numba import cuda
+from matplotlib.pyplot import imshow
+
+
 @cuda.jit(device=True)
 def mandel(x, y, max_iters):
   """
@@ -177,13 +184,9 @@ gimage = np.zeros((1024, 1536), dtype = np.uint8)
 blockdim = (32, 8)
 griddim = (32,16)
 
-start = timer()
 d_image = cuda.to_device(gimage)
 mandel_kernel[griddim, blockdim](-2.0, 1.0, -1.0, 1.0, d_image, 20) 
 d_image.to_host()
-dt = timer() - start
-
-print "Mandelbrot created on GPU in %f s" % dt
 
 imshow(gimage)
 ```
