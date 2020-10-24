@@ -12,6 +12,8 @@
     - file: numexpr
     - file: gpu_introduction
     - file: cuda_introduction
+    - file: numba_cuda
+    - file: rbf_evaluation
 
 - part: Assignments
   chapters:
