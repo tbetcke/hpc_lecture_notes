@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Numba Cuda in Practice &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/sphinx-book-theme.2d2078699c18a0efb88233928e1cf6ed.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GPU accelerated evaluation of particle sums" href="rbf_evaluation.html" />
+    <link rel="prev" title="A tour of CUDA" href="cuda_introduction.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
+   A tour of CUDA
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Numba Cuda in Practice
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rbf_evaluation.html">
+   GPU accelerated evaluation of particle sums
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_1.html">
+   Assignment 1
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/numba_cuda.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numba_cuda.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#finding-out-about-cuda-devices">
+   Finding out about Cuda devices
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#launching-kernels">
+   Launching kernels
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#python-features-in-numba-for-cuda">
+   Python features in Numba for Cuda
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#memory-management">
+   Memory management
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#advanced-features">
+   Advanced features
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="numba-cuda-in-practice">
+<h1>Numba Cuda in Practice<a class="headerlink" href="#numba-cuda-in-practice" title="Permalink to this headline">¶</a></h1>
+<p>To enable Cuda in Numba with conda just execute <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">cudatoolkit</span></code> on the command line.</p>
+<p>The Cuda extension supports almost all Cuda features with the exception of dynamic parallelism and texture memory.  Dynamic parallelism allows to launch compute kernel from within other compute kernels. Texture memory has a caching pattern based on spatial locality. We will not go into detail of these here.</p>
+<div class="section" id="finding-out-about-cuda-devices">
+<h2>Finding out about Cuda devices<a class="headerlink" href="#finding-out-about-cuda-devices" title="Permalink to this headline">¶</a></h2>
+<p>Let us first check what kind of Cuda device we have in the system.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cuda</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found 1 CUDA devices
+id 0      b&#39;Quadro RTX 3000&#39;                              [SUPPORTED]
+                      compute capability: 7.5
+                           pci device id: 0
+                              pci bus id: 1
+Summary:
+	1/1 devices are supported
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="launching-kernels">
+<h2>Launching kernels<a class="headerlink" href="#launching-kernels" title="Permalink to this headline">¶</a></h2>
+<p>Launching a Cuda kernel from Numba is very easy. A kernel is defined by using the <code class="docutils literal notranslate"><span class="pre">&#64;cuda.jit</span></code> decorator as</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">an_empty_kernel</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;A kernel that doesn&#39;t do anything.&quot;&quot;&quot;</span>
+    <span class="c1"># Get my current position in the global grid</span>
+    <span class="p">[</span><span class="n">pos_x</span><span class="p">,</span> <span class="n">pos_y</span><span class="p">]</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The type of the kernel is</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">an_empty_kernel</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;numba.cuda.compiler.Dispatcher at 0x7f0dfc812d90&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In order to launch the kernel we need to specify the thread layout. The following commands define a two dimensional thread layout of <span class="math notranslate nohighlight">\(16\times 16\)</span> threads per block and <span class="math notranslate nohighlight">\(256\times 256\)</span> threads. In total this gives us <span class="math notranslate nohighlight">\(16,777,216\)</span> threads. This sounds huge. But GPUs are designed to launch large amounts of threads. The only restriction is that we are allowed to have at most 1024 threads in total (product of all dimensions) within a single thread block.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">threadsperblock</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="c1"># Should be a multiple of 32 if possible.</span>
+<span class="n">blockspergrid</span> <span class="o">=</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span> <span class="c1"># Blocks per grid</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now launch all 16.8 million threads by calling</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">an_empty_kernel</span><span class="p">[</span><span class="n">blockspergrid</span><span class="p">,</span> <span class="n">threadsperblock</span><span class="p">]()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Inside a kernel we can use the following commands to get the position of the thread.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">another_kernel</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Commands to get thread positions&quot;&quot;&quot;</span>
+    <span class="c1"># Get the thread position in a thread block</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">tz</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">z</span>
+    
+    <span class="c1"># Get the id of the thread block</span>
+    <span class="n">block_x</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">block_y</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">block_z</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockIdx</span><span class="o">.</span><span class="n">z</span>
+    
+    <span class="c1"># Number of threads per block</span>
+    <span class="n">dim_x</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">dim_y</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">dim_z</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">blockDim</span><span class="o">.</span><span class="n">z</span>
+    
+    <span class="c1"># Global thread position</span>
+    <span class="n">pos_x</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">block_x</span> <span class="o">*</span> <span class="n">dim_x</span>
+    <span class="n">pos_y</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">block_y</span> <span class="o">*</span> <span class="n">dim_y</span>
+    <span class="n">pos_z</span> <span class="o">=</span> <span class="n">tz</span> <span class="o">+</span> <span class="n">block_z</span> <span class="o">*</span> <span class="n">dim_z</span>
+    
+    <span class="c1"># We can also use the grid function to get</span>
+    <span class="c1"># the global position</span>
+    
+    <span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="n">pos_y</span><span class="p">,</span> <span class="n">pos_z</span><span class="p">)</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># For a 1-or 2-d grid use grid(1) or grid(2)</span>
+    <span class="c1"># to return a scalar or a two tuple.</span>
+    
+    
+<span class="n">threadsperblock</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="c1"># Should be a multiple of 32 if possible.</span>
+<span class="n">blockspergrid</span> <span class="o">=</span> <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span> <span class="c1"># Blocks per grid</span>
+
+<span class="n">another_kernel</span><span class="p">[</span><span class="n">blockspergrid</span><span class="p">,</span> <span class="n">threadsperblock</span><span class="p">]()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="python-features-in-numba-for-cuda">
+<h2>Python features in Numba for Cuda<a class="headerlink" href="#python-features-in-numba-for-cuda" title="Permalink to this headline">¶</a></h2>
+<p>Numba supports in Cuda kernels only a selected set of features that are supported by the Cuda standard. Not allowed are exceptions, context managers, list comprehensions and yield statements. Supported types are <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>. For a complete overview of supported features see <a class="reference external" href="https://numba.pydata.org/numba-doc/dev/cuda/cudapysupported.html">https://numba.pydata.org/numba-doc/dev/cuda/cudapysupported.html#</a>. Only a small set of Numpy functions are supported. Essentially, everything that does require dynamic memory management will not work due to the restrictions on kernels from the Cuda programming model.</p>
+</div>
+<div class="section" id="memory-management">
+<h2>Memory management<a class="headerlink" href="#memory-management" title="Permalink to this headline">¶</a></h2>
+<p>For simple kernels we can rely on Numba copying data to and from the device. For more complex code we need to manually manage buffers on the device.</p>
+<p>Copy data to the device</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">device_arr</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">to_device</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Copy data from the device back to the host</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">host_arr</span> <span class="o">=</span> <span class="n">device_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Copy into an existing array</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">host_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">device_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">device_arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">device_arr</span><span class="o">.</span><span class="n">copy_to_host</span><span class="p">(</span><span class="n">host_array</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Generate a new array on the device</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device_array</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">device_array</span><span class="p">((</span><span class="mi">10</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="advanced-features">
+<h2>Advanced features<a class="headerlink" href="#advanced-features" title="Permalink to this headline">¶</a></h2>
+<p>Cuda has a number of advanced features that are supported by Numba. Some of them are:</p>
+<ul class="simple">
+<li><p>Pinned Memory is a form of memory allocation that allows much faster data transfer than standard buffers.</p></li>
+<li><p>Streams are a way to run multiple tasks on a GPU concurrently. By default, Cuda executes one command after another on the device. Streams allow us to create several concurrent queues for scheduling tasks onto the device. This allows for example to have a kernel stream that performs computations and a memory stream that does memory transfers, concurrently. One can use events to synchronize between different streams.</p></li>
+<li><p>Multiple devices are well supported by Numba. There exist helper routines to enumerate and select different devices.</p></li>
+</ul>
+<p>For a full list of features check out the guide at <a class="reference external" href="https://numba.pydata.org/numba-doc/latest/cuda/index.html">https://numba.pydata.org/numba-doc/latest/cuda/index.html</a></p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-dev-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-dev-py",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-dev-py'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="cuda_introduction.html" title="previous page">A tour of CUDA</a>
+    <a class='right-next' id="next-link" href="rbf_evaluation.html" title="next page">GPU accelerated evaluation of particle sums</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
