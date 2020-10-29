@@ -14,7 +14,10 @@
     - file: cuda_introduction
     - file: numba_cuda
     - file: rbf_evaluation
-
+- part: Sparse Linear Algebra
+  chapters:
+    - file: sparse_linalg_pde
+    - file: sparse_data_structures
 - part: Assignments
   chapters:
     - file: assignment_1
