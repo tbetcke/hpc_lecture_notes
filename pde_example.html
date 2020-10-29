@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Techniques of High-Performance Computing &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>The need for sparse linear algebra - A PDE example &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -57,7 +57,6 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="What is High-Performance Computing?" href="what_is_hpc.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -92,7 +91,7 @@
 <nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <ul class="nav sidenav_l1">
  <li class="toctree-l1">
-  <a class="reference internal" href="#">
+  <a class="reference internal" href="intro.html">
    Welcome to Techniques of High-Performance Computing
   </a>
  </li>
@@ -234,7 +233,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/intro.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/pde_example.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -259,6 +258,20 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-a-poisson-problem-on-the-unit-square">
+   Solving a Poisson problem on the unit square.
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -266,22 +279,22 @@
         
               <div>
                 
-  <div class="section" id="welcome-to-techniques-of-high-performance-computing">
-<h1>Welcome to Techniques of High-Performance Computing<a class="headerlink" href="#welcome-to-techniques-of-high-performance-computing" title="Permalink to this headline">¶</a></h1>
-<p>In this module we learn a number of basic techniques from High-Performance Computing.
-The module starts with an introduction and overview of parallel computing techniques and
-programming languages. We then take a deeper dive into Python, the main language for this module.
-In particular, we will get to learn libraries and programming techniques that will allow us to
-take full advantage of modern programming architectures in Python.</p>
-<p>This will be followed by an introduction to sparse linear algebra for very large linear systems of
-equations. You will get to know the basics of sparse direct solvers and sparse iterative solvers.</p>
-<p>Finally, we will turn to partial differential equations and implement some typical PDEs using the
-techniques learned in this module.</p>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
+  <div class="section" id="the-need-for-sparse-linear-algebra-a-pde-example">
+<h1>The need for sparse linear algebra - A PDE example<a class="headerlink" href="#the-need-for-sparse-linear-algebra-a-pde-example" title="Permalink to this headline">¶</a></h1>
+<p>In modern applications we are dealing with matrices that have
+hundreds of thousands to billions of unknowns. A typical feature
+of these matrices is that they are highly sparse. Typically, by
+sparsity we mean that a matrix mostly consists of zero elements so
+that it is more economical not to store the whole matrix, but just
+the nonzero entries. This makes necessary different types of storage
+structures and algorithms to deal with these matrices and to efficiently
+exploit the sparsity property.</p>
+<p>Before we dive into sparse matrix storage format, we want to give a simple
+example that demonstrates the necessity of sparse matrix formats and
+algorithms to deal with them.</p>
+<div class="section" id="solving-a-poisson-problem-on-the-unit-square">
+<h2>Solving a Poisson problem on the unit square.<a class="headerlink" href="#solving-a-poisson-problem-on-the-unit-square" title="Permalink to this headline">¶</a></h2>
+<p>We consider the</p>
 </div>
 </div>
 
@@ -313,7 +326,6 @@ techniques learned in this module.</p>
     
     <div class='prev-next-bottom'>
         
-    <a class='right-next' id="next-link" href="what_is_hpc.html" title="next page">What is High-Performance Computing?</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
