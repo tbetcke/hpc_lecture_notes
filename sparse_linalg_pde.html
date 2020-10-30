@@ -333,7 +333,7 @@ u_{i,j} := u(x_i, y_j).
 \[
 A x = f
 \]</div>
-<p>with <span class="math notranslate nohighlight">\(f\)</span> being a vector of all ones and the vector <span class="math notranslate nohighlight">\(x\in\mathbb{R}^{N^2}\)</span> collects all the values <span class="math notranslate nohighlight">\(u_{i, j}\)</span> such that <span class="math notranslate nohighlight">\(u_{i, j} = x_{jN + i}\)</span>.</p>
+<p>with <span class="math notranslate nohighlight">\(f\)</span> being a vector of all ones for interior nodes and zero at the boundary and the vector <span class="math notranslate nohighlight">\(x\in\mathbb{R}^{N^2}\)</span> collects all the values <span class="math notranslate nohighlight">\(u_{i, j}\)</span> such that <span class="math notranslate nohighlight">\(u_{i, j} = x_{jN + i}\)</span>.</p>
 <p>We now want to implement the generation of the associated matrix. Let us calculate how many nonzero matrix elements we have. We have <span class="math notranslate nohighlight">\((N - 2)^2\)</span> interior points. Each row of <span class="math notranslate nohighlight">\(A\)</span> associated with an interior point has <span class="math notranslate nohighlight">\(5\)</span> entries. Furthermore, we have <span class="math notranslate nohighlight">\(4N - 4\)</span> boundary points. Each boundary point requires a single diagonal entry in the matrix <span class="math notranslate nohighlight">\(A\)</span>. In total we therefore have</p>
 <div class="math notranslate nohighlight">
 \[
@@ -347,35 +347,40 @@ A x = f
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
 
 <span class="k">def</span> <span class="nf">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate the matrix associated with the discrete Poisson operator.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Generate the matrix and rhs associated with the discrete Poisson operator.&quot;&quot;&quot;</span>
     
     <span class="n">nelements</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">16</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">16</span>
     
-    <span class="n">i_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">j_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">row_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">col_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    
     <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">i_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">row_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span>  <span class="mi">1</span>
+                <span class="n">f</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">i_ind</span><span class="p">[</span><span class="n">count</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">j_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">j_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="n">j_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="n">j_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">j_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">row_ind</span><span class="p">[</span><span class="n">count</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
                                 
                 <span class="n">data</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">f</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">5</span>
                                                 
-    <span class="k">return</span> <span class="n">coo_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">i_ind</span><span class="p">,</span> <span class="n">j_ind</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">coo_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">row_ind</span><span class="p">,</span> <span class="n">col_ind</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(),</span> <span class="n">f</span>
 </pre></div>
 </div>
 </div>
@@ -392,8 +397,7 @@ A x = f
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">200</span>
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">A</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 <span class="n">sol</span> <span class="o">=</span> <span class="n">spsolve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 
 <span class="n">u</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
@@ -420,7 +424,7 @@ A x = f
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7fb13c5a0fa0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f2d51275790&gt;
 </pre></div>
 </div>
 <img alt="_images/sparse_linalg_pde_9_1.png" src="_images/sparse_linalg_pde_9_1.png" />
@@ -435,7 +439,7 @@ A x = f
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7fb134313400&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f2d51275760&gt;
 </pre></div>
 </div>
 <img alt="_images/sparse_linalg_pde_11_1.png" src="_images/sparse_linalg_pde_11_1.png" />
@@ -456,7 +460,7 @@ A x = f
 </div>
 </div>
 </div>
-<p>What would the matrix have required had we stored a standard dense matrix? A single entry takes 8 bytes. We have <span class="math notranslate nohighlight">\(100^2\times 100^2\)</span> entries. This results in a matrix that would have required 763 MB Ram. Moreover, performing a dense linear system solve would have required significantly more time.</p>
+<p>What would the matrix have required had we stored a standard dense matrix? A single entry takes 8 bytes. We have <span class="math notranslate nohighlight">\(200^2\times 200^2\)</span> entries. This results in a matrix that would have required 12 GB Ram. Moreover, performing a dense linear system solve would have required significantly more time.</p>
 </div>
 </div>
 
