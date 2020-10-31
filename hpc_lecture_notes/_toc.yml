@@ -18,6 +18,8 @@
   chapters:
     - file: sparse_linalg_pde
     - file: sparse_data_structures
+    - file: sparse_solvers_introduction
+    - file: it_solvers1
 - part: Assignments
   chapters:
     - file: assignment_1
