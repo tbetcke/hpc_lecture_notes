@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The need for sparse linear algebra - A PDE example &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>An introduction to sparse linear system solvers &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method" href="it_solvers1.html" />
+    <link rel="prev" title="Sparse Matrix data structures" href="sparse_data_structures.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -168,7 +170,7 @@
   Sparse Linear Algebra
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="sparse_linalg_pde.html">
    The need for sparse linear algebra - A PDE example
@@ -179,8 +181,8 @@
    Sparse Matrix data structures
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_solvers_introduction.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    An introduction to sparse linear system solvers
   </a>
  </li>
@@ -248,9 +250,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/pde_example.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/sparse_solvers_introduction.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -268,6 +270,23 @@
 
         <!-- Launch buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/sparse_solvers_introduction.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
     </div>
 
     <!-- Table of contents -->
@@ -279,9 +298,21 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#solving-a-poisson-problem-on-the-unit-square">
-   Solving a Poisson problem on the unit square.
+  <a class="reference internal nav-link" href="#software-for-sparse-solvers">
+   Software for sparse solvers
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sparse-direct-solver-packages">
+     Sparse direct solver packages
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sparse-iterative-solvers">
+     Sparse iterative solvers
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -294,22 +325,45 @@
         
               <div>
                 
-  <div class="section" id="the-need-for-sparse-linear-algebra-a-pde-example">
-<h1>The need for sparse linear algebra - A PDE example<a class="headerlink" href="#the-need-for-sparse-linear-algebra-a-pde-example" title="Permalink to this headline">¶</a></h1>
-<p>In modern applications we are dealing with matrices that have
-hundreds of thousands to billions of unknowns. A typical feature
-of these matrices is that they are highly sparse. Typically, by
-sparsity we mean that a matrix mostly consists of zero elements so
-that it is more economical not to store the whole matrix, but just
-the nonzero entries. This makes necessary different types of storage
-structures and algorithms to deal with these matrices and to efficiently
-exploit the sparsity property.</p>
-<p>Before we dive into sparse matrix storage format, we want to give a simple
-example that demonstrates the necessity of sparse matrix formats and
-algorithms to deal with them.</p>
-<div class="section" id="solving-a-poisson-problem-on-the-unit-square">
-<h2>Solving a Poisson problem on the unit square.<a class="headerlink" href="#solving-a-poisson-problem-on-the-unit-square" title="Permalink to this headline">¶</a></h2>
-<p>We consider the</p>
+  <div class="section" id="an-introduction-to-sparse-linear-system-solvers">
+<h1>An introduction to sparse linear system solvers<a class="headerlink" href="#an-introduction-to-sparse-linear-system-solvers" title="Permalink to this headline">¶</a></h1>
+<p>We have seen that we can efficiently represent large sparse matrices with suitable data structures. Moreover, we can efficiently evaluate matrix vector products if the sparse matrix is given as CSR format.</p>
+<p>What is missing is a way to efficiently solve linear system with this data structure. We could attempt to use standard LU Decomposition (Gaussian Elimination). But the computational complexity is <span class="math notranslate nohighlight">\(O(n^3)\)</span>, making this method infeasible for very large sparse system. The issue is that standard LU decomposition does not take into account that most elements of a matrix are zero. There are different ways to overcome this issue.</p>
+<ul class="simple">
+<li><p><strong>Sparse direct solvers</strong>. Sparse direct solvers are essentially variants of LU decomposition, but tuned for taken into account that most of the matrix consist of zero elements. Sparse direct solvers are highly efficient for PDE problems in two dimensions and still very good for many three dimensional problems. However, there performance deteriorates on matrices arising from complex three dimensional meshes.</p></li>
+<li><p><strong>Iterative Methods</strong>. The most widely used iterative solvers are based on so-called Krylov subspace iterations. The idea is that the matrix is only known through its actions on vectors, that is we are allowed to use matrix-vector products only. A sequence of matrix-vector products is then used to build up a low-dimensional model of the matrix that can be solved efficiently and well approximates the solution of the original large linear system. Iterative methods are widely used in applications and can give almost optimal complexity in the number of unknowns. However, the problem is that the performance of iterative methods depends very much on certain properties of the matrix that reflect the underlying physical problem and so-called preconditioning techniques often need to be used to accelerate iterative solvers. These preconditioners can themselves be complex to develop for specific applications and are a topic of much research.</p></li>
+<li><p><strong>Multigrid Methods</strong>. Multigrid methods follow a different idea. Here, starting from our discretisation we move to coarser ans coarser discretisation levels to refine the solution. Eventually, we are on a very coarse level on which the solution is trivial to accomplish. From there we refine again. Multigrid can be used as solver on its own or as preconditioner for iterative methods.</p></li>
+</ul>
+<div class="section" id="software-for-sparse-solvers">
+<h2>Software for sparse solvers<a class="headerlink" href="#software-for-sparse-solvers" title="Permalink to this headline">¶</a></h2>
+<p>In the following we want to give a very incomplete overview of some frequently used software packages for the solution of sparse linear systems of equations.</p>
+<div class="section" id="sparse-direct-solver-packages">
+<h3>Sparse direct solver packages<a class="headerlink" href="#sparse-direct-solver-packages" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://people.engr.tamu.edu/davis/suitesparse.html">UMFPACK (Part of Suitesparse)</a> is a widely used sparse direct solver. It is built into Matlab and also available in Python through scikit-umfpack. It is very efficient and constantly being developed.</p></li>
+<li><p><a class="reference external" href="https://www.pardiso-project.org/">Pardiso</a> is available either directly under a closed source license or as part of the Intel MKL, with the caveat that the Intel MKL version is old and significantly slower than the directly available version.</p></li>
+<li><p><a class="reference external" href="https://portal.nersc.gov/project/sparse/superlu/">SuperLU</a> is the standard sparse solver that is also built into Scipy. Scipy only offers the serial version of the library, which is sufficient for smaller to medium problems.</p></li>
+<li><p><a class="reference external" href="http://mumps.enseeiht.fr/">Mumps</a> is a massively parallel sparse direct solver. It is often used on parallel clusters.</p></li>
+<li><p><a class="reference external" href="https://trilinos.github.io/amesos2.html">Amesos2</a> is part of <a class="reference external" href="https://trilinos.github.io/">Trilinos</a>, a large collection of libraries for the parallel solution of partial differential equations. Amesos2 provides its own sparse direct solver, as well as interfaces to many other sparse direct solvers.</p></li>
+<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> is a templated C++ linear algebra library for dense and sparse operations. It provides its own sparse direct solver and also interfaces to many external solvers</p></li>
+</ul>
+</div>
+<div class="section" id="sparse-iterative-solvers">
+<h3>Sparse iterative solvers<a class="headerlink" href="#sparse-iterative-solvers" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.scipy.org/">Scipy</a> has a good selection of sparse iterative solvers built in. For medium sized matrix problems it is a very good choice.</p></li>
+<li><p><a class="reference external" href="https://www.mcs.anl.gov/petsc/">Petsc</a> is a parallel sparse solver library with a range of built-in iterative solvers.</p></li>
+<li><p><a class="reference external" href="https://trilinos.github.io/belos.html">Belos</a> is part of Trilinos and provides a number of parallel iterative solvers.</p></li>
+<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> not only has sparse direct but also several iterative solvers built in.</p></li>
+</ul>
+<p>Multigrid solvers</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.nvidia.com/amgx">AmgX</a> is an algebraic multigrid library for Nvidia GPUs.</p></li>
+<li><p><a class="reference external" href="https://github.com/pyamg/pyamg">PyAMG</a> is a Python based algebraic multigrid package.</p></li>
+<li><p><a class="reference external" href="https://trilinos.github.io/ml.html">ML</a> is the multigrid solver as part of the Trilinos package.</p></li>
+</ul>
+<p>Most of the above packages are written in C/C++. But many of them have Python bindings. In the following sessions we will discuss sparse direct solvers, iterative solvers, and multigrid in more detail, and then give examples using some of the above software packages.</p>
+</div>
 </div>
 </div>
 
@@ -322,16 +376,16 @@ algorithms to deal with them.</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "conda-env-dev-py"
         },
         kernelOptions: {
-            kernelName: "python3",
+            kernelName: "conda-env-dev-py",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'conda-env-dev-py'</script>
 
               </div>
               
@@ -341,6 +395,8 @@ algorithms to deal with them.</p>
     
     <div class='prev-next-bottom'>
         
+    <a class='left-prev' id="prev-link" href="sparse_data_structures.html" title="previous page">Sparse Matrix data structures</a>
+    <a class='right-next' id="next-link" href="it_solvers1.html" title="next page">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

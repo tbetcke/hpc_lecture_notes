@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/sphinx-book-theme.2d2078699c18a0efb88233928e1cf6ed.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Assignment 1" href="assignment_1.html" />
+    <link rel="prev" title="An introduction to sparse linear system solvers" href="sparse_solvers_introduction.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
+   A tour of CUDA
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numba_cuda.html">
+   Numba Cuda in Practice
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rbf_evaluation.html">
+   GPU accelerated evaluation of particle sums
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Sparse Linear Algebra
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_linalg_pde.html">
+   The need for sparse linear algebra - A PDE example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_data_structures.html">
+   Sparse Matrix data structures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_solvers_introduction.html">
+   An introduction to sparse linear system solvers
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_1.html">
+   Assignment 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_2.html">
+   Assignment 2
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/it_solvers1.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/it_solvers1.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#krylov-subspaces-and-the-arnoldi-iteration">
+   Krylov subspaces and the Arnoldi iteration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fom-the-full-orthogonalisation-method">
+   FOM - The Full orthogonalisation method
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="iterative-solvers-1-krylov-subspaces-arnoldi-iteration-and-the-full-orthogonalisation-method">
+<h1>Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method<a class="headerlink" href="#iterative-solvers-1-krylov-subspaces-arnoldi-iteration-and-the-full-orthogonalisation-method" title="Permalink to this headline">¶</a></h1>
+<p>In this session we want to introduce the most import class of iterative solvers, namely Krylov subspace methods for the solution of the linear system of equations</p>
+<div class="math notranslate nohighlight">
+\[
+Ax = b.
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(A\)</span> a real or complex <span class="math notranslate nohighlight">\(n\times n\)</span> matrix. Here, we will assume for simplicity that <span class="math notranslate nohighlight">\(A\in\mathbb{R}^{n\times n}\)</span>. But all algorithms discussed here can also be extended to the complex case.</p>
+<p>The basic assumption is that we are only allowed to perform matrix-vector products with <span class="math notranslate nohighlight">\(A\)</span>, nothing more. It is remarkable that this operation is enough to develop algorithms that for many classes of problems give us fast converging algorithms to the solution of the above linear system of equations.</p>
+<div class="section" id="krylov-subspaces-and-the-arnoldi-iteration">
+<h2>Krylov subspaces and the Arnoldi iteration<a class="headerlink" href="#krylov-subspaces-and-the-arnoldi-iteration" title="Permalink to this headline">¶</a></h2>
+<p>We want to approximate the solution to the linear system <span class="math notranslate nohighlight">\(Ax=b\)</span> by only being allowed to do matrix-vector products with <span class="math notranslate nohighlight">\(A\)</span>. The idea is that we use the matrix-vector products to build up a subspace of <span class="math notranslate nohighlight">\(\mathbb{R}^n\)</span>.</p>
+<p><strong>Definition</strong> (Krylov Subspace)</p>
+<p>The Krylov subspace <span class="math notranslate nohighlight">\(\mathcal{K}_m(A, b)\)</span> is defined by</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K}_m(A, b) := \text{span}\{b, Ab, A^2b, \dots, A^{m-1}b\}.
+\]</div>
+<p>This subspace collects all the vectors that we can form by combining powers of <span class="math notranslate nohighlight">\(A\)</span> times b. Let us try out this subspace numerically.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">compute_krylov_basis</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates a numerical basis for the m-dimensional Krylov subspace.&quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    
+    <span class="n">result</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+    
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>An important measure of the usefulness of a basis is its conditioning. It measures how linearly independent vectors are. A condition number close to <span class="math notranslate nohighlight">\(1\)</span> means that the basis is well behaved. A condition number close to <span class="math notranslate nohighlight">\(10^{16}\)</span> means that the basis is numerically singular (this is related to the fact that standard double precision has around 16 digits of accuracy).</p>
+<p>Let us measure the condition number of the Krylov subspace basis as <span class="math notranslate nohighlight">\(m\)</span> increases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Matrix dimension</span>
+
+<span class="n">m_max</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">krylov_basis</span> <span class="o">=</span> <span class="n">compute_krylov_basis</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m_max</span><span class="p">):</span>
+    <span class="n">cond_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">krylov_basis</span><span class="p">[:,:</span><span class="n">m</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1:2.1e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">cond_number</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1: 1.0e+00
+2: 8.0e+01
+3: 4.0e+03
+4: 2.0e+05
+5: 1.0e+07
+6: 5.0e+08
+7: 2.5e+10
+8: 1.2e+12
+9: 6.1e+13
+10: 3.0e+15
+11: 6.2e+17
+12: 1.1e+19
+13: 4.6e+21
+14: 2.6e+24
+15: 9.7e+23
+16: 5.9e+27
+17: 1.4e+29
+18: 2.0e+29
+19: 2.0e+31
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is catastrophic. Already with 10 vectors the Krylov subspace basis is effectively numerically singular. The mathematical reason is that the powers <span class="math notranslate nohighlight">\(A^{m}b\)</span> converge to the eigenvector associated with the largest (by magnitude) eigenvalue of <span class="math notranslate nohighlight">\(A\)</span>. Hence, the later iterates more and more point in the same direction and are not really linearly dependent. We need a way to generate a stable basis for growing <span class="math notranslate nohighlight">\(m\)</span>. The ideal case is an orthogonal basis, where all basis vectors are pairwise orthogonal to each other and of unit length.</p>
+<p>This is accomplished by the following modified algorithm that after each multiplication with the matrix <span class="math notranslate nohighlight">\(A\)</span> orthogonalizes the new vector against all previous vectors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">compute_krylov_basis_orthogonal</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates an orthogonal basis for the m-dimensional Krylov subspace.&quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    
+    <span class="n">result</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="c1"># Multiply the previous vector with A</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Now orthogonalise against the previous basis vectors</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:,</span> <span class="p">:</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp</span> <span class="c1"># h contains all inner products against previous vectors</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">result</span><span class="p">[:,</span> <span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">@</span> <span class="n">h</span> <span class="c1"># Subtract the components in the directions of the previous vectors</span>
+        <span class="c1"># Normalise and store</span>
+        <span class="n">htilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span> <span class="o">/</span> <span class="n">htilde</span>
+                
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let us test this algorithm.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Matrix dimension</span>
+
+<span class="n">m_max</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">krylov_basis</span> <span class="o">=</span> <span class="n">compute_krylov_basis_orthogonal</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m_max</span><span class="p">):</span>
+    <span class="n">cond_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">krylov_basis</span><span class="p">[:,:</span><span class="n">m</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1:2.1e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">cond_number</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1: 1.0e+00
+2: 1.0e+00
+3: 1.0e+00
+4: 1.0e+00
+5: 1.0e+00
+6: 1.0e+00
+7: 1.0e+00
+8: 1.0e+00
+9: 1.0e+00
+10: 1.0e+00
+11: 1.0e+00
+12: 1.0e+00
+13: 1.0e+00
+14: 1.0e+00
+15: 1.0e+00
+16: 1.0e+00
+17: 1.0e+00
+18: 1.0e+00
+19: 1.0e+00
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see that this basis is now perfectly conditioned. The algorithm that we have implemented is called <strong>Arnoldi iteration</strong>. Mathematically, it can be written as follows.</p>
+<div class="math notranslate nohighlight">
+\[
+A V_m = V_mH_m + h_{m+1, m}v_{m + 1}e_m^T
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(V_m\)</span> is the orthogonal basis of the <span class="math notranslate nohighlight">\(m\)</span>th Krylov subspace. The matrix <span class="math notranslate nohighlight">\(H\)</span> is the matrix of all inner products between the Krylov basis vectors, that is <span class="math notranslate nohighlight">\(h_{i,j} = v_i^TAv_j\)</span> and the vector <span class="math notranslate nohighlight">\(v_{m+1}\)</span> is the next vector in the sequence obtaining by orthogonalising the vector <span class="math notranslate nohighlight">\(Av_m\)</span> against all previous vectors and then normalising.</p>
+<p>To see that this formula represents what we are doing in our Python function <code class="docutils literal notranslate"><span class="pre">compute_krylov_basis_orthogonal</span></code> just take the last column of this matrix equation. It reads</p>
+<div class="math notranslate nohighlight">
+\[
+Av_m = V_m h + h_{m+1, m}v_{m+1}
+\]</div>
+<p>The vector <span class="math notranslate nohighlight">\(h\)</span> is exactly as computed in the Python function. The variable <code class="docutils literal notranslate"><span class="pre">htilde</span></code> is the next value <span class="math notranslate nohighlight">\(h_{m+1, m}\)</span> in the <span class="math notranslate nohighlight">\(H\)</span> matrix, and for the variable <code class="docutils literal notranslate"><span class="pre">w</span></code> we have <span class="math notranslate nohighlight">\(w=h_{m+1, m}v_{m+1}\)</span>. The matrix <span class="math notranslate nohighlight">\(H_m\)</span> has a special structure. The upper triangular part including the first lower subdiagonal are nonzero. The upper triangular part contains the inner products of <span class="math notranslate nohighlight">\(Av_j\)</span> against all the previous vectors and the subdiagonal elements are just the normalisation factors after subtracting off the components against the other vectors.</p>
+<p>We immediately see from this formula that</p>
+<div class="math notranslate nohighlight">
+\[
+V_m^TAV_m = H_m.
+\]</div>
+<p>This motivates our first algorithm for the iterative solution of linear systems of equations.</p>
+</div>
+<div class="section" id="fom-the-full-orthogonalisation-method">
+<h2>FOM - The Full orthogonalisation method<a class="headerlink" href="#fom-the-full-orthogonalisation-method" title="Permalink to this headline">¶</a></h2>
+<p>Let us start with the linear system of equations</p>
+<div class="math notranslate nohighlight">
+\[
+Ax = b.
+\]</div>
+<p>We define an initial approximation <span class="math notranslate nohighlight">\(x_0\)</span> that can be anything (e.g. <span class="math notranslate nohighlight">\(x_0=0\)</span> or <span class="math notranslate nohighlight">\(x_0\)</span> random) and an initial residual <span class="math notranslate nohighlight">\(r_0 := b - Ax_0\)</span>.</p>
+<p>The idea is that we replace <span class="math notranslate nohighlight">\(x\)</span> by an approximation <span class="math notranslate nohighlight">\(x_m := x_0 + V_my_m\)</span> from the Krylov subspace <span class="math notranslate nohighlight">\(\mathcal{K}_m(A, r_0)\)</span>. We obtain</p>
+<div class="math notranslate nohighlight">
+\[
+A(x_0 + V_my_m) \approx b.
+\]</div>
+<p>or equivalently</p>
+<div class="math notranslate nohighlight">
+\[
+AV_my_m \approx r_0.
+\]</div>
+<p>We still need a condition to turn this into a proper linear system of equations. Here, we use the condition that the residual <span class="math notranslate nohighlight">\(r_m := b - Ax_m\)</span> should be orthogonal to the Krylov subspace <span class="math notranslate nohighlight">\(\mathcal{K}_m(A, r_0)\)</span>, that is <span class="math notranslate nohighlight">\(V_m^Tr_m = 0\)</span>. This is the same as</p>
+<div class="math notranslate nohighlight">
+\[
+V_m^TAV_my_m = V_m^Tr_0.
+\]</div>
+<p>The left-hand side is just our projection matrix <span class="math notranslate nohighlight">\(H_m\)</span>. Moreover, we have that <span class="math notranslate nohighlight">\(V_m^Tr_0 = \|r_0\|_2e_1\)</span>, where <span class="math notranslate nohighlight">\(e_1\)</span> is the first unit vector. Hence, we arrive at the system of equations</p>
+<div class="math notranslate nohighlight">
+\[
+H_my_m = \|r_0\|_2e_1.
+\]</div>
+<p>What have we won here? The original linear system of equations is of size <span class="math notranslate nohighlight">\(n\times n\)</span>. The new system is of size <span class="math notranslate nohighlight">\(m\times m\)</span>. If we can get a good approximation of the solution with <span class="math notranslate nohighlight">\(m\ll n\)</span>, then we have had a massive saving. Let’s try it out.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span>
+
+<span class="k">def</span> <span class="nf">fom</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Explore the full orthogonalization method.&quot;&quot;&quot;</span>
+
+    
+    <span class="n">r</span> <span class="o">=</span> <span class="n">b</span> <span class="c1"># Here we assume that we start with x_0 = 0</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    
+    <span class="c1"># V stores the basis vectors</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m_max</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">beta</span>
+    
+    <span class="c1"># H stores the projected matrix</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">m_max</span><span class="p">,</span> <span class="n">m_max</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># We also want to store the residual norms</span>
+    <span class="n">rel_residuals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m_max</span><span class="p">):</span>
+        <span class="c1"># Multiply the previous vector with A</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Now orthogonalise against the previous basis vectors</span>
+        <span class="n">H</span><span class="p">[:</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp</span> <span class="c1"># Compute the next column of H</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span> <span class="o">@</span> <span class="n">H</span><span class="p">[:</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Subtract the components in the directions of the previous vectors</span>
+        <span class="c1"># Normalise and store</span>
+        <span class="n">htilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">V</span><span class="p">[:,</span> <span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span> <span class="o">/</span> <span class="n">htilde</span>
+        <span class="n">H</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">htilde</span> 
+
+        <span class="c1"># Now solve the projected system</span>
+        
+        <span class="n">y</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">H</span><span class="p">[:</span><span class="n">m</span><span class="p">,</span> <span class="p">:</span><span class="n">m</span><span class="p">],</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">b</span><span class="p">)</span>
+        
+        <span class="n">x</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span> <span class="o">@</span> <span class="n">y</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
+        <span class="n">rnorm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">rel_residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rnorm</span> <span class="o">/</span> <span class="n">beta</span><span class="p">)</span>            
+            
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">rel_residuals</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">V</span>
+    
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above function implements the full orthogonalization method. In each step we perform one step of the Arnoldi iteration, compute the projected matrix A and solve the projected system. At the end we plot the convergence of the relative residual <span class="math notranslate nohighlight">\(\|r\| / \|b\|\)</span> and return the approximate solution <code class="docutils literal notranslate"><span class="pre">x</span></code> and the basis <code class="docutils literal notranslate"><span class="pre">V</span></code> of our Krylov subspace.</p>
+<p>The following defines a well conditioned random matrix of dimension 1000 and tries out the algorithm.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">gmres</span>
+
+<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">Q1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+<span class="n">Q2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">@</span> <span class="n">Q2</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">fom</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/it_solvers1_18_0.png" src="_images/it_solvers1_18_0.png" />
+</div>
+</div>
+<p>We can observe nice exponential convergence. Indeed, after just 17 iterations our relative residual is around <span class="math notranslate nohighlight">\(10^{-5}\)</span>. Hence, instead of a 1000 x 1000 system we only needed to solve systems up to dimension 17 for a pretty good solution.</p>
+<p>However, there are some caveats though. A careful observer will have seen already that we cheated a little bit in the code. We have established that theoretically in the FOM the projected right-hand side takes the form <span class="math notranslate nohighlight">\(\|r_0\| e_1\)</span>. However, in the implementation we compute the projection of the right-hand side <span class="math notranslate nohighlight">\(b\)</span> explicitly. The reason is loss of numerical orthogonality. The columns of the matrix <span class="math notranslate nohighlight">\(V\)</span> lose their orthogonality over time with catastrophic effects. Let’s run FOM for 100 steps.</p>
+<p>Let’s make a plot of the matrix <span class="math notranslate nohighlight">\(M = V^TV\)</span>. Theoretically, its diagonal values should be one and all other values <span class="math notranslate nohighlight">\(0\)</span>. Let’s check this.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">fom</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/it_solvers1_20_0.png" src="_images/it_solvers1_20_0.png" />
+</div>
+</div>
+<p>Up until around <span class="math notranslate nohighlight">\(m=30\)</span> we converge nicely. But then the solution deteriorates again until we lose all our accuracy. Let’s check the matrix <span class="math notranslate nohighlight">\(M = V^TV\)</span>. If <span class="math notranslate nohighlight">\(V\)</span> is orthogonal then this matrix has ones on the diagonal and zeros everywhere else.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">V</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">M</span><span class="p">)),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">15</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f910b994700&gt;
+</pre></div>
+</div>
+<img alt="_images/it_solvers1_22_1.png" src="_images/it_solvers1_22_1.png" />
+</div>
+</div>
+<p>This is pretty bad. We completely lose orthogonality. The issue is the way in which we implemented the orthogonalisation. We used the classical Gram-Schmidt algorithm to do this, which is often taught in theoretical text books, but is not numerically stable. There are ways to stabilise the orthogonalisation by using for example modified Gram-Schmidt and introduing reorthogonalisation from time to ime. We are not going to discuss these techniques here.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-dev-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-dev-py",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-dev-py'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="sparse_solvers_introduction.html" title="previous page">An introduction to sparse linear system solvers</a>
+    <a class='right-next' id="next-link" href="assignment_1.html" title="next page">Assignment 1</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
