@@ -20,6 +20,7 @@
     - file: sparse_data_structures
     - file: sparse_solvers_introduction
     - file: it_solvers1
+    - file: it_solvers2
 - part: Assignments
   chapters:
     - file: assignment_1
