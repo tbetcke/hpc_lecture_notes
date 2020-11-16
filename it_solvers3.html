@@ -1,0 +1,614 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iterative Solvers 3 - The Conjugate Gradient Method &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
+   A tour of CUDA
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numba_cuda.html">
+   Numba Cuda in Practice
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rbf_evaluation.html">
+   GPU accelerated evaluation of particle sums
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Sparse Linear Algebra
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_linalg_pde.html">
+   The need for sparse linear algebra - A PDE example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_data_structures.html">
+   Sparse Matrix data structures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_solvers_introduction.html">
+   An introduction to sparse linear system solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers1.html">
+   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers2.html">
+   Iterative Solvers 2 - From FOM to GMRES
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_1.html">
+   Assignment 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_2.html">
+   Assignment 2
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/it_solvers3.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/it_solvers3.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#symmetric-positive-definite-matrices">
+   Symmetric positive definite matrices
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#lanczos-arnoldi-for-symmetric-matrices">
+   Lanczos - Arnoldi for symmetric matrices
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-linear-systems-of-equations-with-lanczos">
+   Solving linear systems of equations with Lanczos
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-quadratic-optimisation-problem">
+   A quadratic optimisation problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-method-of-steepest-descent">
+   The Method of Steepest Descent
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-method-of-conjugate-directions">
+   The method of conjugate directions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conjugate-gradients-mixing-steepest-descent-with-conjugate-directions">
+   Conjugate Gradients - Mixing steepest descent with conjugate directions
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="iterative-solvers-3-the-conjugate-gradient-method">
+<h1>Iterative Solvers 3 - The Conjugate Gradient Method<a class="headerlink" href="#iterative-solvers-3-the-conjugate-gradient-method" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="symmetric-positive-definite-matrices">
+<h2>Symmetric positive definite matrices<a class="headerlink" href="#symmetric-positive-definite-matrices" title="Permalink to this headline">¶</a></h2>
+<p>A very frequent type of matrices are symmetric positive definite matrices. Let <span class="math notranslate nohighlight">\(A\in\mathbb{R}^{n\times n}\)</span> be a symmetric matrix (that is <span class="math notranslate nohighlight">\(A^T=A\)</span>). <span class="math notranslate nohighlight">\(A\)</span> is called symmetric positive definite if</p>
+<div class="math notranslate nohighlight">
+\[
+x^TAx &gt; 0, \forall x\neq 0.
+\]</div>
+<p>This is equivalent to the condition that all eigenvalues of <span class="math notranslate nohighlight">\(A\)</span> are larger than zero (remember that symmetric matrices only have real eigenvalues).</p>
+<p>One application of symmetric positive definite matrices are energy functionals. The expression <span class="math notranslate nohighlight">\(x^TAx\)</span> arises when discretising functional involving kinetic energies (e.g. energies of the from <span class="math notranslate nohighlight">\(E = \frac{1}{2}m|\nabla f|^2\)</span> for f a given function).</p>
+<p>For linear systems involving symmetric positive definite matrices we can derive a special algorithm, namely the Method of Conjugate Gradients (CG).</p>
+</div>
+<div class="section" id="lanczos-arnoldi-for-symmetric-matrices">
+<h2>Lanczos - Arnoldi for symmetric matrices<a class="headerlink" href="#lanczos-arnoldi-for-symmetric-matrices" title="Permalink to this headline">¶</a></h2>
+<p>Let us start with the Arnoldi recurrence relation</p>
+<div class="math notranslate nohighlight">
+\[
+AV_m = V_mH_m + h_{m+1,m}v_{m+1}e_m^T
+\]</div>
+<p>We know that <span class="math notranslate nohighlight">\(H_m\)</span> is an upper Hessenberg matrix (i.e. the upper triangular part plus the first lower triangular diagonal can only be nonzero). Also, we know from the orthogonality of the <span class="math notranslate nohighlight">\(v_k\)</span> vectors that</p>
+<div class="math notranslate nohighlight">
+\[
+V_m^TAV_m = H_m.
+\]</div>
+<p>Let <span class="math notranslate nohighlight">\(A\)</span> now be symmetric. From the symmetry of <span class="math notranslate nohighlight">\(A\)</span> an even nicer structure for <span class="math notranslate nohighlight">\(H_m\)</span> arises. <span class="math notranslate nohighlight">\(H_m\)</span> is upper Hessenberg, but now it is also symmetric. The only possible type of matrices to satisfy this condition are tridional matrices. These are matrices, where only the diagonal and the first upper and lower super/subdiagonals are nonzero.</p>
+<p>Let us test this out. Below you find our simple implementation of Arnoldi’s method. We then plot the resulting matrix <span class="math notranslate nohighlight">\(H_m\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">arnoldi</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform m-1 step of the Arnoldi method.&quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    
+    <span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r0</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="c1"># Multiply the previous vector with A</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]</span>
+        <span class="c1"># Now orthogonalise against the previous basis vectors</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp</span> <span class="c1"># h contains all inner products against previous vectors</span>
+        <span class="n">H</span><span class="p">[:</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">@</span> <span class="n">h</span> <span class="c1"># Subtract the components in the directions of the previous vectors</span>
+        <span class="c1"># Normalise and store</span>
+        <span class="n">H</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">V</span><span class="p">[:,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span> <span class="o">/</span> <span class="n">H</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span>
+                
+    <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">H</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following code creates a random symmetric positive definite matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">RandomState</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="n">rand</span> <span class="o">=</span> <span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Q</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">D</span> <span class="o">@</span> <span class="n">Q</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s run Arnoldi’s method and plot the matrix H. We are adding some artificial noise so as to ensure for the log-plot that all values are nonzero. The colorscale shows the logarithm of the magnitude of the entries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">V</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="n">arnoldi</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1E-15</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7fdff5bbc3d0&gt;
+</pre></div>
+</div>
+<img alt="_images/it_solvers3_9_1.png" src="_images/it_solvers3_9_1.png" />
+</div>
+</div>
+<p>It is clearly visible that only the main diagonal and the first upper and lower off-diagonal are nonzero, as expected. This hugely simplifies the Arnoldi iteration. Instead of orthogonalising <span class="math notranslate nohighlight">\(Av_m\)</span> against all previous vectors we only need to orthogonalise against <span class="math notranslate nohighlight">\(v_m\)</span> and <span class="math notranslate nohighlight">\(v_{m-1}\)</span>. All other inner products are already zero. Hence, the main orthogonalisation step now takes the form</p>
+<div class="math notranslate nohighlight">
+\[
+w = Av_m - (v_m^TAv_m)v_m - (v_{m-1}^TAv_m)v_{m-1}.
+\]</div>
+<p>Since the new vector <span class="math notranslate nohighlight">\(w\)</span> is composed of only 3 vectors. This is also called a 3-term recurrence. The big advantage is that in addition to <span class="math notranslate nohighlight">\(Av_m\)</span> we only need to keep <span class="math notranslate nohighlight">\(v_m\)</span> and <span class="math notranslate nohighlight">\(v_{m-1}\)</span> in memory. Hence, no matter how many iterations we do, the memory requirement remains constant, in contrast to Arnoldi for nonsymmetric matrices, where we need to keep all previous vectors in memory.</p>
+<p>Arnoldi with a short recurrence relation for symmetric matrices has a special name. It is called <strong>Lanczos method</strong>.</p>
+</div>
+<div class="section" id="solving-linear-systems-of-equations-with-lanczos">
+<h2>Solving linear systems of equations with Lanczos<a class="headerlink" href="#solving-linear-systems-of-equations-with-lanczos" title="Permalink to this headline">¶</a></h2>
+<p>We can now proceed exactly as in the Full orthogonalisation method and arrive at the linear system of equations</p>
+<div class="math notranslate nohighlight">
+\[
+T_my_m = \|r_0\|_2e_1,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_m = x_0 + V_my_m\)</span> and <span class="math notranslate nohighlight">\(T_m = V_m^TAV_m\)</span> is the tridiagonal matrix obtained from the Lanczos method.</p>
+<p>The conjugate gradient method is an implementation of this approach. A very good derivation from Lanczos to CG is obtained in the beautiful book by Yousef Saad “<a class="reference external" href="https://www-users.cs.umn.edu/~saad/IterMethBook_2ndEd.pdf">Iterative Methods for Sparse Linear Systems</a>”, which is available online for free. Here, we will briefly motivate another approach to CG, which is a bit more intuitive and reveals more about the structure of the method, namely CG as an optimisation algorithm for a quadratic minimisation problem. One of the most beautiful summaries of this approach is contained in the paper <a class="reference external" href="https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">An introduction to the Conjugate Gradient Method Without the Agonizing Pain</a> by Jonathan Shewchuk.</p>
+</div>
+<div class="section" id="a-quadratic-optimisation-problem">
+<h2>A quadratic optimisation problem<a class="headerlink" href="#a-quadratic-optimisation-problem" title="Permalink to this headline">¶</a></h2>
+<p>We consider the quadratic minimisation problem</p>
+<div class="math notranslate nohighlight">
+\[
+\min_{x\in\mathbb{R}^n} f(x)
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(f(x)=\frac{1}{2}x^TAx - b^Tx\)</span>. We have</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla f(x) = Ax - b
+\]</div>
+<p>and hence the only stationary point is the solution of the linear system <span class="math notranslate nohighlight">\(Ax=b\)</span>. Furthermore, it is really a minimiser since <span class="math notranslate nohighlight">\(f''(x) &gt; 0\)</span> for all <span class="math notranslate nohighlight">\(x\in\mathbb{R}^n\)</span> as <span class="math notranslate nohighlight">\(A\)</span> is positive definite.</p>
+</div>
+<div class="section" id="the-method-of-steepest-descent">
+<h2>The Method of Steepest Descent<a class="headerlink" href="#the-method-of-steepest-descent" title="Permalink to this headline">¶</a></h2>
+<p>Our first idea is the method of steepest descent. Remember that the negative gradient is a descent direction. Given a point <span class="math notranslate nohighlight">\(x_k\)</span>. We have</p>
+<div class="math notranslate nohighlight">
+\[
+-\nabla f(x_k) = b - Ax_k := r_k.
+\]</div>
+<p>The negative gradient is hence just the residual. Hence, we need to minimise along the direction of the residual, that is we will have
+<span class="math notranslate nohighlight">\(x_{k+1} = x_k + \alpha_k r_k\)</span> for some value <span class="math notranslate nohighlight">\(\alpha_k\)</span>. To compute <span class="math notranslate nohighlight">\(\alpha_k\)</span> we just solve</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{d}{d\alpha}f(x_k + \alpha r_k) = 0
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\frac{d}{d\alpha}f(x_k + \alpha r_k) = r_{k+1}^Tr_k\)</span> we just need to choose <span class="math notranslate nohighlight">\(\alpha_k\)</span> such that <span class="math notranslate nohighlight">\(r_{k+1}\)</span> is orthogonal to <span class="math notranslate nohighlight">\(r_k\)</span>. The solution is given by <span class="math notranslate nohighlight">\(\alpha_k = \frac{r_k^Tr_k}{r_k^TAr_k}\)</span>. This gives us a complete method consisting of three steps to get from <span class="math notranslate nohighlight">\(x_k\)</span> to <span class="math notranslate nohighlight">\(x_{k+1}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+r_k &amp;= b - Ax_k\nonumber\\
+\alpha_k &amp;= \frac{r_k^Tr_k}{r_k^TAr_k}\nonumber\\
+x_{k+1} &amp;= x_k + \alpha_k r_k
+\end{align}
+\end{split}\]</div>
+<p>We are not going to derive the complete convergence analysis here but only state the final result. Let <span class="math notranslate nohighlight">\(\kappa := \frac{\lambda_{max}}{\lambda_{min}}\)</span>, where <span class="math notranslate nohighlight">\(\lambda_{max}\)</span> and <span class="math notranslate nohighlight">\(\lambda_{min}\)</span> are the largest, respectively smallest eigenvalue of <span class="math notranslate nohighlight">\(A\)</span> (remember that all eigenvalues are positive since <span class="math notranslate nohighlight">\(A\)</span> is symmetric positive definite). The number <span class="math notranslate nohighlight">\(\kappa\)</span> is called the condition number of <span class="math notranslate nohighlight">\(A\)</span>. Let <span class="math notranslate nohighlight">\(e_k = x_k - x^*\)</span> be the difference of the exact solution <span class="math notranslate nohighlight">\(x^*\)</span> satisfying <span class="math notranslate nohighlight">\(Ax^*=b\)</span> and our current iterate <span class="math notranslate nohighlight">\(x_k\)</span>. Note that <span class="math notranslate nohighlight">\(r_k = -Ae_k\)</span>.</p>
+<p>We now have that</p>
+<div class="math notranslate nohighlight">
+\[
+\|e_k\|_A\leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k\|e_0\|_A,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\|e_k\|_A := \left(e_k^TAe_k\right)^{1/2}\)</span>.</p>
+<p>This is an extremely slow rate of convergence. Let <span class="math notranslate nohighlight">\(\kappa=10\)</span>, which is a fairly small number. Then the error reduces in each step only by a factor of <span class="math notranslate nohighlight">\(\frac{9}{11}\approx 0.81\)</span> and we need 11 iterations for each digit of accuracy.</p>
+</div>
+<div class="section" id="the-method-of-conjugate-directions">
+<h2>The method of conjugate directions<a class="headerlink" href="#the-method-of-conjugate-directions" title="Permalink to this headline">¶</a></h2>
+<p>The steepest descent approach was not bad. But we want to improve on it. The problem with the steepest descent method is that we have no guarantee that we are reducing the error <span class="math notranslate nohighlight">\(e_{k+1}\)</span> as much as possible along our current direction <span class="math notranslate nohighlight">\(r_k\)</span> when we minimize. But we can fix this.</p>
+<p>Let us pick a set of directions <span class="math notranslate nohighlight">\(d_0, d_1, \dots, d_{n-1}\)</span>, which are mutually orthogonal, that is <span class="math notranslate nohighlight">\(d_i^Td_j =0\)</span> for <span class="math notranslate nohighlight">\(i\neq j\)</span>. We now want to enforce the condition that</p>
+<div class="math notranslate nohighlight">
+\[
+e_{k+1}^Td_k = 0.
+\]</div>
+<p>This means that the remaining error is orthogonal to <span class="math notranslate nohighlight">\(d_k\)</span> and hence is a linear combination of all the other search directions. We have therefore exhausted all the information from <span class="math notranslate nohighlight">\(d_k\)</span>. Let’s play this through.</p>
+<p>We know that <span class="math notranslate nohighlight">\(e_{k+1} = x_{k+1} - x^* = x_k -x^* + \alpha_k d_k = e_k + \alpha_kd_k\)</span>.</p>
+<p>It follows that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+e_{k+1}^Td_k &amp;= d_k^T(e_k + \alpha_kd_k)\nonumber\\
+             &amp;= d_k^Te_k + \alpha_kd_k^Td_k = 0\nonumber
+\end{align}
+\end{split}\]</div>
+<p>and therefore <span class="math notranslate nohighlight">\(\alpha_k = -\frac{d_k^Te_k}{d_k^Td_k}\)</span>.</p>
+<p>Unfortunately, this does not quite work in practice as we don’t know <span class="math notranslate nohighlight">\(e_k\)</span>. But there is a solution. Remember that <span class="math notranslate nohighlight">\(r_k = -Ae_k\)</span>. We just need an <span class="math notranslate nohighlight">\(A\)</span> in the right place. To achieve this we choose <strong>conjugate directions</strong>, that is we impose the condition that</p>
+<div class="math notranslate nohighlight">
+\[
+d_i^TAd_j = 0
+\]</div>
+<p>for <span class="math notranslate nohighlight">\(i\neq j\)</span>. We also impose the condition that <span class="math notranslate nohighlight">\(e_{k+1}^TAd_k = 0\)</span>. Writing this out we obtain</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_k = \frac{d_k^Tr_k}{d_k^TAd_k}.
+\]</div>
+<p>This expression is computable if we have a suitable set of conjugate directions <span class="math notranslate nohighlight">\(d_k\)</span>. Moreoever, it guarantees that the method converges in at most <span class="math notranslate nohighlight">\(n\)</span> steps since in every iteration we are annihiliating the error in the direction of <span class="math notranslate nohighlight">\(d_k\)</span> and there are only <span class="math notranslate nohighlight">\(n\)</span> different directions.</p>
+</div>
+<div class="section" id="conjugate-gradients-mixing-steepest-descent-with-conjugate-directions">
+<h2>Conjugate Gradients - Mixing steepest descent with conjugate directions<a class="headerlink" href="#conjugate-gradients-mixing-steepest-descent-with-conjugate-directions" title="Permalink to this headline">¶</a></h2>
+<p>The idea of conjugate gradients is to obtain the conjugate directions <span class="math notranslate nohighlight">\(d_i\)</span> by taking the <span class="math notranslate nohighlight">\(r_i\)</span> (the gradients) and to <span class="math notranslate nohighlight">\(A\)</span>-orthogonalise (conjugate) them against the previous directions. We are leaving out the details of the derivation and refer to the Shewchuk paper. But the final algorithm now takes the following form.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+d_0 &amp;= r_0 = b - Ax_0\nonumber\\
+\alpha_i &amp;= \frac{r_i^Tr_i}{d_i^TAd_i}\nonumber\\
+x_{i+1} &amp;=x_i + \alpha_id_i\nonumber\\
+r_{i+1} &amp;= r_i - \alpha_i Ad_i\nonumber\\
+\beta_{i+1} &amp;= \frac{r_{i+1}^Tr_{i+1}}{r_i^Tr_i}\nonumber\\
+d_{i+1} &amp;= r_{i+1} + \beta_{i+1}d_i\nonumber
+\end{align}
+\end{split}\]</div>
+<p>Conjugate Gradients has a much more favourable convergence bound than steepest descent. One can derive that</p>
+<div class="math notranslate nohighlight">
+\[
+\|e_i\|_A\leq 2\left(\frac{\sqrt{\kappa} - 1}{\sqrt{\kappa} + 1}\right)^i\|e_0\|_A.
+\]</div>
+<p>If we choose again the example that <span class="math notranslate nohighlight">\(\kappa=10\)</span> we obtain</p>
+<div class="math notranslate nohighlight">
+\[
+\|e_i\|A\lessapprox 0.52^i\|e_0\|_A.
+\]</div>
+<p>Hence, we need around <span class="math notranslate nohighlight">\(4\)</span> iterations for each digits of accuracy instead of 11 for the method of steepest descent.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-dev-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-dev-py",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-dev-py'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
