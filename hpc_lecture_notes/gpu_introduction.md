@@ -24,14 +24,14 @@ In the early two thousands it was first recognized that GPUs may be able to be u
 * Strongly memory bound computations. If we have large amounts of data but very little to do per data unit, a GPU may not be well suited. We need to transfer the data to the compute device, which for discrete accelerators means system bus transfers that are slow compared to direct communication between CPU and memory. We may interleave memory operations and computations. But this only works well have the computational load is sufficiently high. Some modern integrated CPU/GPU architectures share the RAM. For these such considerations are less relevant.
 * Computations on highly unstructured data, or adaptive methods. Computations involving complex data structures that may change during the course of the computation are a challenge for GPU accelerators. The more complex the flow of the computation, the harder to match to a GPU, and for highly adaptive computations CPUs are typically preferable.
 
-When GPU computing first took off there were many publications that promised incredible speed-ups of factors of fifty or even one hundred by using cheap gaming GPUs instead of high-end CPUs. This is not the reality. Such speed-ups are only achievable in very specific highly parallel applications (e.g. certain Monte-Carlo methods) or in synthetic benchmarks. Also, authors often compared a carefully tuned GPU implementation with a non-optimised single-threaded CPU code. Today, the field of GPU computing is much more mature and the trend is towards heterogeneous computing in which CPUs and GPUs work together for different parts of a computation. 
+When GPU computing first took off there were many publications that promised incredible speed-ups of factors of fifty or even one hundred by using cheap gaming GPUs instead of high-end CPUs. This is not the reality. Such speed-ups are only achievable in very specific highly parallel applications (e.g. certain Monte-Carlo methods) or in synthetic benchmarks. Also, authors often compared a carefully tuned GPU implementation with a non-optimised single-threaded CPU code. Today, the field of GPU computing is much more mature and the trend is towards heterogeneous computing in which CPUs and GPUs work together for different parts of a computation.
 
 ## GPU Computing Standards and languages
 
 There are a number of ways to develop software for GPU accelerators. Here, we want to give a brief overview of the most important ones.
 
 * [Nvidia Cuda](https://developer.nvidia.com/cuda-zone) is arguably the most advanced development platform for GPU computing. Cuda can be used from C/C++, Fortran, Python, Matlab, Julia, and others. There exists a large ecosystem of GPU computing libraries that are built on Cuda. The major disadvantage of Cuda is that
-it depends on Nvidia's proprietary Cuda drivers and is restricted to Nvida hardware. Thus, it is not a completely open or portable solution.
+it depends on Nvidia's proprietary Cuda drivers and is restricted to Nvidia hardware. Thus, it is not a completely open or portable solution.
 
 * [OpenCL](https://www.khronos.org/opencl/) is the open heterogeneous computing standard from the Khronos Group. It does not only support GPU accelerators but also CPUs, FPGA's and essentially any type of device that provides an OpenCL interface. OpenCL has a number of similarities to Cuda. However, it is slightly more complex in its usage owning to the fact that it needs to support devices from many different vendors. It is widely used but much less common in High-Performance Computing than Cuda. Most vendors, including Nvidia, AMD and Intel support OpenCL. For HPC projects it may be useful to consider Sycl instead of OpenCL. It grew out of OpenCL and is quickly gaining support in the HPC world, largely due to signficant software investment from Codeplay and Intel.
 
@@ -50,7 +50,7 @@ The heterogeneous computing landscape is quickly evolving and the choice of tool
 
 ### Nvidia
 
-All modern Nvida GPUs are well suited for GPU computing. Nvida cards support all major heterogeneous compute standards. The top of the line GPU accelerator from Nvidia is the A100, which has a double precision peak performance of 10 TFlops and a single precision performance of 20 TFlops.
+All modern  GPUs are well suited for GPU computing. Nvidia cards support all major heterogeneous compute standards. The top of the line GPU accelerator from Nvidia is the A100, which has a double precision peak performance of 10 TFlops and a single precision performance of 20 TFlops.
 
 ### AMD
 
@@ -177,7 +177,7 @@ def mandel_kernel(min_x, max_x, min_y, max_y, image, iters):
   for x in range(startX, width, gridX):
     real = min_x + x * pixel_size_x
     for y in range(startY, height, gridY):
-      imag = min_y + y * pixel_size_y 
+      imag = min_y + y * pixel_size_y
       image[y, x] = mandel(real, imag, iters)
 
 gimage = np.zeros((1024, 1536), dtype = np.uint8)
@@ -185,7 +185,7 @@ blockdim = (32, 8)
 griddim = (32,16)
 
 d_image = cuda.to_device(gimage)
-mandel_kernel[griddim, blockdim](-2.0, 1.0, -1.0, 1.0, d_image, 20) 
+mandel_kernel[griddim, blockdim](-2.0, 1.0, -1.0, 1.0, d_image, 20)
 d_image.to_host()
 
 imshow(gimage)
