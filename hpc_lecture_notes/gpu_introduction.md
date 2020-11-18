@@ -50,7 +50,7 @@ The heterogeneous computing landscape is quickly evolving and the choice of tool
 
 ### Nvidia
 
-All modern  GPUs are well suited for GPU computing. Nvidia cards support all major heterogeneous compute standards. The top of the line GPU accelerator from Nvidia is the A100, which has a double precision peak performance of 10 TFlops and a single precision performance of 20 TFlops.
+All modern Nvidia GPUs are well suited for GPU computing. Nvidia cards support all major heterogeneous compute standards. The top of the line GPU accelerator from Nvidia is the A100, which has a double precision peak performance of 10 TFlops and a single precision performance of 20 TFlops.
 
 ### AMD
 
