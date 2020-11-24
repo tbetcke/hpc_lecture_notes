@@ -23,6 +23,7 @@
     - file: it_solvers2
     - file: it_solvers3
     - file: it_solvers4
+    - file: sparse_direct_solvers
 - part: Assignments
   chapters:
     - file: assignment_1
