@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using petsc4py for sparse linear systems &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Assignment 1" href="assignment_1.html" />
+    <link rel="prev" title="Sparse Direct Solvers" href="sparse_direct_solvers.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
+   A tour of CUDA
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numba_cuda.html">
+   Numba Cuda in Practice
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rbf_evaluation.html">
+   GPU accelerated evaluation of particle sums
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Sparse Linear Algebra
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_linalg_pde.html">
+   The need for sparse linear algebra - A PDE example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_data_structures.html">
+   Sparse Matrix data structures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_solvers_introduction.html">
+   An introduction to sparse linear system solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers1.html">
+   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers2.html">
+   Iterative Solvers 2 - From FOM to GMRES
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers3.html">
+   Iterative Solvers 3 - The Conjugate Gradient Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers4.html">
+   Iterative Solvers 4 - Preconditioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_direct_solvers.html">
+   Sparse Direct Solvers
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Using petsc4py for sparse linear systems
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_1.html">
+   Assignment 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_2.html">
+   Assignment 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_3.html">
+   Assignment 3
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/petsc_for_sparse_systems.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/petsc_for_sparse_systems.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#creating-a-sparse-matrix-in-petsc">
+   Creating a sparse matrix in PETSc
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-a-linear-system-with-the-matrix">
+   Solving a linear system with the matrix.
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusions">
+   Conclusions
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="using-petsc4py-for-sparse-linear-systems">
+<h1>Using petsc4py for sparse linear systems<a class="headerlink" href="#using-petsc4py-for-sparse-linear-systems" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://www.mcs.anl.gov/petsc/">PETSc</a> is a widely used software for the solution of linear and nonlinear systems of equations arising from PDE discretisations. It has powerful data structures to scale computations from simple workstations to petascale clusters. In this notebook we want to demonstrate some of the features of PETsc for the solution of sparse linear systems of equations. While Scipy is well suited for smaller and medium sized problems, PETSc is ideal if software is meant to eventually scale across clusters of computers.</p>
+<div class="section" id="creating-a-sparse-matrix-in-petsc">
+<h2>Creating a sparse matrix in PETSc<a class="headerlink" href="#creating-a-sparse-matrix-in-petsc" title="Permalink to this headline">¶</a></h2>
+<p>The main object in PETSc for creating sparse matrices is  the MAT object. Typically, we create a sparse matrix in three steps.</p>
+<ul class="simple">
+<li><p>Specify the layout of the matrix</p></li>
+<li><p>Assign the matrix elements</p></li>
+<li><p>Assemble the matrix</p></li>
+</ul>
+<p>PETSc by default uses the CSR matrix format and distributes rows across different compute nodes. In this example we do not use the parallel features of PETSC and refer to the documentation for details.</p>
+<p>Let’s get started and specify a matrix of dimension 1000 x 1000. We want to have a tridiagonal matrix, so will have two entries in the first and last row, and three entries in each other row. PETSc can dynamically grow sizes needed to store matrix entries. But this is inefficient and it is useful to preallocate the storage size.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">petsc4py</span> <span class="kn">import</span> <span class="n">PETSc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">nnz</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">nnz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">nnz</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Mat</span><span class="p">()</span>
+<span class="n">A</span><span class="o">.</span><span class="n">createAIJ</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="n">nnz</span><span class="o">=</span><span class="n">nnz</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;petsc4py.PETSc.Mat at 0x7efda35b2c20&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now fill the matrix elements.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First set the first row</span>
+<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Now we fill the last row</span>
+<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">999</span><span class="p">,</span> <span class="mi">998</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">999</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># And now everything else</span>
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we can assemble the matrix. This lets PETsc create all necessary internal data structures.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We now have a PETSc matrix to our disposal. Let’s try some commands.</p>
+<p>Get the size of the matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">size</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1000, 1000)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get the local size. This is the storage in the current process and only relevant for parallel operation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">local_size</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1000, 1000)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check if the matrix is symmetric.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">isSymmetric</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>There are lots of convenience functions to access matrix elements. For example, to get the diagonal values we can do the following.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diagonals</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">getDiagonal</span><span class="p">()</span><span class="o">.</span><span class="n">array</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">diagonals</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1000,)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get memory information about the matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;block_size&#39;: 1.0,
+ &#39;nz_allocated&#39;: 2998.0,
+ &#39;nz_used&#39;: 2998.0,
+ &#39;nz_unneeded&#39;: 0.0,
+ &#39;memory&#39;: 59212.0,
+ &#39;assemblies&#39;: 1.0,
+ &#39;mallocs&#39;: 0.0,
+ &#39;fill_ratio_given&#39;: 0.0,
+ &#39;fill_ratio_needed&#39;: 0.0,
+ &#39;factor_mallocs&#39;: 0.0}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Return the data structurs associated with the CSR matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indexptr</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">getValuesCSR</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="solving-a-linear-system-with-the-matrix">
+<h2>Solving a linear system with the matrix.<a class="headerlink" href="#solving-a-linear-system-with-the-matrix" title="Permalink to this headline">¶</a></h2>
+<p>We now want to solve a linear system of equations with this matrix. The basic solver object is <code class="docutils literal notranslate"><span class="pre">ksp</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to let <code class="docutils literal notranslate"><span class="pre">ksp</span></code> know about the operator.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We need to define our right-hand side. It is important to choose vectors that are compatible with the data distribution of <span class="math notranslate nohighlight">\(A\)</span>. Let <span class="math notranslate nohighlight">\(y=Ax\)</span>. Then to get the data distribution for <span class="math notranslate nohighlight">\(A\)</span> we need <code class="docutils literal notranslate"><span class="pre">A.createVecLeft</span></code>. To get the data distribution for <span class="math notranslate nohighlight">\(x\)</span> we need to use <code class="docutils literal notranslate"><span class="pre">A.createVecRight</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecLeft</span><span class="p">()</span>
+<span class="n">b</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following initialised the full solver and solves the problem. As iterative solver we choose <code class="docutils literal notranslate"><span class="pre">BicgStab</span></code> (denoted by the parameter <code class="docutils literal notranslate"><span class="pre">bcgs</span></code>). This is an iterative solver for nonsymmetric systems of equations that requires only a short recurrence and therefore, in contrast to GMRES, does not need to store the whole Krylov subspace basis. The disadvantage is that it does not guarantee that the residual is minimized in each step.
+As preconditioner we set <code class="docutils literal notranslate"><span class="pre">none</span></code>, which disables preconditioning for now. We also save the convergence history so that we can plot it afterwards.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecRight</span><span class="p">()</span>
+
+<span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;bcgs&#39;</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setConvergenceHistory</span><span class="p">()</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">getPC</span><span class="p">()</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now plot the residual curve.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">residuals</span> <span class="o">=</span> <span class="n">ksp</span><span class="o">.</span><span class="n">getConvergenceHistory</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efd14f86910&gt;]
+</pre></div>
+</div>
+<img alt="_images/petsc_for_sparse_systems_33_1.png" src="_images/petsc_for_sparse_systems_33_1.png" />
+</div>
+</div>
+<p>PETSc knows a huge number of preconditioners. For example, the following uses SOR as preconditioner.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecRight</span><span class="p">()</span>
+
+<span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;bcgs&#39;</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setConvergenceHistory</span><span class="p">()</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">getPC</span><span class="p">()</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;sor&#39;</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">ksp</span><span class="o">.</span><span class="n">getConvergenceHistory</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efd14b10a00&gt;]
+</pre></div>
+</div>
+<img alt="_images/petsc_for_sparse_systems_35_1.png" src="_images/petsc_for_sparse_systems_35_1.png" />
+</div>
+</div>
+<p>If we want to use a direct solver with PETSc we neeed to specify the direct solver as preconditioner and tell PETSc to only evaluate the precondtiioner. This seems a bit strange but allows iterative and direct solvers to have the same interface.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecRight</span><span class="p">()</span>
+
+<span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;preonly&#39;</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">setConvergenceHistory</span><span class="p">()</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">getPC</span><span class="p">()</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;lu&#39;</span><span class="p">)</span>
+<span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">residual</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">b</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The relative residual is: </span><span class="si">{</span><span class="n">residual</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">/</span> <span class="n">b</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The residual is: 8.358396715688236e-12.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>PETSc is an amazing library. It makes it simple to build solvers that scale from small workstations to huge clusters. With petsc4py most PETSc functions are available from Python. The main problem with petsc4py is that while PETSc has great documentation, petsc4py is mostly undocumented. The function names in petsc4py are similar to those in PETSc. So using the PETSc documentation often helps. If this is not sufficient then the best approach is to directly look into the petscpy source code to see how information is transferred on to PETSc.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-dev-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-dev-py",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-dev-py'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="sparse_direct_solvers.html" title="previous page">Sparse Direct Solvers</a>
+    <a class='right-next' id="next-link" href="assignment_1.html" title="next page">Assignment 1</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
