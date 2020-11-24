@@ -57,7 +57,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Assignment 1" href="assignment_1.html" />
+    <link rel="next" title="Sparse Direct Solvers" href="sparse_direct_solvers.html" />
     <link rel="prev" title="Iterative Solvers 3 - The Conjugate Gradient Method" href="it_solvers3.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -201,6 +201,11 @@
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Iterative Solvers 4 - Preconditioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_direct_solvers.html">
+   Sparse Direct Solvers
   </a>
  </li>
 </ul>
@@ -427,7 +432,8 @@ M_{k+1} &amp;= M_k + \alpha_k G_k\nonumber\\
 <p>We run the code with the following matrix, which is a slightly shifted version of the discrete 3-point second order differential operator.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
 
@@ -461,6 +467,24 @@ M_{k+1} &amp;= M_k + \alpha_k G_k\nonumber\\
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="n">spai</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span> <span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f7da0203790&gt;
+</pre></div>
+</div>
+<img alt="_images/it_solvers4_13_1.png" src="_images/it_solvers4_13_1.png" />
 </div>
 </div>
 <p>Let us check the condition number of the right-preconditioned system.</p>
@@ -504,10 +528,10 @@ M_{k+1} &amp;= M_k + \alpha_k G_k\nonumber\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7efbc0488b50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f7da00c3f10&gt;
 </pre></div>
 </div>
-<img alt="_images/it_solvers4_16_1.png" src="_images/it_solvers4_16_1.png" />
+<img alt="_images/it_solvers4_17_1.png" src="_images/it_solvers4_17_1.png" />
 </div>
 </div>
 <p>We can see a significant improvement in the number of iterations. However, the comparison is not quite fair. Setting up the preconditioner took time, which should be taken into account. Just considering number of iterations is not sufficient. In practice, the overall computation time is the much more important measure. We have implemented here a very primitive variant of SPAI that should not be used in practice. For practical alternatives see the cited literature. For the type of matrix that <span class="math notranslate nohighlight">\(A\)</span> is there are also much better precondtioners available, some of which we will encounter later.</p>
@@ -547,7 +571,7 @@ M_{k+1} &amp;= M_k + \alpha_k G_k\nonumber\\
     <div class='prev-next-bottom'>
         
     <a class='left-prev' id="prev-link" href="it_solvers3.html" title="previous page">Iterative Solvers 3 - The Conjugate Gradient Method</a>
-    <a class='right-next' id="next-link" href="assignment_1.html" title="next page">Assignment 1</a>
+    <a class='right-next' id="next-link" href="sparse_direct_solvers.html" title="next page">Sparse Direct Solvers</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

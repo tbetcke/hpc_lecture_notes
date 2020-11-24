@@ -202,6 +202,11 @@
    Iterative Solvers 4 - Preconditioning
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_direct_solvers.html">
+   Sparse Direct Solvers
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -362,7 +367,7 @@
 \[
 \tilde{A}x = f,
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(\tilde{A}\)</span> is represented through your linear operator. For <span class="math notranslate nohighlight">\(f\)</span> simply choose the function with all ones. Make plots of the convergence of the relative residual <span class="math notranslate nohighlight">\(\|Ax_k-b\|_2/\|b\|_2\)</span>. As solver tolerance you can choose the default value. Plot within the same graph the convergence curves for different values of <span class="math notranslate nohighlight">\(\omega &gt; 0\)</span>. Try to explain your observations from what you know about the convergence bounds for CG.</p>
+<p>where <span class="math notranslate nohighlight">\(\tilde{A}\)</span> is represented through your linear operator. For <span class="math notranslate nohighlight">\(f\)</span> simply choose the function with all ones. Make plots of the convergence of the relative residual <span class="math notranslate nohighlight">\(\|Ax_k-f\|_2/\|f\|_2\)</span>. As solver tolerance you can choose the default value. Plot within the same graph the convergence curves for different values of <span class="math notranslate nohighlight">\(\omega &gt; 0\)</span>. Try to explain your observations from what you know about the convergence bounds for CG.</p>
 <p>Finally, visualize your PDE solution for <span class="math notranslate nohighlight">\(\omega=1\)</span> using <code class="docutils literal notranslate"><span class="pre">imshow</span></code>.</p>
 </div>
 </div>
