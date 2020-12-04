@@ -25,8 +25,13 @@
     - file: it_solvers4
     - file: sparse_direct_solvers
     - file: petsc_for_sparse_systems
+    - file: multigrid
+- part: Time-Dependent Problems
+  chapters:
+    - file: simple_time_stepping
 - part: Assignments
   chapters:
     - file: assignment_1
     - file: assignment_2
     - file: assignment_3
+    - file: assignment_4
