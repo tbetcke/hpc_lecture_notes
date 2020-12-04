@@ -57,7 +57,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Assignment 1" href="assignment_1.html" />
+    <link rel="next" title="Multigrid Methods" href="multigrid.html" />
     <link rel="prev" title="Sparse Direct Solvers" href="sparse_direct_solvers.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -213,6 +213,23 @@
    Using petsc4py for sparse linear systems
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="multigrid.html">
+   Multigrid Methods
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Time-Dependent Problems
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_time_stepping.html">
+   Time-dependent problems
+  </a>
+ </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -233,6 +250,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="assignment_3.html">
    Assignment 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_4.html">
+   Assignment 4
   </a>
  </li>
 </ul>
@@ -359,7 +381,7 @@
 <li><p>Assign the matrix elements</p></li>
 <li><p>Assemble the matrix</p></li>
 </ul>
-<p>PETSc by default uses the CSR matrix format and distributes rows across different compute nodes. In this example we do not use the parallel features of PETSC and refer to the documentation for details.</p>
+<p>PETSc by default uses the CSR matrix format and distributes rows across different compute nodes. In this example we do not use the parallel features of PETSc and refer to the documentation for details.</p>
 <p>Let’s get started and specify a matrix of dimension 1000 x 1000. We want to have a tridiagonal matrix, so will have two entries in the first and last row, and three entries in each other row. PETSc can dynamically grow sizes needed to store matrix entries. But this is inefficient and it is useful to preallocate the storage size.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -377,7 +399,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;petsc4py.PETSc.Mat at 0x7efda35b2c20&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;petsc4py.PETSc.Mat at 0x7efd14a42630&gt;
 </pre></div>
 </div>
 </div>
@@ -549,7 +571,7 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efd14f86910&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efd14a19370&gt;]
 </pre></div>
 </div>
 <img alt="_images/petsc_for_sparse_systems_33_1.png" src="_images/petsc_for_sparse_systems_33_1.png" />
@@ -571,7 +593,7 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efd14b10a00&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7efd1479ea60&gt;]
 </pre></div>
 </div>
 <img alt="_images/petsc_for_sparse_systems_35_1.png" src="_images/petsc_for_sparse_systems_35_1.png" />
@@ -595,7 +617,7 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The residual is: 8.358396715688236e-12.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The relative residual is: 8.358396715688236e-12.
 </pre></div>
 </div>
 </div>
@@ -636,7 +658,7 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
     <div class='prev-next-bottom'>
         
     <a class='left-prev' id="prev-link" href="sparse_direct_solvers.html" title="previous page">Sparse Direct Solvers</a>
-    <a class='right-next' id="next-link" href="assignment_1.html" title="next page">Assignment 1</a>
+    <a class='right-next' id="next-link" href="multigrid.html" title="next page">Multigrid Methods</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

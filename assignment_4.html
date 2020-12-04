@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python HPC Tools &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 4 &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -57,8 +57,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Memory layout and Numpy arrays" href="numpy_and_data_layouts.html" />
-    <link rel="prev" title="Languages for High-Performance Computing" href="hpc_languages.html" />
+    <link rel="prev" title="Assignment 3" href="assignment_3.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -100,7 +99,7 @@
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="current nav sidenav_l1">
+<ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -111,8 +110,8 @@
    Languages for High-Performance Computing
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
    Python HPC Tools
   </a>
  </li>
@@ -236,7 +235,7 @@
   Assignments
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="assignment_1.html">
    Assignment 1
@@ -252,8 +251,8 @@
    Assignment 3
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="assignment_4.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Assignment 4
   </a>
  </li>
@@ -297,9 +296,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/python_hpc_tools.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/assignment_4.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -317,59 +316,27 @@
 
         <!-- Launch buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/assignment_4.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
     </div>
 
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
-        </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#jupyter-notebook">
-   Jupyter Notebook
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#numpy-and-scipy">
-   Numpy and Scipy
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#numba">
-   Numba
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#matplotlib">
-   Matplotlib
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dask">
-   Dask
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pandas">
-   Pandas
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#tensorflow-pytorch-and-scikit-learn">
-   Tensorflow, PyTorch, and scikit-learn
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#other-tools">
-   Other tools
-  </a>
- </li>
-</ul>
-
-        </nav>
         
     </div>
 </div>
@@ -378,41 +345,10 @@
         
               <div>
                 
-  <div class="section" id="python-hpc-tools">
-<h1>Python HPC Tools<a class="headerlink" href="#python-hpc-tools" title="Permalink to this headline">¶</a></h1>
-<p>Python has an incredible ecosystem for scientific computing. In this chapter we provide a brief overview of some of the existing libraries before diving down much deeper in the following parts.</p>
-<div class="section" id="jupyter-notebook">
-<h2>Jupyter Notebook<a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://jupyter.org/">Jupyter</a> is a key part of the Python ecosystem. It allows the creation of Jupyter Notebook documents that mix executable code, descriptions, figures and formulas in a single file that can be viewed and edited inside a web browser. Jupyter notebooks can be used either through the Jupyter Notebook tool or the more recent Jupyterlab environment.</p>
-</div>
-<div class="section" id="numpy-and-scipy">
-<h2>Numpy and Scipy<a class="headerlink" href="#numpy-and-scipy" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://numpy.org/">Numpy</a> and <a class="reference external" href="https://www.scipy.org/">Scipy</a> are key tools for any scientific Python installation. Numpy defines a fast array data type and provides a huge amount of operations on this type including all common linear algebra operations. Moreover, Numpy beautifully handles multi-dimensional arrays and operations on them. While Numpy provides fairly low-level routines, Scipy builds on top of Numpy to provide a collection of high-level routines, including graph algorithms, optimisation, sparse matrices, ode solvers, and many more. Both, Numpy and Scipy together are one of the main reasons for the success of Python.</p>
-</div>
-<div class="section" id="numba">
-<h2>Numba<a class="headerlink" href="#numba" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://numba.pydata.org/">Numba</a> is a tool for the just-in-time compilation of Python functions. Python itself is a slow language. Each operation has considerable overhead from the Python interpreter, making especially time-critical for-loops inefficient in Python. Numba allows to just-in-time compile Python functions into direct machine code that needs not access the Python interpreter. Moreover, in doing so it allows to use simple loop parallelisations that cover a lot of use-cases for parallel computing on a single machine. In addition to all this, Numba has features to directly cross-compile code for use on GPU accelerators. Numba will be one of our main tools to write performant Python codes for CPUs and GPUs.</p>
-</div>
-<div class="section" id="matplotlib">
-<h2>Matplotlib<a class="headerlink" href="#matplotlib" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://matplotlib.org/">Matplotlib</a> is the standard on Python for data visualization in two dimensions. It is incredibly feature rich. While simple plots are easy to do, there is a huge underlying API that allows very fine-grained control for complex data visualization settings. Indeed, the complexity of this API has lead to the development of other libraries that build on Matplotlib and provide simplified interfaces for specific application areas.</p>
-</div>
-<div class="section" id="dask">
-<h2>Dask<a class="headerlink" href="#dask" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://dask.org/">Dask</a> provides a powerful environment to specify complex calculations as graph that is then optimally executed on a given parallel environment. It allows scalability for algorithms from a single desktop up to a HPC systems with thousands of nodes.</p>
-</div>
-<div class="section" id="pandas">
-<h2>Pandas<a class="headerlink" href="#pandas" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://pandas.pydata.org/">Pandas</a> is the standard data-analysis library for Python. It has efficient data structures and tools to handle and process large-scale data sets in Python.</p>
-</div>
-<div class="section" id="tensorflow-pytorch-and-scikit-learn">
-<h2>Tensorflow, PyTorch, and scikit-learn<a class="headerlink" href="#tensorflow-pytorch-and-scikit-learn" title="Permalink to this headline">¶</a></h2>
-<p>Python is the preferred environment for machine learning. We will not go into the various tools as part of this module, but just mention some of them for completeness, in particular <a class="reference external" href="https://www.tensorflow.org/">Tensorflow</a>, <a class="reference external" href="https://pytorch.org/">PyTorch</a> and <a class="reference external" href="https://scikit-learn.org/stable/">scikit-learn</a>.</p>
-</div>
-<div class="section" id="other-tools">
-<h2>Other tools<a class="headerlink" href="#other-tools" title="Permalink to this headline">¶</a></h2>
-<p>There are many other tools available for scientific computing in Python, such as <a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/">mpi4py</a> for data communication on clusters using the MPI standard, <a class="reference external" href="https://pypi.org/project/petsc4py/">petsc4py</a>, an interface to the widely used PetsC library for parallel sparse matrix operations, or <a class="reference external" href="https://fenicsproject.org/">FEniCS</a>, a powerful PDE solution package using the finite element method. Many more large and small packages exist for specific application areas which are too numerous to all mention here.</p>
-</div>
+  <div class="section" id="assignment-4">
+<h1>Assignment 4<a class="headerlink" href="#assignment-4" title="Permalink to this headline">¶</a></h1>
+<p><strong>Deadline: Friday 18 December, 10am</strong>.</p>
+<p>Consider a square plate with sides <span class="math notranslate nohighlight">\([-1, 1]\times [-1, 1]\)</span>. At time <span class="math notranslate nohighlight">\(t = 0\)</span> we are heating the plate up such that the temperature is <span class="math notranslate nohighlight">\(u=5\)</span> on one side and <span class="math notranslate nohighlight">\(u=0\)</span> on the other sides. The temperature evolves according to <span class="math notranslate nohighlight">\(u_t=\Delta u\)</span>. At what time <span class="math notranslate nohighlight">\(t^*\)</span> does the plate reach <span class="math notranslate nohighlight">\(u=1\)</span> at the center of the plate? Implement a finite difference scheme and try with explicit and implicit time-stepping. By increasing the number of discretisation points demonstrate how many correct digits you can achieve. Show convincing benchmark experiments. Think about your implementation (you need not use GPU programming if you don’t want to) and how you want to present your results. An efficient implementation is worth 50%. The other 50% are focused on good and convincing presentation. Hint: To 12 digits the wanted solution is <span class="math notranslate nohighlight">\(t^* = 0.424011387033\)</span>.</p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -424,16 +360,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "conda-env-dev-py"
         },
         kernelOptions: {
-            kernelName: "python3",
+            kernelName: "conda-env-dev-py",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'conda-env-dev-py'</script>
 
               </div>
               
@@ -443,8 +379,7 @@
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="hpc_languages.html" title="previous page">Languages for High-Performance Computing</a>
-    <a class='right-next' id="next-link" href="numpy_and_data_layouts.html" title="next page">Memory layout and Numpy arrays</a>
+    <a class='left-prev' id="prev-link" href="assignment_3.html" title="previous page">Assignment 3</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
