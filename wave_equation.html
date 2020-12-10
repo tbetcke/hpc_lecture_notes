@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discretising the wave equation &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Further topics" href="further_topics.html" />
+    <link rel="prev" title="Simple time-stepping" href="simple_time_stepping.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to Techniques of High-Performance Computing
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
+   A tour of CUDA
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numba_cuda.html">
+   Numba Cuda in Practice
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rbf_evaluation.html">
+   GPU accelerated evaluation of particle sums
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Sparse Linear Algebra
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_linalg_pde.html">
+   The need for sparse linear algebra - A PDE example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_data_structures.html">
+   Sparse Matrix data structures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_solvers_introduction.html">
+   An introduction to sparse linear system solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers1.html">
+   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers2.html">
+   Iterative Solvers 2 - From FOM to GMRES
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers3.html">
+   Iterative Solvers 3 - The Conjugate Gradient Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers4.html">
+   Iterative Solvers 4 - Preconditioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_direct_solvers.html">
+   Sparse Direct Solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="petsc_for_sparse_systems.html">
+   Using petsc4py for sparse linear systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="multigrid.html">
+   Multigrid Methods
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Time-Dependent Problems
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_time_stepping.html">
+   Simple time-stepping
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Discretising the wave equation
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Conclusions
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="further_topics.html">
+   Further topics
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_1.html">
+   Assignment 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_2.html">
+   Assignment 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_3.html">
+   Assignment 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="assignment_4.html">
+   Assignment 4
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/wave_equation.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/wave_equation.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-graphical-description-of-the-leapfrog-method">
+   A graphical description of the Leapfrog Method
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-first-iteration-step">
+     The first iteration step.
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-following-iterations">
+   The following iterations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-dependence-cone-of-the-wave-equation">
+   The dependence cone of the wave equation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#numerical-implementation-of-the-leapfrog-scheme">
+   Numerical implementation of the Leapfrog Scheme.
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-final-remark">
+   A final remark
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="discretising-the-wave-equation">
+<h1>Discretising the wave equation<a class="headerlink" href="#discretising-the-wave-equation" title="Permalink to this headline">¶</a></h1>
+<p>We now consider the second order wave equation</p>
+<div class="math notranslate nohighlight">
+\[
+u_{tt} = c^2u_{xx}
+\]</div>
+<p>for <span class="math notranslate nohighlight">\(x\in [0, 1]\)</span>, <span class="math notranslate nohighlight">\(u(x, 0) = U_0(x)\)</span>, <span class="math notranslate nohighlight">\(u_t(x, 0) = 0\)</span>, <span class="math notranslate nohighlight">\(u(0, t) = 0\)</span>, <span class="math notranslate nohighlight">\(u(1, t) = 0\)</span>.</p>
+<p>A simple finite difference scheme can be derived by using the three-point stencil in time and in space. This gives us</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{u_i^{n+1} - 2u_{i}^n + u_i^{n-1}}{\Delta t^2} = c^2\frac{u_{i+1}^n - 2u_i^n + u_{i-1}^n}{\Delta x^2}.
+\]</div>
+<p>We hence obtain the next time-step <span class="math notranslate nohighlight">\(u_i^{n+1}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+u_i^{n+1} = -u_i^{n-1} + 2u_i^n + C^2\left(u_{i+1}^n - 2u_i^n + u_{i-1}^n\right)
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(C = c\frac{\Delta t}{\Delta x}\)</span> being called the Courant number. This method is called the leapfrog method. In the following we will develop a graphical understanding how this method is working.</p>
+<div class="section" id="a-graphical-description-of-the-leapfrog-method">
+<h2>A graphical description of the Leapfrog Method<a class="headerlink" href="#a-graphical-description-of-the-leapfrog-method" title="Permalink to this headline">¶</a></h2>
+<p>We first define some helper functions to simply the plotting of the leap-frog scheme.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">circle</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper to draw a circle.&quot;&quot;&quot;</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="o">.</span><span class="mi">15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">draw_leap_frog</span><span class="p">(</span><span class="n">red_circs</span><span class="o">=</span><span class="p">[],</span> <span class="n">blue_circs</span><span class="o">=</span><span class="p">[],</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper to draw the leap-frog dependencies.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">11</span><span class="p">));</span>
+    
+    <span class="k">for</span> <span class="n">circ</span> <span class="ow">in</span> <span class="n">red_circs</span><span class="p">:</span>
+        <span class="n">circle</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">circ</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">circ</span> <span class="ow">in</span> <span class="n">blue_circs</span><span class="p">:</span>
+        <span class="n">circle</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">circ</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">ax</span>
+        
+<span class="k">def</span> <span class="nf">draw_dependency_graph</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Draw leap-frog dependency graph&quot;&quot;&quot;</span>
+    <span class="n">red_circ</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">blue_circs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ycoord</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">xcoord</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">blue_circs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">xcoord</span><span class="p">,</span> <span class="n">ycoord</span><span class="p">))</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">draw_leap_frog</span><span class="p">(</span><span class="n">red_circ</span><span class="p">,</span> <span class="n">blue_circs</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="the-first-iteration-step">
+<h3>The first iteration step.<a class="headerlink" href="#the-first-iteration-step" title="Permalink to this headline">¶</a></h3>
+<p>In the first step we have the problem that we cannot yet fully evaluate the leap-frog formula. In order to compute <span class="math notranslate nohighlight">\(u_i^{1}\)</span> we would need the value at <span class="math notranslate nohighlight">\(u_i^{-1}\)</span>, which doesn’t exist. Here, the initial condition at the derivative comes in. The first derivative at the start should be <span class="math notranslate nohighlight">\(0\)</span>. If we use a simple central difference formula around to implement the first derivative we derive that <span class="math notranslate nohighlight">\(u_i^{-1} = u_i^{1}\)</span>, giving us the required value.</p>
+<p>Below the current value <span class="math notranslate nohighlight">\(u_i^{1}\)</span> is shown with a red circle and the values it depends on, are shown with a blue circle.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/wave_equation_5_0.png" src="_images/wave_equation_5_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="the-following-iterations">
+<h2>The following iterations<a class="headerlink" href="#the-following-iterations" title="Permalink to this headline">¶</a></h2>
+<p>We now proceed with the iteration. The current value is always shown with a red circle and the chain of values that contributed to the value are shown with blue circles. The following shows the dependent values for a point at time-steps 2 to 5.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
+<span class="n">ax4</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ax1</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ax4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/wave_equation_8_0.png" src="_images/wave_equation_8_0.png" />
+</div>
+</div>
+<p>We see that a dependency cone is forming. In the following we discuss this in more detail.</p>
+</div>
+<div class="section" id="the-dependence-cone-of-the-wave-equation">
+<h2>The dependence cone of the wave equation<a class="headerlink" href="#the-dependence-cone-of-the-wave-equation" title="Permalink to this headline">¶</a></h2>
+<p>Any twice differentiable function <span class="math notranslate nohighlight">\(F\)</span> gives us two solutions of the wave equation, namely <span class="math notranslate nohighlight">\(u_1(x, t) = F(x - ct)\)</span> and <span class="math notranslate nohighlight">\(u_2(x, t) = F(x + ct)\)</span>. The lines <span class="math notranslate nohighlight">\(x-ct = \text{const}\)</span> and <span class="math notranslate nohighlight">\(x+ct = \text{const}\)</span> are characteristics. They describe how information is transported from the origin with <span class="math notranslate nohighlight">\(t=0\)</span> to other time-steps.</p>
+<p>If we want to satisfy the initial conditions <span class="math notranslate nohighlight">\(u(x, 0) = U_0(x)\)</span> and <span class="math notranslate nohighlight">\(U_t(x, 0) = 0\)</span> we can choose the solution</p>
+<div class="math notranslate nohighlight">
+\[
+u(x, t) = \frac{1}{2}\left[U_0(x - ct) + U_0(x + ct)\right].
+\]</div>
+<p>This solution does not necessarily satisfy our boundary conditions <span class="math notranslate nohighlight">\(u(0, t) = u(1, t) = 0\)</span>. But for the sake of simplicity we ignore this here. We see that at a given point <span class="math notranslate nohighlight">\((x, t)\)</span> the solution depends on the values of <span class="math notranslate nohighlight">\(U_0\)</span> at <span class="math notranslate nohighlight">\(x - ct\)</span> and <span class="math notranslate nohighlight">\(x + ct\)</span>. This is due to the nature of the wave equation. We have a finite speed of propagation of information <span class="math notranslate nohighlight">\(c\)</span> and this is reflected in the solution.</p>
+<p>The numerical leap-frog scheme recreates this dependency cone. However, we require that the numerical dependency cone is at least as large as the physical dependency cone. If this is not the case we are losing out physical information and our solution becomes meaningless. Hence, we require that</p>
+<div class="math notranslate nohighlight">
+\[
+c\leq \frac{\Delta x}{\Delta t},
+\]</div>
+<p>where on the right-hand side we have the numerical speed of propagation.</p>
+<p>This is equivalent to the condition that</p>
+<div class="math notranslate nohighlight">
+\[
+C := c\frac{\Delta t}{\Delta x} \leq 1.
+\]</div>
+<p>This condition is also called <strong>Courant-Friedrichs-Lewy (CFL)</strong> condition and guarantees that our solution remains numerically bounded.</p>
+<p>If we are in the limit case <span class="math notranslate nohighlight">\(C=1\)</span> then the current value <span class="math notranslate nohighlight">\(u_i^n\)</span> cancels out of our recurrence formua. We are leaping over it to obtain the new value. If <span class="math notranslate nohighlight">\(C &lt; 1\)</span> then we have that</p>
+<div class="math notranslate nohighlight">
+\[
+u_i^{n+1} = 2(1 - C^2)u_i^n + \dots.
+\]</div>
+<p>Hence, the influence of <span class="math notranslate nohighlight">\(u_i^{n}\)</span> becomes quadratically smaller as <span class="math notranslate nohighlight">\(C\rightarrow 1\)</span>.</p>
+</div>
+<div class="section" id="numerical-implementation-of-the-leapfrog-scheme">
+<h2>Numerical implementation of the Leapfrog Scheme.<a class="headerlink" href="#numerical-implementation-of-the-leapfrog-scheme" title="Permalink to this headline">¶</a></h2>
+<p>We want to implement a finite difference method for the wave equation <span class="math notranslate nohighlight">\(u_{tt} = c^2u_{xx}\)</span> for <span class="math notranslate nohighlight">\(c=1\)</span> and <span class="math notranslate nohighlight">\((x, 0) \in [0, 1]\times [0, 2]\)</span>. The initial condition is <span class="math notranslate nohighlight">\(u(x, 0) = e^{-5(x-.5)^2}\)</span> and the boundary conditions are <span class="math notranslate nohighlight">\(\frac{\partial}{\partial n} u = 0\)</span> otherwise (Here, <span class="math notranslate nohighlight">\(n\)</span> is the normal derivative along the normal direction of the boundary). We are going to use the leapfrog scheme. At the boundary <span class="math notranslate nohighlight">\(x=0\)</span> we use a centered difference to obtain the condition that the required value at <span class="math notranslate nohighlight">\(u_{-1}^n\)</span> is just <span class="math notranslate nohighlight">\(u_1^n\)</span> (with the corresponding condition at the other boundary).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve_wave_equation</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solves a 1d wave equation.</span>
+
+<span class="sd">    This function solves the 1d wave equation</span>
+<span class="sd">    with zero boundary conditions. The x-domain is the</span>
+<span class="sd">    interval [0, 1] and the final time is T.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">xt_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">time_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+    <span class="c1"># Set initial condition</span>
+    <span class="n">xt_grid</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xx</span><span class="o">-.</span><span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">time_steps</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Compute courant number</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Courant Number: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+
+    <span class="c1"># Set first step</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">il</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">ir</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xt_grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> \
+            <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">C</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">xt_grid</span><span class="p">[</span><span class="n">ir</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="o">+</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">il</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Compute the other steps</span>
+
+    <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">x_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+            <span class="n">il</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x_index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">x_index</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">ir</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">x_index</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x_index</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="o">-</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]</span> <span class="o">+</span>
+                 <span class="n">C</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">xt_grid</span><span class="p">[</span><span class="n">ir</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]</span> <span class="o">-</span>
+                 <span class="mi">2</span> <span class="o">*</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]</span> <span class="o">+</span>
+                 <span class="n">xt_grid</span><span class="p">[</span><span class="n">il</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">xt_grid</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solve_wave_equation</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">et</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elapsed time (s): </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">et</span> <span class="o">-</span> <span class="n">st</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Courant Number: 0.995
+Elapsed time (s): 0.20034098625183105
+</pre></div>
+</div>
+<img alt="_images/wave_equation_14_1.png" src="_images/wave_equation_14_1.png" />
+</div>
+</div>
+<p>In the above example the Courant number is almost <span class="math notranslate nohighlight">\(1\)</span>. Yet, the scheme is perfectly stable. Let us consider what happens if <span class="math notranslate nohighlight">\(C &gt; 1\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solve_wave_equation</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">et</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elapsed time (s): </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">et</span> <span class="o">-</span> <span class="n">st</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Courant Number: 1.0348000000000002
+Elapsed time (s): 0.18599629402160645
+</pre></div>
+</div>
+<img alt="_images/wave_equation_16_1.png" src="_images/wave_equation_16_1.png" />
+</div>
+</div>
+<p>Now we have chosen <span class="math notranslate nohighlight">\(c\)</span> such that the Courant number is just above <span class="math notranslate nohighlight">\(1\)</span> and the solution completely explodes. This is a beautiful example for how stability is derived from proper physical considerations in the implementation of a numerical scheme.</p>
+</div>
+<div class="section" id="a-final-remark">
+<h2>A final remark<a class="headerlink" href="#a-final-remark" title="Permalink to this headline">¶</a></h2>
+<p>We have presented here a method for directly discretising the second order wave equation. One can also reformulate the wave equation as a first-order equation and then apply all the methods well known for first-order problems. Which method is applied in practice depends on the application and what information is needed. If in addition to <span class="math notranslate nohighlight">\(u\)</span> also the time-derivative <span class="math notranslate nohighlight">\(u_t\)</span> is required at each step, then a first-order method is often more useful. For a simple direct discretisation of the wave equation leapfrog is a very simple and effective scheme.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-hpc-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-hpc-py",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-hpc-py'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="simple_time_stepping.html" title="previous page">Simple time-stepping</a>
+    <a class='right-next' id="next-link" href="further_topics.html" title="next page">Further topics</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Timo Betcke<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>

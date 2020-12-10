@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Techniques of High-Performance Computing &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Further topics &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -57,7 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="What is High-Performance Computing?" href="what_is_hpc.html" />
+    <link rel="next" title="Assignment 1" href="assignment_1.html" />
+    <link rel="prev" title="Discretising the wave equation" href="wave_equation.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -88,8 +89,8 @@
 </form>
 <nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
     <ul class="nav sidenav_l1">
- <li class="toctree-l1 current active">
-  <a class="reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
    Welcome to Techniques of High-Performance Computing
   </a>
  </li>
@@ -240,9 +241,9 @@
   Conclusions
  </span>
 </p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="further_topics.html">
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Further topics
   </a>
  </li>
@@ -313,9 +314,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/intro.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/further_topics.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
+                data-placement="left">.ipynb</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -333,10 +334,71 @@
 
         <!-- Launch buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/further_topics.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
     </div>
 
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#domain-decomposition-methods">
+   Domain Decomposition Methods
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#randomized-linear-algebra">
+   Randomized Linear Algebra
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fast-direct-solvers">
+   Fast direct solvers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#space-time-parallel-methods">
+   Space-Time Parallel Methods
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reproducibility-in-computational-sciences-using-containers">
+   Reproducibility in Computational Sciences using containers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#machine-learning-meets-scientific-computing">
+   Machine Learning meets Scientific Computing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-julia-programming-language">
+   The Julia Programming Language
+  </a>
+ </li>
+</ul>
+
+        </nav>
         
     </div>
 </div>
@@ -345,26 +407,36 @@
         
               <div>
                 
-  <div class="section" id="welcome-to-techniques-of-high-performance-computing">
-<h1>Welcome to Techniques of High-Performance Computing<a class="headerlink" href="#welcome-to-techniques-of-high-performance-computing" title="Permalink to this headline">¶</a></h1>
-<p>In this module we learn a number of basic techniques from High-Performance Computing.
-The module starts with an introduction and overview of parallel computing techniques and
-programming languages. We then take a deeper dive into Python, the main language for this module.
-In particular, we will get to learn libraries and programming techniques that will allow us to
-take full advantage of modern programming architectures in Python.</p>
-<p>This will be followed by an introduction to sparse linear algebra for very large linear systems of
-equations. You will get to know the basics of sparse direct solvers and sparse iterative solvers.</p>
-<p>Finally, we will turn to partial differential equations and implement some typical PDEs using the
-techniques learned in this module.</p>
-<div class="toctree-wrapper compound">
+  <div class="section" id="further-topics">
+<h1>Further topics<a class="headerlink" href="#further-topics" title="Permalink to this headline">¶</a></h1>
+<p>We want to list some further topics of current interest in Scientific Computing that we did not cover in this module. The list can not be exhaustive and there will be things of importance that I am leaving out. But it should give some pointers for those who are interested in diving more into the research side.</p>
+<div class="section" id="domain-decomposition-methods">
+<h2>Domain Decomposition Methods<a class="headerlink" href="#domain-decomposition-methods" title="Permalink to this headline">¶</a></h2>
+<p>We have not discussed domain decomposition methods at all. The idea is to decompose a computational problem into a number of subproblems that can be solved independently and exchange information via interface conditions. The individual subproblems can then be solved in parallel. This approach is important to achieve weak scaling for larger problems on massively parallel architectures. Research into domain decomposition methods combines techniques from Partial Differential Equations (coupled PDE problems, design of interface conditions), Numerical Linear Algebra (efficient preconditioning, adapted iterative solvers, etc.) and Computer Science (load balancing, network communication, and much more).</p>
 </div>
-<div class="toctree-wrapper compound">
+<div class="section" id="randomized-linear-algebra">
+<h2>Randomized Linear Algebra<a class="headerlink" href="#randomized-linear-algebra" title="Permalink to this headline">¶</a></h2>
+<p>It might seem counterintuitive. But we can learn a lot about matrices by multiplication with random vectors. Indeed, we can learn so much that we can design efficient methods for problems such as singular value decompositions, dense linear solvers, eigenvalue computations, and many other standard problems of numerical linear algebra. Modern randomized methods approximate solutions to these problems in a probabilistic sense, with an error probability that is so small that in practice we need not worry about it. This area of research has become extremely prominent in the last 10 years and is more and more used for application problems of all sizes. A very recent overview is given in the article <a class="reference external" href="https://www.cambridge.org/core/journals/acta-numerica/article/abs/randomized-numerical-linear-algebra-foundations-and-algorithms/4486926746CFF4547F42A2996C7DC09C">Randomized numerical linear algebra: Foundations and algorithms</a> by Martinsson and Tropp.</p>
 </div>
-<div class="toctree-wrapper compound">
+<div class="section" id="fast-direct-solvers">
+<h2>Fast direct solvers<a class="headerlink" href="#fast-direct-solvers" title="Permalink to this headline">¶</a></h2>
+<p>Fast direct solvers are a technology to compute approximate inverses to many relevant PDE problems in close to lnear complexity. This is made possible through compressing Green’s function interactions between different points of the computational domain in the inversion. Fast direct solvers have shown tremendous success for certain types of linear systems arising for the solution of non-oscillatory stationary problems. A beautiful overview article is <a class="reference external" href="https://www.cambridge.org/core/journals/acta-numerica/article/abs/fast-direct-solvers-for-integral-equations-in-complex-threedimensional-domains/B3CCDC43521A7EEEC0207786AE469C4B">Fast direct solvers for integral equations in complex three-dimensional domains</a> by Greengard, Gueyffier, Martinsson and Rohklin.</p>
 </div>
-<div class="toctree-wrapper compound">
+<div class="section" id="space-time-parallel-methods">
+<h2>Space-Time Parallel Methods<a class="headerlink" href="#space-time-parallel-methods" title="Permalink to this headline">¶</a></h2>
+<p>We have seen very simple discretisation of time-stepping methods for first and second order systems. However, while we can easily parallelise the space discretisation, we have to compute one timestep after another, which limits parallelisation opportunities on large HPC machines. The idea of space-time parallel methods is to form a large linear system that contains all space variables at all time steps and then to develop efficient preconditioned methods that solve these problems. More information is given in the article <a class="reference external" href="https://www.unige.ch/~gander/Preprints/50YearsTimeParallel.pdf">50 Years of Time Parallel Time Integration</a> by Martin Gander.</p>
 </div>
-<div class="toctree-wrapper compound">
+<div class="section" id="reproducibility-in-computational-sciences-using-containers">
+<h2>Reproducibility in Computational Sciences using containers<a class="headerlink" href="#reproducibility-in-computational-sciences-using-containers" title="Permalink to this headline">¶</a></h2>
+<p>Reproducibility means that we want to provide means that make it easy for other people to run our codes and data to reproduce the output that we are using in our publications. This sounds straight forward, but is fiendishly complex due to widely varying hardware configurations, operating systems, tool libraries, etc. In recent years Docker container have become more and more established as a tool to achieve reproducibility. Docker containers allow us to pack all required libraries and software into one image that can be run on various operating systems. A great introduction to reproduciblity and use of containers in computational sciences can be found at <a class="reference external" href="https://lorenabarba.com/tag/reproducibility/">https://lorenabarba.com/tag/reproducibility/</a>.</p>
+</div>
+<div class="section" id="machine-learning-meets-scientific-computing">
+<h2>Machine Learning meets Scientific Computing<a class="headerlink" href="#machine-learning-meets-scientific-computing" title="Permalink to this headline">¶</a></h2>
+<p>The tremendous importance of machine learning is undisputed and there are a number of modules at UCL, which teach all aspects of machine learning. However, machine learning has developed quite independent from traditional scientific computing with its own tools and libraries. Recently more and more researchers have become interested in merging more traditional scientific computing and modelling with machine learning. The idea is to mix statistical and PDE based models to significantly improve the predictive power of computational simulations. This is an emerging area with a huge need for mathematical and computational and natural sciences research together with the development of suitable computational tools.</p>
+</div>
+<div class="section" id="the-julia-programming-language">
+<h2>The Julia Programming Language<a class="headerlink" href="#the-julia-programming-language" title="Permalink to this headline">¶</a></h2>
+<p>We have focused in this module on using Python. It is a very powerful programming language, which is used in a number of HPC projects. However, Julia is growing significantly as programming language and it is a number of novel ideas and concepts. A few years ago it was demonstrated that a pure Julia application was able to scale to petascale performance, which was a huge breakthrough. For new projects that do not need to be developed in a low-level language such as C++ or Fortran I strongly consider to evaluate both, Julia and Python as environments.</p>
 </div>
 </div>
 
@@ -377,16 +449,16 @@ techniques learned in this module.</p>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "conda-env-hpc-py"
         },
         kernelOptions: {
-            kernelName: "python3",
+            kernelName: "conda-env-hpc-py",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'conda-env-hpc-py'</script>
 
               </div>
               
@@ -396,7 +468,8 @@ techniques learned in this module.</p>
     
     <div class='prev-next-bottom'>
         
-    <a class='right-next' id="next-link" href="what_is_hpc.html" title="next page">What is High-Performance Computing?</a>
+    <a class='left-prev' id="prev-link" href="wave_equation.html" title="previous page">Discretising the wave equation</a>
+    <a class='right-next' id="next-link" href="assignment_1.html" title="next page">Assignment 1</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
