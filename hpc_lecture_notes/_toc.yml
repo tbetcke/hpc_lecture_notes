@@ -29,6 +29,10 @@
 - part: Time-Dependent Problems
   chapters:
     - file: simple_time_stepping
+    - file: wave_equation
+- part: Conclusions
+  chapters:
+    - file: further_topics
 - part: Assignments
   chapters:
     - file: assignment_1
