@@ -1,38 +1,39 @@
-- file: intro
-
-- part: High-Performance Computing with Python
+format: jb-book
+root: intro
+parts:
+- caption: High-Performance Computing with Python
   chapters:
-    - file: what_is_hpc
-    - file: hpc_languages
-    - file: python_hpc_tools
-    - file: numpy_and_data_layouts
-    - file: parallel_principles
-    - file: working_with_numba
-    - file: simd
-    - file: numexpr
-    - file: gpu_introduction
-    - file: cuda_introduction
-    - file: numba_cuda
-    - file: rbf_evaluation
-- part: Sparse Linear Algebra
+  - file: what_is_hpc
+  - file: hpc_languages
+  - file: python_hpc_tools
+  - file: numpy_and_data_layouts
+  - file: parallel_principles
+  - file: working_with_numba
+  - file: simd
+  - file: numexpr
+  - file: gpu_introduction
+  - file: cuda_introduction
+  - file: numba_cuda
+  - file: rbf_evaluation
+- caption: Sparse Linear Algebra
   chapters:
-    - file: sparse_linalg_pde
-    - file: sparse_data_structures
-    - file: sparse_solvers_introduction
-    - file: it_solvers1
-    - file: it_solvers2
-    - file: it_solvers3
-    - file: it_solvers4
-    - file: sparse_direct_solvers
-    - file: petsc_for_sparse_systems
-    - file: multigrid
-- part: Time-Dependent Problems
+  - file: sparse_linalg_pde
+  - file: sparse_data_structures
+  - file: sparse_solvers_introduction
+  - file: it_solvers1
+  - file: it_solvers2
+  - file: it_solvers3
+  - file: it_solvers4
+  - file: sparse_direct_solvers
+  - file: petsc_for_sparse_systems
+  - file: multigrid
+- caption: Time-Dependent Problems
   chapters:
-    - file: simple_time_stepping
-    - file: wave_equation
-- part: Conclusions
+  - file: simple_time_stepping
+  - file: wave_equation
+- caption: Conclusions
   chapters:
-    - file: further_topics
-- part: Assignments
+  - file: further_topics
+- caption: Assignments
   chapters:
-    - file: assignment_1
+  - file: assignment_1
