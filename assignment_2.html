@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A Numexpr example &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>GPU Accelerated solution of Poisson problems &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -42,6 +42,8 @@
     <script src="_static/copybutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script>
         const thebe_selector = ".thebe"
@@ -51,8 +53,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="An Introduction to GPU Computing" href="gpu_introduction.html" />
-    <link rel="prev" title="SIMD Autovectorization in Numba" href="simd.html" />
+    <link rel="prev" title="Assignment 1 - Matrix multiplication in Numba" href="assignment_1.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -98,7 +99,7 @@
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -134,8 +135,8 @@
    SIMD Autovectorization in Numba
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
    A Numexpr example
   </a>
  </li>
@@ -251,14 +252,14 @@
   Assignments
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="assignment_1.html">
    Assignment 1 - Matrix multiplication in Numba
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="assignment_2.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    GPU Accelerated solution of Poisson problems
   </a>
  </li>
@@ -303,9 +304,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/numexpr.ipynb"><button type="button"
+        <a class="dropdown-buttons" href="_sources/assignment_2.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
+                data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -323,23 +324,6 @@
 
             <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numexpr.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
-
         </div>
 
         <!-- Table of contents -->
@@ -353,109 +337,58 @@
         
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="a-numexpr-example">
-<h1>A Numexpr example<a class="headerlink" href="#a-numexpr-example" title="Permalink to this headline">¶</a></h1>
-<p>Numexpr is a library for the fast execution of array transformation. One can define complex elementwise operations on array and Numexpr will generate efficient code to execute the operations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numexpr</span> <span class="k">as</span> <span class="nn">ne</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Numexpr provides fast multithreaded operations on array elements. Let’s test it on some large arrays.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Componentwise addition is easy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + 1&quot;</span><span class="p">)</span>
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + b&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.3195833 , 0.92546223, 1.68758307, ..., 1.19557921, 1.19559017,
-       0.24145174])
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can evaluate complex expressions.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False, False, False, ..., False, False, False])
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s compare the performance with Numpy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mf">4.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">b</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.89 ms ± 91.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>995 µs ± 40.5 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<p>Numexpr is a factor 10 faster compared to Numpy, a nice improvement with very little effort. Let us compare some more complex operations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;sin(a) + arcsinh(a/b)&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.4 ms ± 100 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can compare it with Numpy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39.5 ms ± 664 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
-</pre></div>
-</div>
-</div>
-</div>
+  <div class="tex2jax_ignore mathjax_ignore section" id="gpu-accelerated-solution-of-poisson-problems">
+<h1>GPU Accelerated solution of Poisson problems<a class="headerlink" href="#gpu-accelerated-solution-of-poisson-problems" title="Permalink to this headline">¶</a></h1>
+<p><strong>Submission Deadline: 8 November 2021, 10am</strong></p>
+<p>In this assignment we consider the solution of Poisson problems of the form</p>
+<div class="math notranslate nohighlight">
+\[
+-\Delta u(x, y) = f(x, y)
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\Delta := u_{xx} + u_{yy}\)</span>
+for <span class="math notranslate nohighlight">\((x, y)\in\Omega\subset\mathbb{R}^2\)</span> and boundary conditions <span class="math notranslate nohighlight">\(u(x, y) = g(x, y)\)</span> on <span class="math notranslate nohighlight">\(\Gamma :=\partial\Omega\)</span>.</p>
+<p>For all our experiments the domain <span class="math notranslate nohighlight">\(\Omega\)</span> is the unit square <span class="math notranslate nohighlight">\(\Omega :=[0, 1]^2\)</span>.</p>
+<p>To numerically solve this problem we define grid points <span class="math notranslate nohighlight">\(x_i := ih\)</span> and <span class="math notranslate nohighlight">\(y_j :=jh\)</span> with <span class="math notranslate nohighlight">\(i, j=1, \dots, N\)</span> and <span class="math notranslate nohighlight">\(h=1/(N+1)\)</span>. We can now approximate</p>
+<div class="math notranslate nohighlight">
+\[
+-\Delta u(x_i, y_j) \approx \frac{1}{h^2}(4 u(x_i, y_j) - u(x_{i-1}, y_j) - u(x_{i+1}, y_j) - u(x_{i}, y_{j-1}) - u(x_i, y_{j+1})).
+\]</div>
+<p>If the neighboring point of <span class="math notranslate nohighlight">\((x_i, y_j)\)</span> is at the boundary we simply use the corresponding value of the boundary data <span class="math notranslate nohighlight">\(g\)</span> in the above approximation.</p>
+<p>The above Poisson problem now becomes the sytem of <span class="math notranslate nohighlight">\(N^2\)</span> equations given by</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{h^2}(4 u(x_i, y_j) - u(x_{i-1}, y_j) - u(x_{i+1}, y_j) - u(x_{i}, y_{j-1}) - u(x_i, y_{j+1})) = f(x_i, y_j)
+\]</div>
+<p>for <span class="math notranslate nohighlight">\(i, j=1,\dots, N\)</span>.</p>
+<p><strong>Task 1</strong> We first need to create a verified reference solution to this problem. Implement a function <code class="docutils literal notranslate"><span class="pre">discretise(f,</span> <span class="pre">g,</span> <span class="pre">N)</span></code> that takes a Python callable <span class="math notranslate nohighlight">\(f\)</span>, a Python callable <span class="math notranslate nohighlight">\(g\)</span> and the parameter <span class="math notranslate nohighlight">\(N\)</span> and returns a sparse CSR matrix <span class="math notranslate nohighlight">\(A\)</span> and the corresponding right-hand side <span class="math notranslate nohighlight">\(b\)</span> of the above discretised Poisson problem.</p>
+<p>To verify your code we use the method of manufactured solutions. Let <span class="math notranslate nohighlight">\(u(x, y)\)</span> be the exact function <span class="math notranslate nohighlight">\(u_{exact}(x, y) = e^{(x-0.5)^2 + (y-0.5)^2}\)</span>. By taking <span class="math notranslate nohighlight">\(-\Delta u_{exact}\)</span> you can compute the corresponding right-hand side <span class="math notranslate nohighlight">\(f\)</span> so that this function <span class="math notranslate nohighlight">\(u_{exact}\)</span> will be the exact solution of the Poisson equation <span class="math notranslate nohighlight">\(-\Delta u(x, y) = f(x, y)\)</span> with boundary conditions given by the boundary data of your known <span class="math notranslate nohighlight">\(u_{exact}\)</span>.</p>
+<p>For growing values <span class="math notranslate nohighlight">\(N\)</span> solve the linear system of equations using the <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> command. Plot the maximum relative error of your computed grid values <span class="math notranslate nohighlight">\(u(x_i, y_j)\)</span> against the exact solution <span class="math notranslate nohighlight">\(u_{exact}\)</span> as <span class="math notranslate nohighlight">\(N\)</span> increases. The relative error at a given point is</p>
+<div class="math notranslate nohighlight">
+\[
+e_{rel} = \frac{|u(x_i, y_j) - u_{exact}(x_i, y_j)|}{|u_{exact}(x_i, y_j)|}
+\]</div>
+<p>For your plot you should use a double logarithmic plot (<code class="docutils literal notranslate"><span class="pre">loglog</span></code> in Matplotlib). As <span class="math notranslate nohighlight">\(N\)</span> increases the error should go to zero. What can you conjecture about the rate of convergence?</p>
+<p><em><strong>Task 2</strong></em> With your verified code we now have something to compare a GPU code against. On the GPU we want to implement a simple iterative scheme to solve the Poisson equation. The idea is to rewrite the above discrete linear system as</p>
+<div class="math notranslate nohighlight">
+\[
+u(x_i, y_j) = \frac{1}{4}\left(h^2f(x_i, y_j) + u(x_{i-1}, y_j) + u(x_{i+1}, y_j) + u(x_{i}, y_{j-1}) + u(x_i, y_{j+1}))\right)
+\]</div>
+<p>You can notice that if <span class="math notranslate nohighlight">\(f\)</span> is zero then the left-hand side <span class="math notranslate nohighlight">\(u(x_i, y_j)\)</span> is just the average of all the neighbouring grid points. This motivates a simple iterative scheme, namely</p>
+<div class="math notranslate nohighlight">
+\[
+u^{k+1}(x_i, y_j) = \frac{1}{4}\left(h^2f(x_i, y_j) + u^k(x_{i-1}, y_j) + u^k(x_{i+1}, y_j) + u^k(x_{i}, y_{j-1}) + u^k(x_i, y_{j+1}))\right).
+\]</div>
+<p>In other words, the value of <span class="math notranslate nohighlight">\(u\)</span> at the iteration <span class="math notranslate nohighlight">\(k+1\)</span> is just the average of all the values at iteration <span class="math notranslate nohighlight">\(k\)</span> plus the contribution from the right-hand side.</p>
+<p>Your task is to implement this iterative scheme in Numba Cuda. A few hints are in order:</p>
+<ul class="simple">
+<li><p>Make sure that when possible you only copy data from the GPU to the host at the end of your computation. To initialize the iteration you can for example take <span class="math notranslate nohighlight">\(u=0\)</span>. You do not want to copy data after each iteration step.</p></li>
+<li><p>You will need two global buffers, one for the current iteration <span class="math notranslate nohighlight">\(k\)</span> and one for the next iteration.</p></li>
+<li><p>Your compute kernel will execute one iteration of the scheme and you run multiple iterations by repeatedly calling the kernel from the host.</p></li>
+<li><p>To check for convergence you should investigate the relative change of your values from <span class="math notranslate nohighlight">\(u^k\)</span> to <span class="math notranslate nohighlight">\(u^{k+1}\)</span> and take the maximum relative change as measure how accurate your solution is. Decide how you implement this (in the same kernel or through a separate kernel). Also, decide how often you check for convergence. You may not want to check in each iteration as it is an expensive operation.</p></li>
+<li><p>Verify your GPU code by comparing against the exact discrete solution in Task 1. Generate a convergence plot of how the values in your iterative scheme converge against the exact discrete solution. For this use a few selected values of <span class="math notranslate nohighlight">\(N\)</span>. How does the convergence change as <span class="math notranslate nohighlight">\(N\)</span> increases?</p></li>
+<li><p>Try to optimise memory accesses. You will notice that if you consider a grid value <span class="math notranslate nohighlight">\(u(i, j)\)</span> it will be read multiple times from the global buffer. Try to optimise memory accesses by preloading a block of values into local shared memory and have a thread block read the data from there. When you do this benchmark against an implementation where each thread just reads from global memory.</p></li>
+</ul>
+<p><em><strong>Carefully describe your computations and observations. Explain what you are doing and try to be scientifically precise in your observations and conclusions. Carefully designing and interpreting your convergence and benchmark experiments is a significant component of this assignment.</strong></em></p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -467,16 +400,16 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "conda-env-jupyter-book-py"
+            mode: "python"
         },
         kernelOptions: {
-            kernelName: "conda-env-jupyter-book-py",
+            kernelName: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'conda-env-jupyter-book-py'</script>
+    <script>kernelName = 'python3'</script>
 
               </div>
               
@@ -488,23 +421,14 @@
 <div class='prev-next-bottom'>
     
     <div id="prev">
-        <a class="left-prev" href="simd.html" title="previous page">
+        <a class="left-prev" href="assignment_1.html" title="previous page">
             <i class="prevnext-label fas fa-angle-left"></i>
             <div class="prevnext-info">
                 <p class="prevnext-label">previous</p>
-                <p class="prevnext-title">SIMD Autovectorization in Numba</p>
+                <p class="prevnext-title">Assignment 1 - Matrix multiplication in Numba</p>
             </div>
         </a>
     </div>
-     <div id="next">
-        <a class="right-next" href="gpu_introduction.html" title="next page">
-            <div class="prevnext-info">
-                <p class="prevnext-label">next</p>
-                <p class="prevnext-title">An Introduction to GPU Computing</p>
-            </div>
-            <i class="prevnext-label fas fa-angle-right"></i>
-        </a>
-     </div>
 
 </div>
         
