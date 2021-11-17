@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A Numexpr example &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 3 - Sparse matrix-vector formats on GPUs and GMRES &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -51,8 +51,7 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="An Introduction to GPU Computing" href="gpu_introduction.html" />
-    <link rel="prev" title="SIMD Autovectorization in Numba" href="simd.html" />
+    <link rel="prev" title="Assignment 2 - GPU Accelerated solution of Poisson problems" href="assignment_2.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -101,7 +100,7 @@
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -137,8 +136,8 @@
    SIMD Autovectorization in Numba
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
    A Numexpr example
   </a>
  </li>
@@ -254,7 +253,7 @@
   Assignments
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="assignment_1.html">
    Assignment 1 - Matrix multiplication in Numba
@@ -265,8 +264,8 @@
    Assignment 2 - GPU Accelerated solution of Poisson problems
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="assignment_3.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Assignment 3 - Sparse matrix-vector formats on GPUs and GMRES
   </a>
  </li>
@@ -311,9 +310,9 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/numexpr.ipynb"><button type="button"
+        <a class="dropdown-buttons" href="_sources/assignment_3.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
+                data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
@@ -331,23 +330,6 @@
 
             <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numexpr.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
-
         </div>
 
         <!-- Table of contents -->
@@ -361,109 +343,24 @@
         
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="a-numexpr-example">
-<h1>A Numexpr example<a class="headerlink" href="#a-numexpr-example" title="Permalink to this headline">¶</a></h1>
-<p>Numexpr is a library for the fast execution of array transformation. One can define complex elementwise operations on array and Numexpr will generate efficient code to execute the operations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numexpr</span> <span class="k">as</span> <span class="nn">ne</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <div class="tex2jax_ignore mathjax_ignore section" id="assignment-3-sparse-matrix-vector-formats-on-gpus-and-gmres">
+<h1>Assignment 3 - Sparse matrix-vector formats on GPUs and GMRES<a class="headerlink" href="#assignment-3-sparse-matrix-vector-formats-on-gpus-and-gmres" title="Permalink to this headline">¶</a></h1>
+<p><strong>Submission Deadline: Mo 29 November, 10am</strong></p>
+<p><strong>Task 1</strong>: So far we learned about the CSR format. On CPUs this is a widely used standard format. However, it has some severe disadvantages on GPUs, but also on modern vector extensions (AVX, etc.) of CPUs. The paper <a class="reference external" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=5577904">Improving the performance of the sparse matrix
+vector product with GPUs</a> by Vazquez et. al. describes these difficulties and also the alternative Ellpack and Ellpack-R formats that improve on the shortcomings of CSR on GPUs and offer more performance on these devices. Summarize the difficulties of the CSR format and how Ellpack and Ellpack-R solve these difficultues. For a very high mark look for some more modern papers on GPU based matvecs and describe what other modern developments have happened since that paper.</p>
+<p><strong>Task 2</strong>:  Given a sparse matrix in CSR format. Write a CPU based Numba routine that converts this matrix into the Ellpack-R format.</p>
+<p>Implement a new class <code class="docutils literal notranslate"><span class="pre">EllpackMatrix</span></code> derived from <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator</span></code>, which in its constructor takes a Scipy sparse matrix in CSR format, converts it to Ellpack-R and provides a routine for matrix-vector product in the Ellpack-R format. At the end the following prototype commands should be possible with your class.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_sparse_mat</span> <span class="o">=</span> <span class="n">EllpackMatrix</span><span class="p">(</span><span class="n">csr_mat</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">my_sparse_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">my_sparse_mat</span> <span class="o">@</span> <span class="n">x</span>
 </pre></div>
 </div>
-</div>
-</div>
-<p>Numexpr provides fast multithreaded operations on array elements. Let’s test it on some large arrays.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Componentwise addition is easy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + 1&quot;</span><span class="p">)</span>
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + b&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.3195833 , 0.92546223, 1.68758307, ..., 1.19557921, 1.19559017,
-       0.24145174])
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can evaluate complex expressions.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False, False, False, ..., False, False, False])
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s compare the performance with Numpy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mf">4.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">b</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.89 ms ± 91.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>995 µs ± 40.5 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<p>Numexpr is a factor 10 faster compared to Numpy, a nice improvement with very little effort. Let us compare some more complex operations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;sin(a) + arcsinh(a/b)&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.4 ms ± 100 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can compare it with Numpy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39.5 ms ± 664 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
-</pre></div>
-</div>
-</div>
-</div>
+<p>The sparse-matrix vector product at the end shall be executed in the Ellpack-R format.</p>
+<p>For your implementation you can either use CPU based Numba code using <code class="docutils literal notranslate"><span class="pre">prange</span></code> for multithreading or write an implementation in Numba-Cuda. For an overall mark of the assignment beyond 80% we would expect a Numba-Cuda implementation (assuming also all other parts are of high standard).</p>
+<p>Demonstrate in your solution that your code provides the correct result by verifying with the standard CSR matvec of sparse matrices and showing for 3 random vectors that the relative distance of your Ellpack-R matvec to the CSR matvec result is in the order of machine precision.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">discretize_poisson</span></code> method from the lecture notes to generate the sparse matrix for the Poisson discretization and plot the times for a single matvec for growing matrix-sizes (go as high as you think is reasonable) using the standard Scipy csr matvec and your own Ellpack-R implemementation.</p>
+<p>Your implementation may not be faster since the matrix derives from a very simple 2d problem with few elements per row. This is not the situation where the additional complexitiy is usually needed.</p>
+<p>Finally, go shopping in the <a class="reference external" href="https://math.nist.gov/MatrixMarket/">Matrix Market</a> and try to find two matrices that better show off the Ellpack-R format and do timing comparisions for your chosen matrices.</p>
 </div>
 
     <script type="text/x-thebe-config">
@@ -475,35 +372,28 @@
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "conda-env-jupyter-book-py"
+            mode: "python"
         },
         kernelOptions: {
-            kernelName: "conda-env-jupyter-book-py",
+            kernelName: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'conda-env-jupyter-book-py'</script>
+    <script>kernelName = 'python3'</script>
 
               </div>
               
         
             <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="simd.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="assignment_2.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">SIMD Autovectorization in Numba</p>
+            <p class="prev-next-title">Assignment 2 - GPU Accelerated solution of Poisson problems</p>
         </div>
-    </a>
-    <a class='right-next' id="next-link" href="gpu_introduction.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">An Introduction to GPU Computing</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
     </a>
 </div>
         
