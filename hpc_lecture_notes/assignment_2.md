@@ -1,4 +1,4 @@
-# GPU Accelerated solution of Poisson problems
+# Assignment 2 - GPU Accelerated solution of Poisson problems
 
 **Submission Deadline: 8 November 2021, 10am**
 
