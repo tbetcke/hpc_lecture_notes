@@ -18,7 +18,7 @@ The sparse-matrix vector product at the end shall be executed in the Ellpack-R f
 
 For your implementation you can either use CPU based Numba code using ```prange``` for multithreading or write an implementation in Numba-Cuda. For an overall mark of the assignment beyond 80% we would expect a Numba-Cuda implementation (assuming also all other parts are of high standard).
 
-Demonstrate in your solution that your code provides the correct result by verifying for a $100\times 1000$ sparse random matrix with the standard CSR matvec of sparse matrices and showing for 3 random vectors that the relative distance of your Ellpack-R matvec to the CSR matvec result is in the order of machine precision.
+Demonstrate in your solution that your code provides the correct result by verifying for a $1000\times 1000$ sparse random matrix with the standard CSR matvec of sparse matrices and showing for 3 random vectors that the relative distance of your Ellpack-R matvec to the CSR matvec result is in the order of machine precision.
 
 Use the ```discretise_poisson``` method from the lecture notes to generate the sparse matrix for the Poisson discretization and plot the times for a single matvec for growing matrix-sizes (go as high as you think is reasonable) using the standard Scipy csr matvec and your own Ellpack-R implemementation.
 
