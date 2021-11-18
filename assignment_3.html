@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assignment 3 - Sparse matrix-vector formats on GPUs and GMRES &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 3 - Sparse matrix formats on GPUs &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -42,6 +42,8 @@
     <script src="_static/copybutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
     <script>
         const thebe_selector = ".thebe"
@@ -266,7 +268,7 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Assignment 3 - Sparse matrix-vector formats on GPUs and GMRES
+   Assignment 3 - Sparse matrix formats on GPUs
   </a>
  </li>
 </ul>
@@ -343,8 +345,8 @@
         
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="assignment-3-sparse-matrix-vector-formats-on-gpus-and-gmres">
-<h1>Assignment 3 - Sparse matrix-vector formats on GPUs and GMRES<a class="headerlink" href="#assignment-3-sparse-matrix-vector-formats-on-gpus-and-gmres" title="Permalink to this headline">¶</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="assignment-3-sparse-matrix-formats-on-gpus">
+<h1>Assignment 3 - Sparse matrix formats on GPUs<a class="headerlink" href="#assignment-3-sparse-matrix-formats-on-gpus" title="Permalink to this headline">¶</a></h1>
 <p><strong>Submission Deadline: Mo 29 November, 10am</strong></p>
 <p><strong>Task 1</strong>: So far we learned about the CSR format. On CPUs this is a widely used standard format. However, it has some severe disadvantages on GPUs, but also on modern vector extensions (AVX, etc.) of CPUs. The paper <a class="reference external" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=5577904">Improving the performance of the sparse matrix
 vector product with GPUs</a> by Vazquez et. al. describes these difficulties and also the alternative Ellpack and Ellpack-R formats that improve on the shortcomings of CSR on GPUs and offer more performance on these devices. Summarize the difficulties of the CSR format and how Ellpack and Ellpack-R solve these difficultues. For a very high mark look for some more modern papers on GPU based matvecs and describe what other modern developments have happened since that paper.</p>
@@ -357,8 +359,8 @@ vector product with GPUs</a> by Vazquez et. al. describes these difficulties and
 </div>
 <p>The sparse-matrix vector product at the end shall be executed in the Ellpack-R format.</p>
 <p>For your implementation you can either use CPU based Numba code using <code class="docutils literal notranslate"><span class="pre">prange</span></code> for multithreading or write an implementation in Numba-Cuda. For an overall mark of the assignment beyond 80% we would expect a Numba-Cuda implementation (assuming also all other parts are of high standard).</p>
-<p>Demonstrate in your solution that your code provides the correct result by verifying with the standard CSR matvec of sparse matrices and showing for 3 random vectors that the relative distance of your Ellpack-R matvec to the CSR matvec result is in the order of machine precision.</p>
-<p>Use the <code class="docutils literal notranslate"><span class="pre">discretize_poisson</span></code> method from the lecture notes to generate the sparse matrix for the Poisson discretization and plot the times for a single matvec for growing matrix-sizes (go as high as you think is reasonable) using the standard Scipy csr matvec and your own Ellpack-R implemementation.</p>
+<p>Demonstrate in your solution that your code provides the correct result by verifying for a <span class="math notranslate nohighlight">\(100\times 1000\)</span> sparse random matrix with the standard CSR matvec of sparse matrices and showing for 3 random vectors that the relative distance of your Ellpack-R matvec to the CSR matvec result is in the order of machine precision.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">discretise_poisson</span></code> method from the lecture notes to generate the sparse matrix for the Poisson discretization and plot the times for a single matvec for growing matrix-sizes (go as high as you think is reasonable) using the standard Scipy csr matvec and your own Ellpack-R implemementation.</p>
 <p>Your implementation may not be faster since the matrix derives from a very simple 2d problem with few elements per row. This is not the situation where the additional complexitiy is usually needed.</p>
 <p>Finally, go shopping in the <a class="reference external" href="https://math.nist.gov/MatrixMarket/">Matrix Market</a> and try to find two matrices that better show off the Ellpack-R format and do timing comparisions for your chosen matrices.</p>
 </div>
