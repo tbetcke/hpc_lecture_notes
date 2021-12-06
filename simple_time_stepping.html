@@ -554,11 +554,12 @@ Therefore, for forward Euler to converge we require that</p>
 \Delta t &lt; \frac{2}{|\lambda_{max}(A)|},
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\lambda_{max}\)</span> is the largest eigenvalue by magnitude.</p>
-<p>As example let us take a look at the problem
-$<span class="math notranslate nohighlight">\(
+<p>As example let us take a look at the problem</p>
+<div class="math notranslate nohighlight">
+\[
 \frac{\partial u(x, t)}{\partial t} = \frac{\partial^2 u(x, t)}{\partial x^2}
-\)</span><span class="math notranslate nohighlight">\(
-with \)</span>u(x, 0) = u_0(x)<span class="math notranslate nohighlight">\(, \)</span>u(0, t) = u(1, t) = 0$. We can discretise the right-hand side using our usual second order finite dfference scheme. For the left-hand side, we use the forward Euler method. This gives us the recurrence equation</p>
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(u(x, 0) = u_0(x)\)</span>, <span class="math notranslate nohighlight">\(u(0, t) = u(1, t) = 0\)</span>. We can discretise the right-hand side using our usual second order finite dfference scheme. For the left-hand side, we use the forward Euler method. This gives us the recurrence equation</p>
 <div class="math notranslate nohighlight">
 \[
 U_{n+1} = U_n + \Delta t A U_n,
