@@ -542,10 +542,11 @@ U_{n+1} &amp;= (1+\alpha\Delta t)U_n\\
 \[
 -1 &lt; 1 + \alpha \Delta t &lt; 1,
 \]</div>
-<p>from which we obtain <span class="math notranslate nohighlight">\(|\alpha\Delta t| &lt; 2\)</span> (if <span class="math notranslate nohighlight">\(\alpha\)</span> negative). Now consider the problem
-$<span class="math notranslate nohighlight">\(
+<p>from which we obtain <span class="math notranslate nohighlight">\(|\alpha\Delta t| &lt; 2\)</span> (if <span class="math notranslate nohighlight">\(\alpha\)</span> negative). Now consider the problem</p>
+<div class="math notranslate nohighlight">
+\[
 \frac{dU}{dt} = AU
-\)</span>$</p>
+\]</div>
 <p>with <span class="math notranslate nohighlight">\(A\in\mathbb{R}^{n\times n}\)</span> diagonalizable. For any eigenpair <span class="math notranslate nohighlight">\((\lambda, \hat{U})\)</span> of <span class="math notranslate nohighlight">\(A\)</span> satisfying <span class="math notranslate nohighlight">\(A\hat{U} = \lambda\hat{U}\)</span> the function <span class="math notranslate nohighlight">\(U(t) = e^{\lambda t}\hat{U}\)</span> is a solution for this problem.
 Therefore, for forward Euler to converge we require that</p>
 <div class="math notranslate nohighlight">
