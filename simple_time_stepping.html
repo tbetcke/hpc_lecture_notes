@@ -416,10 +416,10 @@
 <p>Our previous examples were all stationary problems. However, many practical simulations describe processes that change over time. In this part we want to start looking a bit closer onto time-domain partial differential equations and their efficient implementation.</p>
 <div class="section" id="finite-difference-approximation-for-the-time-derivative">
 <h2>Finite Difference Approximation for the time-derivative<a class="headerlink" href="#finite-difference-approximation-for-the-time-derivative" title="Permalink to this headline">¶</a></h2>
-<p>We want to approximate the time derivative <span class="math notranslate nohighlight">\(\frac{du}{dt}\)</span>. Remember that</p>
+<p>We want to approximate the derivative <span class="math notranslate nohighlight">\(\frac{du}{dt}\)</span>. Remember that</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{du}{dt} \approx \frac{u(x+h) - u(x)}{h}
+\frac{du}{dt} \approx \frac{u(t+\Delta t) - u(t)}{\Delta t}
 \]</div>
 <p>for sufficiently small <span class="math notranslate nohighlight">\(h\)</span>.</p>
 <p>There are three standard approximations for the time-derivative:</p>
@@ -428,56 +428,56 @@
 </ul>
 <div class="math notranslate nohighlight">
 \[
-\frac{du}{dt}\approx \frac{u(x + h) - u(x)}{h}.
+\frac{du}{dt}\approx \frac{u(t + \Delta t) - u(t)}{\Delta t}.
 \]</div>
 <ul class="simple">
 <li><p>The backward difference:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[
-\frac{du}{dt}\approx \frac{u(x) - u(x - h)}{h}.
+\frac{du}{dt}\approx \frac{u(t) - u(t - \Delta t)}{\Delta t}.
 \]</div>
 <ul class="simple">
 <li><p>The centered difference:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[
-\frac{du}{dt} \approx \frac{u(x + h) - u(x -h)}{2h}.
+\frac{du}{dt} \approx \frac{u(t + \Delta t) - u(t -\Delta t)}{2\Delta t}.
 \]</div>
 <p>To understand the error of these schemes we can use Tayler expansions to obtain</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{u(x + h) - u(x)}{h} = u'(x) + \frac{1}{2}hu''(x) + \dots
+\frac{u(t + \Delta t) - u(t)}{\Delta t} = u'(t) + \frac{1}{2}\Delta tu''(t) + \dots
 \]</div>
 <div class="math notranslate nohighlight">
 \[
-\frac{u(x) - u(x-h)}{h} = u'(x) - \frac{1}{2}hu''(x) + \dots
+\frac{u(t) - u(t-\Delta t)}{\Delta t} = u'(t) - \frac{1}{2}\Delta t u''(t) + \dots
 \]</div>
 <div class="math notranslate nohighlight">
 \[
-\frac{u(x + h) - u(x-h)}{2h} = u'(x) + \frac{1}{6}h^2u'''(x) + \dots
+\frac{u(t + \Delta t) - u(t-\Delta t)}{2\Delta t} = u'(t) + \frac{1}{6}\Delta t^2u'''(t) + \dots
 \]</div>
 <p>Hence, the error of the first two schemes decreases linearly with <span class="math notranslate nohighlight">\(h\)</span> and the error in the centred scheme decreases quadratically with <span class="math notranslate nohighlight">\(h\)</span>.</p>
 </div>
 <div class="section" id="the-3-point-stencil-for-the-second-derivative">
 <h2>The 3-point stencil for the second derivative<a class="headerlink" href="#the-3-point-stencil-for-the-second-derivative" title="Permalink to this headline">¶</a></h2>
-<p>For simplicity we denote <span class="math notranslate nohighlight">\(u_i := u(x)\)</span>, <span class="math notranslate nohighlight">\(u_{i + 1} := u(x + h)\)</span>, <span class="math notranslate nohighlight">\(u_{i-1} := u(x - h)\)</span>. We want to approximate</p>
+<p>For simplicity we denote <span class="math notranslate nohighlight">\(u_i := u(t)\)</span>, <span class="math notranslate nohighlight">\(u_{i + 1} := u(t + h)\)</span>, <span class="math notranslate nohighlight">\(u_{i-1} := u(t - h)\)</span>. We want to approximate</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{d}{dx}\left[\frac{du}{dx}\right].
+\frac{d}{dt}\left[\frac{du}{dt}\right].
 \]</div>
 <p>The trick is to use an approximation around half-steps for the outer derivative, resulting in</p>
 <div class="math notranslate nohighlight">
 \[
-\frac{d}{dx}\left[\frac{du}{dx}\right]\approx \frac{1}{h}\left[{u_{i+\frac{1}{2}}'} - {u_{i-\frac{1}{2}}'}\right].
+\frac{d}{dt}\left[\frac{du}{dt}\right]\approx \frac{1}{\Delta t}\left[{u_{i+\frac{1}{2}}'} - {u_{i-\frac{1}{2}}'}\right].
 \]</div>
 <p>The derivatives at the half-steps are now again approximated by centered differences, resulting in</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\frac{d}{dx}\left[\frac{du}{dx}\right]&amp;\approx \frac{1}{h}\left[\frac{u_{i+1} - u_i}{h} - \frac{u_i - u_{i-1}}{h}\right]\nonumber\\
-&amp;= \frac{u_{i+1} - 2u_i - u_{i-1}}{h^2}\\
-&amp;= u''(x) + \mathcal{O}(h^2)
+\frac{d}{dt}\left[\frac{du}{dt}\right]&amp;\approx \frac{1}{\Delta t}\left[\frac{u_{i+1} - u_i}{h} - \frac{u_i - u_{i-1}}{\Delta t}\right]\\
+&amp;= \frac{u_{i+1} - 2u_i + u_{i-1}}{\Delta t^2}\\
+&amp;= u''(t) + \mathcal{O}(\Delta t^2)
 \end{align}
 \end{split}\]</div>
 <p>This is the famous second order finite difference operator that we have already used before. Its error is quadratically small in <span class="math notranslate nohighlight">\(h\)</span>.</p>
@@ -488,8 +488,8 @@
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\frac{dU}{dt} &amp;= f(U, t)\nonumber\\
-         U(0) &amp;= U_0,\nonumber
+\frac{dU}{dt} &amp;= f(U, t)\\
+         U(0) &amp;= U_0,
 \end{align}
 \end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(U(t):\mathbb{R}\rightarrow \mathbb{R}^n\)</span> is some vector valued function.</p>
@@ -533,7 +533,7 @@ u'=\alpha u
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-U_{n+1} &amp;= (1+\alpha\Delta t)U_n\nonumber\\
+U_{n+1} &amp;= (1+\alpha\Delta t)U_n\\
         &amp;= (1+\alpha\Delta t)^nU_0.
 \end{align}
 \end{split}\]</div>
@@ -581,7 +581,7 @@ U_{n+1} = U_n + \Delta t A U_n,
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-U_{n+1} &amp;= (1-\alpha\Delta t)^{-1}U_n\nonumber\\
+U_{n+1} &amp;= (1-\alpha\Delta t)^{-1}U_n\\
         &amp;= (1-\alpha\Delta t)^{-n}U_0.
 \end{align}
 \end{split}\]</div>
