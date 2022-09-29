@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Iterative Solvers 3 - The Conjugate Gradient Method &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,39 +20,38 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
-    <script>
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
-    </script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Iterative Solvers 4 - Preconditioning" href="it_solvers4.html" />
@@ -62,7 +63,21 @@
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -71,9 +86,10 @@
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -91,14 +107,15 @@
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="intro.html">
-   Welcome to Techniques of High-Performance Computing
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Techniques of High-Performance Computing
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   High-Performance Computing with Python
  </span>
@@ -280,91 +297,164 @@
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/it_solvers3.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/it_solvers3.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/it_solvers3.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/it_solvers3.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#symmetric-positive-definite-matrices">
    Symmetric positive definite matrices
@@ -407,19 +497,77 @@
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Iterative Solvers 3 - The Conjugate Gradient Method</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#symmetric-positive-definite-matrices">
+   Symmetric positive definite matrices
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#lanczos-arnoldi-for-symmetric-matrices">
+   Lanczos - Arnoldi for symmetric matrices
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-linear-systems-of-equations-with-lanczos">
+   Solving linear systems of equations with Lanczos
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-quadratic-optimisation-problem">
+   A quadratic optimisation problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-method-of-steepest-descent">
+   The Method of Steepest Descent
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-method-of-conjugate-directions">
+   The method of conjugate directions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conjugate-gradients-mixing-steepest-descent-with-conjugate-directions">
+   Conjugate Gradients - Mixing steepest descent with conjugate directions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#a-numerical-example">
+   A numerical example
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="iterative-solvers-3-the-conjugate-gradient-method">
-<h1>Iterative Solvers 3 - The Conjugate Gradient Method<a class="headerlink" href="#iterative-solvers-3-the-conjugate-gradient-method" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="symmetric-positive-definite-matrices">
-<h2>Symmetric positive definite matrices<a class="headerlink" href="#symmetric-positive-definite-matrices" title="Permalink to this headline">¶</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="iterative-solvers-3-the-conjugate-gradient-method">
+<h1>Iterative Solvers 3 - The Conjugate Gradient Method<a class="headerlink" href="#iterative-solvers-3-the-conjugate-gradient-method" title="Permalink to this headline">#</a></h1>
+<section id="symmetric-positive-definite-matrices">
+<h2>Symmetric positive definite matrices<a class="headerlink" href="#symmetric-positive-definite-matrices" title="Permalink to this headline">#</a></h2>
 <p>A very frequent type of matrices are symmetric positive definite matrices. Let <span class="math notranslate nohighlight">\(A\in\mathbb{R}^{n\times n}\)</span> be a symmetric matrix (that is <span class="math notranslate nohighlight">\(A^T=A\)</span>). <span class="math notranslate nohighlight">\(A\)</span> is called symmetric positive definite if</p>
 <div class="math notranslate nohighlight">
 \[
@@ -428,9 +576,9 @@ x^TAx &gt; 0, \forall x\neq 0.
 <p>This is equivalent to the condition that all eigenvalues of <span class="math notranslate nohighlight">\(A\)</span> are larger than zero (remember that symmetric matrices only have real eigenvalues).</p>
 <p>One application of symmetric positive definite matrices are energy functionals. The expression <span class="math notranslate nohighlight">\(x^TAx\)</span> arises when discretising functional involving kinetic energies (e.g. energies of the from <span class="math notranslate nohighlight">\(E = \frac{1}{2}m|\nabla f|^2\)</span> for f a given function).</p>
 <p>For linear systems involving symmetric positive definite matrices we can derive a special algorithm, namely the Method of Conjugate Gradients (CG).</p>
-</div>
-<div class="section" id="lanczos-arnoldi-for-symmetric-matrices">
-<h2>Lanczos - Arnoldi for symmetric matrices<a class="headerlink" href="#lanczos-arnoldi-for-symmetric-matrices" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="lanczos-arnoldi-for-symmetric-matrices">
+<h2>Lanczos - Arnoldi for symmetric matrices<a class="headerlink" href="#lanczos-arnoldi-for-symmetric-matrices" title="Permalink to this headline">#</a></h2>
 <p>Let us start with the Arnoldi recurrence relation</p>
 <div class="math notranslate nohighlight">
 \[
@@ -519,9 +667,9 @@ w = Av_m - (v_m^TAv_m)v_m - (v_{m-1}^TAv_m)v_{m-1}.
 \]</div>
 <p>Since the new vector <span class="math notranslate nohighlight">\(w\)</span> is composed of only 3 vectors. This is also called a 3-term recurrence. The big advantage is that in addition to <span class="math notranslate nohighlight">\(Av_m\)</span> we only need to keep <span class="math notranslate nohighlight">\(v_m\)</span> and <span class="math notranslate nohighlight">\(v_{m-1}\)</span> in memory. Hence, no matter how many iterations we do, the memory requirement remains constant, in contrast to Arnoldi for nonsymmetric matrices, where we need to keep all previous vectors in memory.</p>
 <p>Arnoldi with a short recurrence relation for symmetric matrices has a special name. It is called <strong>Lanczos method</strong>.</p>
-</div>
-<div class="section" id="solving-linear-systems-of-equations-with-lanczos">
-<h2>Solving linear systems of equations with Lanczos<a class="headerlink" href="#solving-linear-systems-of-equations-with-lanczos" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="solving-linear-systems-of-equations-with-lanczos">
+<h2>Solving linear systems of equations with Lanczos<a class="headerlink" href="#solving-linear-systems-of-equations-with-lanczos" title="Permalink to this headline">#</a></h2>
 <p>We can now proceed exactly as in the Full orthogonalisation method and arrive at the linear system of equations</p>
 <div class="math notranslate nohighlight">
 \[
@@ -529,9 +677,9 @@ T_my_m = \|r_0\|_2e_1,
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(x_m = x_0 + V_my_m\)</span> and <span class="math notranslate nohighlight">\(T_m = V_m^TAV_m\)</span> is the tridiagonal matrix obtained from the Lanczos method.</p>
 <p>The conjugate gradient method is an implementation of this approach. A very good derivation from Lanczos to CG is obtained in the beautiful book by Yousef Saad “<a class="reference external" href="https://www-users.cs.umn.edu/~saad/IterMethBook_2ndEd.pdf">Iterative Methods for Sparse Linear Systems</a>”, which is available online for free. Here, we will briefly motivate another approach to CG, which is a bit more intuitive and reveals more about the structure of the method, namely CG as an optimisation algorithm for a quadratic minimisation problem. One of the most beautiful summaries of this approach is contained in the paper <a class="reference external" href="https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">An introduction to the Conjugate Gradient Method Without the Agonizing Pain</a> by Jonathan Shewchuk.</p>
-</div>
-<div class="section" id="a-quadratic-optimisation-problem">
-<h2>A quadratic optimisation problem<a class="headerlink" href="#a-quadratic-optimisation-problem" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="a-quadratic-optimisation-problem">
+<h2>A quadratic optimisation problem<a class="headerlink" href="#a-quadratic-optimisation-problem" title="Permalink to this headline">#</a></h2>
 <p>We consider the quadratic minimisation problem</p>
 <div class="math notranslate nohighlight">
 \[
@@ -543,9 +691,9 @@ T_my_m = \|r_0\|_2e_1,
 \nabla f(x) = Ax - b
 \]</div>
 <p>and hence the only stationary point is the solution of the linear system <span class="math notranslate nohighlight">\(Ax=b\)</span>. Furthermore, it is really a minimiser since <span class="math notranslate nohighlight">\(f''(x)\)</span> is positive definite for all <span class="math notranslate nohighlight">\(x\in\mathbb{R}^n\)</span> as <span class="math notranslate nohighlight">\(A\)</span> is positive definite.</p>
-</div>
-<div class="section" id="the-method-of-steepest-descent">
-<h2>The Method of Steepest Descent<a class="headerlink" href="#the-method-of-steepest-descent" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="the-method-of-steepest-descent">
+<h2>The Method of Steepest Descent<a class="headerlink" href="#the-method-of-steepest-descent" title="Permalink to this headline">#</a></h2>
 <p>Our first idea is the method of steepest descent. Remember that the negative gradient is a descent direction. Given a point <span class="math notranslate nohighlight">\(x_k\)</span>. We have</p>
 <div class="math notranslate nohighlight">
 \[
@@ -574,9 +722,9 @@ x_{k+1} &amp;= x_k + \alpha_k r_k
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\|e_k\|_A := \left(e_k^TAe_k\right)^{1/2}\)</span>.</p>
 <p>This is an extremely slow rate of convergence. Let <span class="math notranslate nohighlight">\(\kappa=10\)</span>, which is a fairly small number. Then the error reduces in each step only by a factor of <span class="math notranslate nohighlight">\(\frac{9}{11}\approx 0.81\)</span> and we need 11 iterations for each digit of accuracy.</p>
-</div>
-<div class="section" id="the-method-of-conjugate-directions">
-<h2>The method of conjugate directions<a class="headerlink" href="#the-method-of-conjugate-directions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="the-method-of-conjugate-directions">
+<h2>The method of conjugate directions<a class="headerlink" href="#the-method-of-conjugate-directions" title="Permalink to this headline">#</a></h2>
 <p>The steepest descent approach was not bad. But we want to improve on it. The problem with the steepest descent method is that we have no guarantee that we are reducing the error <span class="math notranslate nohighlight">\(e_{k+1}\)</span> as much as possible along our current direction <span class="math notranslate nohighlight">\(r_k\)</span> when we minimize. But we can fix this.</p>
 <p>Let us pick a set of directions <span class="math notranslate nohighlight">\(d_0, d_1, \dots, d_{n-1}\)</span>, which are mutually orthogonal, that is <span class="math notranslate nohighlight">\(d_i^Td_j =0\)</span> for <span class="math notranslate nohighlight">\(i\neq j\)</span>. We now want to enforce the condition that</p>
 <div class="math notranslate nohighlight">
@@ -605,9 +753,9 @@ d_i^TAd_j = 0
 \alpha_k = \frac{d_k^Tr_k}{d_k^TAd_k}.
 \]</div>
 <p>This expression is computable if we have a suitable set of conjugate directions <span class="math notranslate nohighlight">\(d_k\)</span>. Moreoever, it guarantees that the method converges in at most <span class="math notranslate nohighlight">\(n\)</span> steps since in every iteration we are annihiliating the error in the direction of <span class="math notranslate nohighlight">\(d_k\)</span> and there are only <span class="math notranslate nohighlight">\(n\)</span> different directions.</p>
-</div>
-<div class="section" id="conjugate-gradients-mixing-steepest-descent-with-conjugate-directions">
-<h2>Conjugate Gradients - Mixing steepest descent with conjugate directions<a class="headerlink" href="#conjugate-gradients-mixing-steepest-descent-with-conjugate-directions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="conjugate-gradients-mixing-steepest-descent-with-conjugate-directions">
+<h2>Conjugate Gradients - Mixing steepest descent with conjugate directions<a class="headerlink" href="#conjugate-gradients-mixing-steepest-descent-with-conjugate-directions" title="Permalink to this headline">#</a></h2>
 <p>The idea of conjugate gradients is to obtain the conjugate directions <span class="math notranslate nohighlight">\(d_i\)</span> by taking the <span class="math notranslate nohighlight">\(r_i\)</span> (the gradients) and to <span class="math notranslate nohighlight">\(A\)</span>-orthogonalise (conjugate) them against the previous directions. We are leaving out the details of the derivation and refer to the Shewchuk paper. But the final algorithm now takes the following form.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -631,9 +779,9 @@ d_{i+1} &amp;= r_{i+1} + \beta_{i+1}d_i\nonumber
 \|e_i\|A\lessapprox 0.52^i\|e_0\|_A.
 \]</div>
 <p>Hence, we need around <span class="math notranslate nohighlight">\(4\)</span> iterations for each digits of accuracy instead of 11 for the method of steepest descent.</p>
-</div>
-<div class="section" id="a-numerical-example">
-<h2>A numerical example<a class="headerlink" href="#a-numerical-example" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="a-numerical-example">
+<h2>A numerical example<a class="headerlink" href="#a-numerical-example" title="Permalink to this headline">#</a></h2>
 <p>The following code creates a symmetric positive definite matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -677,8 +825,8 @@ d_{i+1} &amp;= r_{i+1} + \beta_{i+1}d_i\nonumber
 <img alt="_images/it_solvers3_26_0.png" src="_images/it_solvers3_26_0.png" />
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -702,9 +850,11 @@ d_{i+1} &amp;= r_{i+1} + \beta_{i+1}d_i\nonumber
 
               </div>
               
-        
-            <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="it_solvers2.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -720,26 +870,28 @@ d_{i+1} &amp;= r_{i+1} + \beta_{i+1}d_i\nonumber
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-        
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-    <div class="container">
-      <p>
-        
-          By Timo Betcke<br/>
-        
-            &copy; Copyright 2020.<br/>
-      </p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Timo Betcke<br/>
+  
+      &copy; Copyright 2020.<br/>
+</p>
+        </footer>
     </div>
-  </footer>
-</main>
+    
+</div>
 
 
       </div>
     </div>
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>
