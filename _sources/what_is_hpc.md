@@ -62,7 +62,7 @@ Only 20 years ago a PS5 would have been the world's fastest supercomputer. This 
 
 It therefore makes little sense to talk about High-Performance Computing only if we develop on very big systems. What we have under our desk now, was a big system just a few years ago. My personal definition of High-Performance Computing is the following:
 
-**High-Performance Computing is concernced with developing tools, algorithms, and applications that can make optimal use of a given hardware environment.**
+**High-Performance Computing is concerned with developing tools, algorithms, and applications that can make optimal use of a given hardware environment.**
 
 In this sense, we can perform High-Performance Computing also on a Raspberry Pi or a mobile phone. And indeed, the trend goes to scalable development environments that allow us to make optimal use of hardware from a small low-powered ARM device up to the fastest supercomputers in the world.
 
