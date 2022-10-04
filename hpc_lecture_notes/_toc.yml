@@ -34,9 +34,9 @@ parts:
 - caption: Conclusions
   chapters:
   - file: further_topics
-- caption: Assignments
+- caption: Assignments from past years
   chapters:
-  - file: assignment_1
-  - file: assignment_2
-  - file: assignment_3
-  - file: assignment_4
+  - file: 2021-assignment_1
+  - file: 2021-assignment_2
+  - file: 2021-assignment_3
+  - file: 2021-assignment_4

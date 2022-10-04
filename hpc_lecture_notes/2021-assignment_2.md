@@ -1,6 +1,6 @@
 # Assignment 2 - GPU Accelerated solution of Poisson problems
 
-**Submission Deadline: 8 November 2021, 10am**
+**Note: This is the assignment from the 2021-22 academic year.**
 
 In this assignment we consider the solution of Poisson problems of the form
 
