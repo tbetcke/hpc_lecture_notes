@@ -1,6 +1,6 @@
 # Assignment 4 - Time-dependent problems
 
-**Submission Deadline: We 15 December, 10am**
+**Note: This is the assignment from the 2021-22 academic year.**
 
 Consider a square plate with sides $[−1, 1] × [−1, 1]$. At time t = 0 we are heating the plate up
 such that the temperature is $u = 5$ on one side and $u = 0$ on the other sides. The temperature

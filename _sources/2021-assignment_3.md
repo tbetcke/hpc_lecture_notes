@@ -1,6 +1,6 @@
 # Assignment 3 - Sparse matrix formats on GPUs
 
-**Submission Deadline: Mo 29 November, 10am**
+**Note: This is the assignment from the 2021-22 academic year.**
 
 **Task 1**: So far we learned about the CSR format. On CPUs this is a widely used standard format. However, it has some severe disadvantages on GPUs, but also on modern vector extensions (AVX, etc.) of CPUs. The paper [Improving the performance of the sparse matrix
 vector product with GPUs](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5577904) by Vazquez et. al. describes these difficulties and also the alternative Ellpack and Ellpack-R formats that improve on the shortcomings of CSR on GPUs and offer more performance on these devices. Summarize the difficulties of the CSR format and how Ellpack and Ellpack-R solve these difficultues. For a very high mark look for some more modern papers on GPU based matvecs and describe what other modern developments have happened since that paper.

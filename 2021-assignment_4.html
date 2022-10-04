@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Assignment 3 - Sparse matrix formats on GPUs &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 4 - Time-dependent problems &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -54,8 +54,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Assignment 4 - Time-dependent problems" href="assignment_4.html" />
-    <link rel="prev" title="Assignment 2 - GPU Accelerated solution of Poisson problems" href="assignment_2.html" />
+    <link rel="prev" title="Assignment 3 - Sparse matrix formats on GPUs" href="2021-assignment_3.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -270,27 +269,27 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Assignments
+  Assignments from past years
  </span>
 </p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="assignment_1.html">
+  <a class="reference internal" href="2021-assignment_1.html">
    Assignment 1 - Matrix multiplication in Numba
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="assignment_2.html">
+  <a class="reference internal" href="2021-assignment_2.html">
    Assignment 2 - GPU Accelerated solution of Poisson problems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2021-assignment_3.html">
+   Assignment 3 - Sparse matrix formats on GPUs
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Assignment 3 - Sparse matrix formats on GPUs
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="assignment_4.html">
    Assignment 4 - Time-dependent problems
   </a>
  </li>
@@ -367,7 +366,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/assignment_3.md"
+        <a href="_sources/2021-assignment_4.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -416,7 +415,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Assignment 3 - Sparse matrix formats on GPUs</h1>
+                <h1>Assignment 4 - Time-dependent problems</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -428,24 +427,17 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="assignment-3-sparse-matrix-formats-on-gpus">
-<h1>Assignment 3 - Sparse matrix formats on GPUs<a class="headerlink" href="#assignment-3-sparse-matrix-formats-on-gpus" title="Permalink to this headline">#</a></h1>
-<p><strong>Submission Deadline: Mo 29 November, 10am</strong></p>
-<p><strong>Task 1</strong>: So far we learned about the CSR format. On CPUs this is a widely used standard format. However, it has some severe disadvantages on GPUs, but also on modern vector extensions (AVX, etc.) of CPUs. The paper <a class="reference external" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=5577904">Improving the performance of the sparse matrix
-vector product with GPUs</a> by Vazquez et. al. describes these difficulties and also the alternative Ellpack and Ellpack-R formats that improve on the shortcomings of CSR on GPUs and offer more performance on these devices. Summarize the difficulties of the CSR format and how Ellpack and Ellpack-R solve these difficultues. For a very high mark look for some more modern papers on GPU based matvecs and describe what other modern developments have happened since that paper.</p>
-<p><strong>Task 2</strong>:  Given a sparse matrix in CSR format. Write a CPU based Numba routine that converts this matrix into the Ellpack-R format.</p>
-<p>Implement a new class <code class="docutils literal notranslate"><span class="pre">EllpackMatrix</span></code> derived from <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator</span></code>, which in its constructor takes a Scipy sparse matrix in CSR format, converts it to Ellpack-R and provides a routine for matrix-vector product in the Ellpack-R format. At the end the following prototype commands should be possible with your class.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_sparse_mat</span> <span class="o">=</span> <span class="n">EllpackMatrix</span><span class="p">(</span><span class="n">csr_mat</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">my_sparse_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">my_sparse_mat</span> <span class="o">@</span> <span class="n">x</span>
-</pre></div>
-</div>
-<p>The sparse-matrix vector product at the end shall be executed in the Ellpack-R format.</p>
-<p>For your implementation you can either use CPU based Numba code using <code class="docutils literal notranslate"><span class="pre">prange</span></code> for multithreading or write an implementation in Numba-Cuda. For an overall mark of the assignment beyond 80% we would expect a Numba-Cuda implementation (assuming also all other parts are of high standard).</p>
-<p>Demonstrate in your solution that your code provides the correct result by verifying for a <span class="math notranslate nohighlight">\(1000\times 1000\)</span> sparse random matrix with the standard CSR matvec of sparse matrices and showing for 3 random vectors that the relative distance of your Ellpack-R matvec to the CSR matvec result is in the order of machine precision.</p>
-<p>Use the <code class="docutils literal notranslate"><span class="pre">discretise_poisson</span></code> method from the lecture notes to generate the sparse matrix for the Poisson discretization and plot the times for a single matvec for growing matrix-sizes (go as high as you think is reasonable) using the standard Scipy csr matvec and your own Ellpack-R implemementation.</p>
-<p>Your implementation may not be faster since the matrix derives from a very simple 2d problem with few elements per row. This is not the situation where the additional complexitiy is usually needed.</p>
-<p>Finally, go shopping in the <a class="reference external" href="https://math.nist.gov/MatrixMarket/">Matrix Market</a> and try to find two matrices that better show off the Ellpack-R format and do timing comparisions for your chosen matrices.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="assignment-4-time-dependent-problems">
+<h1>Assignment 4 - Time-dependent problems<a class="headerlink" href="#assignment-4-time-dependent-problems" title="Permalink to this headline">#</a></h1>
+<p><strong>Note: This is the assignment from the 2021-22 academic year.</strong></p>
+<p>Consider a square plate with sides <span class="math notranslate nohighlight">\([−1, 1] × [−1, 1]\)</span>. At time t = 0 we are heating the plate up
+such that the temperature is <span class="math notranslate nohighlight">\(u = 5\)</span> on one side and <span class="math notranslate nohighlight">\(u = 0\)</span> on the other sides. The temperature
+evolves according to <span class="math notranslate nohighlight">\(u_t = \Delta u\)</span>. At what time <span class="math notranslate nohighlight">\(t^*\)</span> does the plate reach <span class="math notranslate nohighlight">\(u = 1\)</span> at the center of the plate?
+Implement a finite difference scheme and try with explicit and implicit time-stepping. By increasing
+the number of discretisation points demonstrate how many correct digits you can achieve. Also,
+plot the convergence of your computed time <span class="math notranslate nohighlight">\(t^*\)</span> against the actual time. To 12 digits the wanted
+solution is <span class="math notranslate nohighlight">\(t^* = 0.424011387033\)</span>.</p>
+<p>A GPU implementation of the explicit time-stepping scheme is not necessary but would be expected for a very high mark beyond 80%.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -475,19 +467,12 @@ vector product with GPUs</a> by Vazquez et. al. describes these difficulties and
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="assignment_2.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="2021-assignment_3.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Assignment 2 - GPU Accelerated solution of Poisson problems</p>
+            <p class="prev-next-title">Assignment 3 - Sparse matrix formats on GPUs</p>
         </div>
-    </a>
-    <a class='right-next' id="next-link" href="assignment_4.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Assignment 4 - Time-dependent problems</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>
