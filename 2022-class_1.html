@@ -1,0 +1,738 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Class 1 (Monday 10 October) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Assignment 1 - Matrix multiplication in Numba" href="2021-assignment_1.html" />
+    <link rel="prev" title="Assignment 1 - Matrix-matrix multiplication" href="2022-assignment_1.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/cpu_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to Techniques of High-Performance Computing
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  High-Performance Computing with Python
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="what_is_hpc.html">
+   What is High-Performance Computing?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hpc_languages.html">
+   Languages for High-Performance Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="python_hpc_tools.html">
+   Python HPC Tools
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numpy_and_data_layouts.html">
+   Memory layout and Numpy arrays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="parallel_principles.html">
+   Parallel Computing Principles in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="working_with_numba.html">
+   Working with Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simd.html">
+   SIMD Autovectorization in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
+   A Numexpr example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gpu_introduction.html">
+   An Introduction to GPU Computing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
+   A tour of CUDA
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="numba_cuda.html">
+   Numba Cuda in Practice
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rbf_evaluation.html">
+   GPU accelerated evaluation of particle sums
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Sparse Linear Algebra
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_linalg_pde.html">
+   The need for sparse linear algebra - A PDE example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_data_structures.html">
+   Sparse Matrix data structures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_solvers_introduction.html">
+   An introduction to sparse linear system solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers1.html">
+   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers2.html">
+   Iterative Solvers 2 - From FOM to GMRES
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers3.html">
+   Iterative Solvers 3 - The Conjugate Gradient Method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="it_solvers4.html">
+   Iterative Solvers 4 - Preconditioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse_direct_solvers.html">
+   Sparse Direct Solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="petsc_for_sparse_systems.html">
+   Using petsc4py for sparse linear systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="multigrid.html">
+   Multigrid Methods
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Time-Dependent Problems
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="simple_time_stepping.html">
+   Simple time-stepping
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="wave_equation.html">
+   Discretising the wave equation
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Conclusions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="further_topics.html">
+   Further topics
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Assignments
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-assignment_1.html">
+   Assignment 1 - Matrix-matrix multiplication
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tasks for Monday Practical Classes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Class 1 (Monday 10 October)
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Assignments from past years
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="2021-assignment_1.html">
+   Assignment 1 - Matrix multiplication in Numba
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2021-assignment_2.html">
+   Assignment 2 - GPU Accelerated solution of Poisson problems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2021-assignment_3.html">
+   Assignment 3 - Sparse matrix formats on GPUs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2021-assignment_4.html">
+   Assignment 4 - Time-dependent problems
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/2022-class_1.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-to-know-numpy">
+   Getting to know Numpy
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#testing-with-asserts">
+   Testing with asserts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#timing-a-function">
+   Timing a function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting-with-matplotlib">
+   Plotting with matplotlib
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#saving-data-to-a-file">
+   Saving data to a file
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Class 1 (Monday 10 October)</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-to-know-numpy">
+   Getting to know Numpy
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#testing-with-asserts">
+   Testing with asserts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#timing-a-function">
+   Timing a function
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting-with-matplotlib">
+   Plotting with matplotlib
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#saving-data-to-a-file">
+   Saving data to a file
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="class-1-monday-10-october">
+<h1>Class 1 (Monday 10 October)<a class="headerlink" href="#class-1-monday-10-october" title="Permalink to this headline">#</a></h1>
+<p>These tasks are designed to be worked on in the practical class on Monday 10 October.</p>
+<section id="getting-to-know-numpy">
+<h2>Getting to know Numpy<a class="headerlink" href="#getting-to-know-numpy" title="Permalink to this headline">#</a></h2>
+<p>Practice using Numpy by doing the following tasks:</p>
+<ul class="simple">
+<li><p>Create the vectors <span class="math notranslate nohighlight">\(\mathbf{a} = \begin{pmatrix}1\\2\\0\end{pmatrix}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{b} = \begin{pmatrix}-3\\\tfrac32\\1\end{pmatrix}\)</span>.</p></li>
+<li><p>Create the matrix <span class="math notranslate nohighlight">\(A=\begin{pmatrix}1&amp;0&amp;0\\0&amp;2&amp;0\\1&amp;0&amp;1\end{pmatrix}\)</span>.</p></li>
+<li><p>Compute the matrix-vector product <span class="math notranslate nohighlight">\(Aa\)</span>.</p></li>
+<li><p>Compute the dot product <span class="math notranslate nohighlight">\(\mathbf{a}\cdot\mathbf{b}\)</span>.</p></li>
+<li><p>Find a vector that is perpendicular to both <span class="math notranslate nohighlight">\(\mathbf{a}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{b}\)</span>.</p></li>
+<li><p>Find the vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> such that <span class="math notranslate nohighlight">\(A\mathbf{x}=\mathbf{a}\)</span></p></li>
+</ul>
+<p>The following snippet of code defines a function that computes a matrix-vector product. The last two lines should print the same result:
+this can be used to check that the function is behaving as expected.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">slow_matvec</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="c1"># Example of using this function</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">slow_matvec</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">matrix</span> <span class="o">@</span> <span class="n">vector</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using this code as a template, write your own function called <code class="docutils literal notranslate"><span class="pre">faster_matvec</span></code> that computes matrix-vector products by taking the dot product of the matrix with each row.
+Check that your function also gives the same result as these two functions.</p>
+</section>
+<section id="testing-with-asserts">
+<h2>Testing with asserts<a class="headerlink" href="#testing-with-asserts" title="Permalink to this headline">#</a></h2>
+<p>When writing a code that you want to run on a large HPC system, it is important to test that the code is correct before setting it off.
+There are better ways to do this than manually comparing outputs like you did above.</p>
+<p>Probably the best way to test your code for correctness is to write some <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements to assert that your function gives the correct result for some small problems that
+you know the answer to. For example, the following code tests a function that’s been written to add two integers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+
+<span class="k">assert</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="k">assert</span> <span class="n">add</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span>
+</pre></div>
+</div>
+<p>When using floating point numbers, asserts using <code class="docutils literal notranslate"><span class="pre">==</span></code> can fail even when the numbers should be the same (due to differences around the size of machine precision).
+For example, the following assert fails (or at least, it fails on my computer using Python 3.10.4):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="mi">100</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">30</span> <span class="o">==</span> <span class="mf">1000.0</span>
+</pre></div>
+</div>
+<p>To avoid this issue, the function <code class="docutils literal notranslate"><span class="pre">np.isclose</span></code> should be used, eg:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For vectors and matrices, <code class="docutils literal notranslate"><span class="pre">np.allclose</span></code> can be used.</p>
+<p>Write some Python code that test your <code class="docutils literal notranslate"><span class="pre">faster_matvec</span></code> function by computing that matrix-vector product of a random matrix and vector and compares the result to
+the result when using <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>.</p>
+<p>(Python libraries commonly use the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> library to carry out automated testing. Use of <code class="docutils literal notranslate"><span class="pre">pytest</span></code> is beyond the scope of this course.)</p>
+</section>
+<section id="timing-a-function">
+<h2>Timing a function<a class="headerlink" href="#timing-a-function" title="Permalink to this headline">#</a></h2>
+<p>You’re now going to measure the time it takes to compute matrix-vector products with the two functions <code class="docutils literal notranslate"><span class="pre">slow_matvec</span></code> and <code class="docutils literal notranslate"><span class="pre">fast_matvec</span></code>. The following code snippet measures the time taken
+to run a function <code class="docutils literal notranslate"><span class="pre">f</span></code>. This runs the function 1000 times and prints the total time taken.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">timeit</span>
+
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="c1"># contents of the function go here</span>
+
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Write some Python code that measures the time taken to compute a matrix-vector product of an <span class="math notranslate nohighlight">\(n\times n\)</span> matrix and a vector with <span class="math notranslate nohighlight">\(n\)</span> entries for <span class="math notranslate nohighlight">\(n=2,10,100\)</span> for both <code class="docutils literal notranslate"><span class="pre">slow_matvec</span></code> and <code class="docutils literal notranslate"><span class="pre">fast_matvec</span></code>.
+How much is your function faster than <code class="docutils literal notranslate"><span class="pre">slow_matvec</span></code>?</p>
+</section>
+<section id="plotting-with-matplotlib">
+<h2>Plotting with matplotlib<a class="headerlink" href="#plotting-with-matplotlib" title="Permalink to this headline">#</a></h2>
+<p>The Python library matplotlib is commonly used to draw plots of data. Matplotlib gives you a lot of freedom to do whatever you want, but this means that it has a lot of options/functions you can use.</p>
+<p>(When making plots with matplotlib, you may want to bear in mind that around 4% of people have some form of colourblindness. It can be very helpful to use different line styles and/or markers as well
+as colour differences.)</p>
+<p>The following example code makes a plot with the curves <span class="math notranslate nohighlight">\(y=x\)</span>, <span class="math notranslate nohighlight">\(y=x^2\)</span> and <span class="math notranslate nohighlight">\(y=3x^2\)</span> between <span class="math notranslate nohighlight">\(x=1\)</span> and <span class="math notranslate nohighlight">\(x=3\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="s2">&quot;ro-&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s2">&quot;g^-&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Values of x&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Values of y&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;$y=x$&quot;</span><span class="p">,</span> <span class="s2">&quot;$y=x^2$&quot;</span><span class="p">,</span> <span class="s2">&quot;$y=3x^2$&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>(If you’re using a Jupyter notebook, you may need to put the magic command <code class="docutils literal notranslate"><span class="pre">%matplotlib</span> <span class="pre">inline</span></code> at the start of the cell to display the plot. If you’re running Python from the command line,
+you’ll need to put <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> at the end to show the plot.)</p>
+<p>Make an alternative version of this plot with both axes using a log scale (hint: <code class="docutils literal notranslate"><span class="pre">plt.xscale(&quot;log&quot;)</span></code>). (Personally, I think log-log plots are much clearer if the <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> axes use equal tick sizes:
+you can do this with <code class="docutils literal notranslate"><span class="pre">plt.axis(&quot;equal&quot;)</span></code>.) What do you notice about your curves on this log-log plot? (Pen and paper task: starting with <span class="math notranslate nohighlight">\(y=ax^b\)</span>, work out why what you’ve observed happens.)</p>
+<p>Using matplotlib, make a plot showing the timings you measures in the previous part. Add some more data to your plot to make it more informative.</p>
+</section>
+<section id="saving-data-to-a-file">
+<h2>Saving data to a file<a class="headerlink" href="#saving-data-to-a-file" title="Permalink to this headline">#</a></h2>
+<p>If your problem takes a long time to solve, you don’t want to have to resolve it to get the data when you want to tweak a matplotlib plot. It’s therefore a good idea to save your data to a file
+and make a pretty plot with the data separately.</p>
+<p>In Jupyter notebooks, this can be acheived by running cells selectively: once you’re run the cell with your solver in once, you can tweak your plotting cell and re-run it as many times as you like
+without having to re-solve your problem.</p>
+<p>When running through a command line interface, you can use the functions <code class="docutils literal notranslate"><span class="pre">numpy.save</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.load</span></code> to save and load Numpy objects. For example, the following snippet saves a random matrix to a
+<code class="docutils literal notranslate"><span class="pre">.npy</span></code> file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;my_results.npy&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This matrix can then be loaded in a different file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;my_results.npy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="2022-assignment_1.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Assignment 1 - Matrix-matrix multiplication</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="2021-assignment_1.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Assignment 1 - Matrix multiplication in Numba</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Timo Betcke & Matthew Scroggs<br/>
+  
+      &copy; Copyright 2020-22.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

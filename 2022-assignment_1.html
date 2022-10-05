@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Welcome to Techniques of High-Performance Computing &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 1 - Matrix-matrix multiplication &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,10 +50,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="What is High-Performance Computing?" href="what_is_hpc.html" />
+    <link rel="next" title="Class 1 (Monday 10 October)" href="2022-class_1.html" />
+    <link rel="prev" title="Further topics" href="further_topics.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -107,8 +110,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="bd-toc-item active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     Welcome to Techniques of High-Performance Computing
                 </a>
             </li>
@@ -271,9 +274,9 @@ const thebe_selector_output = ".output, .cell_output"
   Assignments
  </span>
 </p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_1.html">
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Assignment 1 - Matrix-matrix multiplication
   </a>
  </li>
@@ -389,7 +392,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/intro.md"
+        <a href="_sources/2022-assignment_1.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -426,23 +429,84 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-assignment">
+   The assignment
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-1-a-better-function">
+     Part 1: a better function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-2-speeding-it-up-with-numba">
+     Part 2: speeding it up with Numba
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Welcome to Techniques of High-Performance Computing</h1>
+                <h1>Assignment 1 - Matrix-matrix multiplication</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-assignment">
+   The assignment
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-1-a-better-function">
+     Part 1: a better function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-2-speeding-it-up-with-numba">
+     Part 2: speeding it up with Numba
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -450,31 +514,80 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-techniques-of-high-performance-computing">
-<h1>Welcome to Techniques of High-Performance Computing<a class="headerlink" href="#welcome-to-techniques-of-high-performance-computing" title="Permalink to this headline">#</a></h1>
-<p>In this module we learn a number of basic techniques from High-Performance Computing.
-The module starts with an introduction and overview of parallel computing techniques and
-programming languages. We then take a deeper dive into Python, the main language for this module.
-In particular, we will get to learn libraries and programming techniques that will allow us to
-take full advantage of modern programming architectures in Python.</p>
-<p>This will be followed by an introduction to sparse linear algebra for very large linear systems of
-equations. You will get to know the basics of sparse direct solvers and sparse iterative solvers.</p>
-<p>Finally, we will turn to partial differential equations and implement some typical PDEs using the
-techniques learned in this module.</p>
-<div class="toctree-wrapper compound">
+  <section class="tex2jax_ignore mathjax_ignore" id="assignment-1-matrix-matrix-multiplication">
+<h1>Assignment 1 - Matrix-matrix multiplication<a class="headerlink" href="#assignment-1-matrix-matrix-multiplication" title="Permalink to this headline">#</a></h1>
+<p>This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is <strong>5pm on Thursday 20 October 2022</strong>.</p>
+<p>Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
+to any text questions included in the assessment. The easiest ways to create this file are:</p>
+<ul class="simple">
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
+</ul>
+<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this headline">#</a></h2>
+<p>In this assignment, we will look at computing the product <span class="math notranslate nohighlight">\(AB\)</span> of two matrices <span class="math notranslate nohighlight">\(A,B\in\mathbb{R}^{n\times n}\)</span>. The following snippet of code defines a function that computes the
+product of two matrices. As an example, the product of two 10 by 10 matrices is printed. The final line prints <code class="docutils literal notranslate"><span class="pre">matrix1</span> <span class="pre">&#64;</span> <span class="pre">matrix2</span></code> - the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol denotes matrix multiplication, and
+Python will get Numpy to compute the product of two matrices. By looking at the output, it’s possible to check that the two results are the same.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">slow_matrix_product</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span> <span class="n">mat2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Multiply two matrices.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">mat1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">mat2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">value</span> <span class="o">+=</span> <span class="n">mat1</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">mat2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+
+<span class="n">matrix1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">matrix2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">slow_matrix_product</span><span class="p">(</span><span class="n">matrix1</span><span class="p">,</span> <span class="n">matrix2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">matrix1</span> <span class="o">@</span> <span class="n">matrix2</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
+<p>The function in this snippet isn’t very good.</p>
+<section id="part-1-a-better-function">
+<h3>Part 1: a better function<a class="headerlink" href="#part-1-a-better-function" title="Permalink to this headline">#</a></h3>
+<p><strong>Write your own function called <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> that computes the product of two matrices more efficiently than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong></p>
+<p>Before you look at the performance of your function, you should check that it is computing the correct results. <strong>Write a Python script using an <code class="docutils literal notranslate"><span class="pre">assert</span></code>
+statement that checks that your function gives the same result as using <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for random 2 by 2, 3 by 3, 4 by 4, and 5 by 5 matrices.</strong></p>
+<p>In a text box, <strong>give two brief reasons (1-2 sentences for each) why your function is better than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong> At least one of your
+reasons should be related to the time you expect the two functions to take.</p>
+<p>Next, we want to compare the speed of <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code> and <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code>. <strong>Write a Python script that runs the two functions for matrices of a range of sizes,
+and use <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> to create a plot showing the time taken for different sized matrices for both functions.</strong> You should be able to run the functions for matrices
+of size up to around 1000 by 1000 (but if you’re using an older/slower computer, you may decide to decrease the maximums slightly). You do not need to run your functions for
+every size between your minimum and maximum, but should choose a set of 10-15 values that will give you an informative plot.</p>
+</section>
+<section id="part-2-speeding-it-up-with-numba">
+<h3>Part 2: speeding it up with Numba<a class="headerlink" href="#part-2-speeding-it-up-with-numba" title="Permalink to this headline">#</a></h3>
+<p>In the second part of this assignment, you’re going to use Numba to speed up your function.</p>
+<p><strong>Create a copy of your function <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> that is just-in-time (JIT) compiled using Numba.</strong> To demonstrate the speed improvement acheived by using Numba,
+<strong>make a plot (similar to that you made in the first part) that shows the times taken to multiply matrices using <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code>, <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> with
+Numba JIT compilation, and Numpy (<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>).</strong> Numpy’s matrix-matrix multiplication is highly optimised, so you should not expect to be as fast is it.</p>
+<p>You may be able to achieve further speed up of your function by adjusting the memory layout used. The function <code class="docutils literal notranslate"><span class="pre">np.asfortanarray</span></code> will make a copy of an array that uses
+Fortran-style ordering, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">fortran_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfortranarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
+<p><strong>Make a plot that compares the times taken by your JIT compiled function when the inputs have different combinations of C-style and Fortran-style ordering</strong>
+(ie the plot should have lines for when both inputs are C-style, when the first is C-style and the second is Fortran-style, and so on). Focusing on the fact
+that it is more efficient to access memory that is close to previous accesses, <strong>comment (in 1-2 sentences) on why one of these orderings appears to be fastest that the others</strong>.
+(Numba can do a lot of different things when compiling code, so depending on your function there may or may not be a large difference: if there is little change in speeds
+for your function, you can comment on which ordering you might expect to be faster and why, but conclude that Numba is doing something more advanced.)</p>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -504,10 +617,17 @@ techniques learned in this module.</p>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="what_is_hpc.html" title="next page">
+    <a class='left-prev' id="prev-link" href="further_topics.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Further topics</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="2022-class_1.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">What is High-Performance Computing?</p>
+        <p class="prev-next-title">Class 1 (Monday 10 October)</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
