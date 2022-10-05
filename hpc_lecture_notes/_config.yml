@@ -6,9 +6,11 @@
 #######################################################################################
 # Book settings
 title                       : Techniques of High-Performance Computing - Lecture Notes  # The title of the book. Will be placed in the left navbar.
-author                      : Timo Betcke  # The author of the book
-copyright                   : "2020"  # Copyright year to be placed in the footer
-logo                        : logo.png  # A path to the book logo
+author                      : Timo Betcke & Matthew Scroggs  # The author of the book
+copyright                   : "2020-22"  # Copyright year to be placed in the footer
+logo                        : cpu_logo.png  # A path to the book logo
 execute:
   execute_notebooks: 'off'
 
+html:
+  favicon: favicon.ico

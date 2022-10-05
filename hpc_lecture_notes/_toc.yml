@@ -34,6 +34,12 @@ parts:
 - caption: Conclusions
   chapters:
   - file: further_topics
+- caption: Assignments
+  chapters:
+  - file: 2022-assignment_1
+- caption: Tasks for Monday Practical Classes
+  chapters:
+  - file: 2022-class_1
 - caption: Assignments from past years
   chapters:
   - file: 2021-assignment_1
