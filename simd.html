@@ -1986,11 +1986,10 @@ float64:
             $44binary_subtract.9 = $36binary_subscr.5 - $42binary_subscr.8 :: float32
             del $42binary_subscr.8
             del $36binary_subscr.5
-            $46binary_multiply.10 = $const30.2 * $44binary_subtract.9 :: float64```
-
-Notice that the constant `2` has been typed as an int value.  Later, this causes the multiplication `2 * (x[i] - y[i]` to promote up to float64, and then the rest of the calculation becomes float64.  This is a situation where Numba is being overly conservative (and should be fixed at some point), but we can tweak this behavior by casting the constant to the type we want:
+            $46binary_multiply.10 = $const30.2 * $44binary_subtract.9 :: float64
 </pre></div>
 </div>
+<p>Notice that the constant <code class="docutils literal notranslate"><span class="pre">2</span></code> has been typed as an int value.  Later, this causes the multiplication <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">(x[i]</span> <span class="pre">-</span> <span class="pre">y[i]</span></code> to promote up to float64, and then the rest of the calculation becomes float64.  This is a situation where Numba is being overly conservative (and should be fixed at some point), but we can tweak this behavior by casting the constant to the type we want:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_model</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
