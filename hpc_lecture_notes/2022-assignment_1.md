@@ -46,6 +46,8 @@ The function in this snippet isn't very good.
 
 ### Part 1: a better function
 **Write your own function called `faster_matrix_product` that computes the product of two matrices more efficiently than `slow_matrix_product`.**
+Your function may use functions from Numpy (eg `np.dot`) to complete part of its calculation, but your function should not use `np.dot` or `@` to compute
+the full matrix-matrix product.
 
 Before you look at the performance of your function, you should check that it is computing the correct results. **Write a Python script using an `assert`
 statement that checks that your function gives the same result as using `@` for random 2 by 2, 3 by 3, 4 by 4, and 5 by 5 matrices.**
