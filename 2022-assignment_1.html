@@ -557,7 +557,9 @@ Python will get Numpy to compute the product of two matrices. By looking at the 
 <p>The function in this snippet isn’t very good.</p>
 <section id="part-1-a-better-function">
 <h3>Part 1: a better function<a class="headerlink" href="#part-1-a-better-function" title="Permalink to this headline">#</a></h3>
-<p><strong>Write your own function called <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> that computes the product of two matrices more efficiently than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong></p>
+<p><strong>Write your own function called <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> that computes the product of two matrices more efficiently than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong>
+Your function may use functions from Numpy (eg <code class="docutils literal notranslate"><span class="pre">np.dot</span></code>) to complete part of its calculation, but your function should not use <code class="docutils literal notranslate"><span class="pre">np.dot</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> to compute
+the full matrix-matrix product.</p>
 <p>Before you look at the performance of your function, you should check that it is computing the correct results. <strong>Write a Python script using an <code class="docutils literal notranslate"><span class="pre">assert</span></code>
 statement that checks that your function gives the same result as using <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for random 2 by 2, 3 by 3, 4 by 4, and 5 by 5 matrices.</strong></p>
 <p>In a text box, <strong>give two brief reasons (1-2 sentences for each) why your function is better than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong> At least one of your
