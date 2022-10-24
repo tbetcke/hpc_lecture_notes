@@ -21,7 +21,7 @@ u &= 0&&\text{if }x=0,\\
 u &= 1&&\text{if }x=1,\\
 \end{align*}
 $$
-with wavenumber $k=13\mathrm{\pi}/2$.
+with wavenumber $k=29\mathrm{\pi}/2$.
 
 ### Part 1: Solving with finite differences and sparse matrices
 In this part, we will approximately solving this problem using the method of finite differences.
@@ -32,15 +32,15 @@ To compute these approximations, we use the approximation
 
 $$
 \frac{\mathrm{d}^2u_{i}}{\mathrm{d}x^2} \approx \frac{
-2u_i-u_{i-1}-u_{i+1}
-}{h},
+u_{i-1}-2u_i+u_{i+1}
+}{h^2},
 $$
 where $h = 1/N$.
 
 With a bit of algebra, we see that the wave problem can be written as
 
 $$
-(2+hk^2)u_i-u_{i-1}-u_{i+1} = 0
+(2-h^2k^2)u_i-u_{i-1}-u_{i+1} = 0
 $$
 if $x_i$ is not 0 or 1, and
 
@@ -63,7 +63,7 @@ $$
 \begin{align*}
 \left[\mathbf{u}\right]_i &= u_i,\\
 \left[\mathbf{f}\right]_i &= \begin{cases}
-1&\text{if }x_i=1,\\
+1&\text{if }i=N,\\
 0&\text{otherwise}.
 \end{cases}
 \end{align*}
@@ -74,15 +74,15 @@ $$
 \left[\mathrm{A}\right]_i = 
 \begin{cases}
 1&\text{if }k=i,\\
-0&\text{if }\text{otherwise},
+0&\text{otherwise},
 \end{cases}
 $$
 if $i=0$ or $i=N$; and
 
 $$
-\left[\mathrm{A}\right]_{iN+j, k} = 
+\left[\mathrm{A}\right]_{i, k} = 
 \begin{cases}
-2+hk^2&\text{if }k=i,\\
+2-h^2k^2&\text{if }k=i,\\
 -1&\text{if }k=i+1,\\
 -1&\text{if }k=i-1.\\
 0&\text{otherwise},
@@ -93,7 +93,7 @@ otherwise.
 **Write a Python function that takes $N$ as an input and returns the matrix $\mathrm{A}$ and vector $\mathrm{f}$**.
 You should use an appropriate sparse storage format for the matrix $\mathrm{A}$.
 
-The function `scipy.sparse.spsolve` can be used to solve a sparse matrix-vector problem. Use this to **compute
+The function `scipy.sparse.linalg.spsolve` can be used to solve a sparse matrix-vector problem. Use this to **compute
 the approximate solution for your problem for $N=10$, $N=100$, and $N=1000$**. Use `matplotlib` (or any other plotting library)
 to **plot the solutions for these three values of $N$**.
 You may wish to time your functions at this point, as you will need these timings later.
@@ -102,10 +102,10 @@ You may wish to time your functions at this point, as you will need these timing
 actual solution of the wave problem?
 
 ### Part 2: Iterative method with GPU acceleration
-The equation $(2+hk^2)u_i-u_{i-1}-u_{i+1} = 0$ (that we worked out above) can be rewritten as
+The equation $(2-h^2k^2)u_i-u_{i-1}-u_{i+1} = 0$ (that we worked out above) can be rewritten as
 
 $$
-u_i=\frac{u_{i-1}+u_{i+1}}{2+hk^2}.
+u_i=\frac{u_{i-1}+u_{i+1}}{2-h^2k^2}.
 $$
 
 We can use this to formulate an iterative method for computing an approximation of $u$. We first pick an "inital guess" for the values of
@@ -124,7 +124,7 @@ u^{(n+1)}_i &=
 \begin{cases}
 0&\text{if }i=0,\\
 1&\text{if }i=N,\\
-\displaystyle\frac{u^{(n)}_{i-1}+u^{(n)}_{i+1}}{2+hk^2}&\text{otherwise}.
+\displaystyle\frac{u^{(n)}_{i-1}+u^{(n)}_{i+1}}{2-h^2k^2}&\text{otherwise}.
 \end{cases}
 $$
 
@@ -144,7 +144,7 @@ You may wish to time your functions at this point, as you will need these timing
 
 ### Part 3: Comparing errors and timings
 The problem above was carefully chosen so that its exact solution is known: this solution is
-$u_\text{exact}(x) = \sin(13{\pi}x/2)$. (You can check this by differentiating this twice and substituting, but you
+$u_\text{exact}(x) = \sin(kx/2)$. (You can check this by differentiating this twice and substituting, but you
 do not need to do this part of this assignment.)
 
 A possible approximate measure of the error in your solution can be found by computing
