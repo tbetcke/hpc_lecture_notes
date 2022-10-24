@@ -184,6 +184,6 @@ comment on how you picked a value for $N$**.
 You should think carefully about when data needs to be copied, and be careful not to copy data to/from the GPU when not needed.
 
 
-**Use your code to estimate the time at which the temperature of the midpoint of the rod first exceeds a temperature of 8**.
+**Use your code to estimate the time at which the temperature of the midpoint of the rod first exceeds a temperature of 9.8**.
 **Briefly (2-3 sentences) describe how you estimated this time**. You may choose to use a plot or diagram to aid your description,
 but it is not essential to include a plot.
