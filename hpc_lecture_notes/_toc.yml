@@ -37,6 +37,7 @@ parts:
 - caption: Assignments
   chapters:
   - file: 2022-assignment_1
+  - file: 2022-assignment_2
 - caption: Tasks for Monday Practical Classes
   chapters:
   - file: 2022-class_1
