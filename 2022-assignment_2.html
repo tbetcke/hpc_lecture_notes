@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>A tour of CUDA &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 2 - Solving two 1D problems &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,11 +50,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Numba Cuda in Practice" href="numba_cuda.html" />
-    <link rel="prev" title="An Introduction to GPU Computing" href="gpu_introduction.html" />
+    <link rel="next" title="Class 1 (Monday 10 October)" href="2022-class_1.html" />
+    <link rel="prev" title="Assignment 1 - Matrix-matrix multiplication" href="2022-assignment_1.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -119,7 +121,7 @@ const thebe_selector_output = ".output, .cell_output"
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -165,8 +167,8 @@ const thebe_selector_output = ".output, .cell_output"
    An Introduction to GPU Computing
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
    A tour of CUDA
   </a>
  </li>
@@ -272,14 +274,14 @@ const thebe_selector_output = ".output, .cell_output"
   Assignments
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-assignment_1.html">
    Assignment 1 - Matrix-matrix multiplication
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_2.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Assignment 2 - Solving two 1D problems
   </a>
  </li>
@@ -405,7 +407,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/cuda_introduction.md"
+        <a href="_sources/2022-assignment_2.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -465,31 +467,21 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cuda-device-model">
-   CUDA Device Model
+  <a class="reference internal nav-link" href="#the-assignment">
+   The assignment
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#threads-cuda-cores-warps-and-streaming-multiprocessors">
-     Threads, Cuda Cores, Warps and Streaming Multiprocessors
+    <a class="reference internal nav-link" href="#part-1-solving-a-wave-problem-with-sparse-matrices">
+     Part 1: Solving a wave problem with sparse matrices
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#numbering-of-threads">
-     Numbering of threads
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#memory-hierarchy">
-     Memory Hierarchy
+    <a class="reference internal nav-link" href="#part-2-solving-the-heat-equation-with-gpu-acceleration">
+     Part 2: Solving the heat equation with GPU acceleration
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example">
-   An example
-  </a>
  </li>
 </ul>
 
@@ -500,7 +492,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>A tour of CUDA</h1>
+                <h1>Assignment 2 - Solving two 1D problems</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -511,31 +503,21 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cuda-device-model">
-   CUDA Device Model
+  <a class="reference internal nav-link" href="#the-assignment">
+   The assignment
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#threads-cuda-cores-warps-and-streaming-multiprocessors">
-     Threads, Cuda Cores, Warps and Streaming Multiprocessors
+    <a class="reference internal nav-link" href="#part-1-solving-a-wave-problem-with-sparse-matrices">
+     Part 1: Solving a wave problem with sparse matrices
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#numbering-of-threads">
-     Numbering of threads
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#memory-hierarchy">
-     Memory Hierarchy
+    <a class="reference internal nav-link" href="#part-2-solving-the-heat-equation-with-gpu-acceleration">
+     Part 2: Solving the heat equation with GPU acceleration
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example">
-   An example
-  </a>
  </li>
 </ul>
 
@@ -547,82 +529,176 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="a-tour-of-cuda">
-<h1>A tour of CUDA<a class="headerlink" href="#a-tour-of-cuda" title="Permalink to this headline">#</a></h1>
-<p>In this chapter we will dive into CUDA, the standard GPU development model for Nvidia devices. To understand the basics of CUDA we first need to understand how GPU devices are organised.</p>
-<section id="cuda-device-model">
-<h2>CUDA Device Model<a class="headerlink" href="#cuda-device-model" title="Permalink to this headline">#</a></h2>
-<p>At the most basic level, GPU accelerators are massively parallel compute devices that can run a huge number of threads concurrently. Compute devices have global memory, shared memory and local memory for threads. Moreover, threads are grouped into thread blocks that allow shared memory access. We will discuss all these points in more detail below.</p>
-<section id="threads-cuda-cores-warps-and-streaming-multiprocessors">
-<h3>Threads, Cuda Cores, Warps and Streaming Multiprocessors<a class="headerlink" href="#threads-cuda-cores-warps-and-streaming-multiprocessors" title="Permalink to this headline">#</a></h3>
-<p>A GPU device is organised into a number of Streaming Multiprocessors (SM). Each SM is responsible for scheduling and executing a number of thread blocks. Below we show the design of a SM for the Nvidia A100 Architecture (see <a class="reference external" href="https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/">https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/</a>).</p>
-<p><img alt="SM Architecture" src="_images/a100_sm.png" /></p>
-<p>Each SM in the A100 architecture consists of integer cores, floating point cores and tensor cores. Tensor cores are relatively new and optimised for mixed precision multiply/add operations for deep learning. The SM is responsible for scheduling threads onto the different compute cores. For the developer the lowest logical entity is a thread. Threads are organised by thread blocks in CUDA. A thread block is a group of thread that is allowed to access fast shared memory together. In terms of implementation thread blocks are divided into Warps, where as each Warp contains 32 threads. Within a Warp all threads must follow the same execution path, which has implications for branch statements that we will discuss later. A Warp is roughly comparable to a SIMD vector register in CPU architectures.</p>
-<p>The scheduling into Warps is important for the organisation of thread blocks. Ideally, these are multiples of 32. If a thread block is not a multiple of 32 Cores may be underutilised. Consider a thread block of 48 threads. This will take up two Warps as we have 32 + 16 threads. Hence, the second Warp will not be fully utilised.</p>
-</section>
-<section id="numbering-of-threads">
-<h3>Numbering of threads<a class="headerlink" href="#numbering-of-threads" title="Permalink to this headline">#</a></h3>
-<p>The numbering of a thread is shown in the following Figure (see <a class="reference external" href="https://developer.nvidia.com/blog/even-easier-introduction-cuda/">https://developer.nvidia.com/blog/even-easier-introduction-cuda/</a>).</p>
-<p><img alt="Thread Numbering" src="_images/thread_numbering.png" /></p>
-<p>As mentioned above, threads are organised in thread blocks. All thread blocks together form a thread grid. The thread grid does not need to be one-dimensional. It can also be two or three dimensional. This is convenient if the computational domain is better represented in two or three dimensions. The figure demonstrates how for one dimension the global thread number of a thread block is computed.</p>
-</section>
-<section id="memory-hierarchy">
-<h3>Memory Hierarchy<a class="headerlink" href="#memory-hierarchy" title="Permalink to this headline">#</a></h3>
-<p>CUDA knows three types of memory</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="assignment-2-solving-two-1d-problems">
+<h1>Assignment 2 - Solving two 1D problems<a class="headerlink" href="#assignment-2-solving-two-1d-problems" title="Permalink to this headline">#</a></h1>
+<p>This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is <strong>5pm on Thursday 4 November 2022</strong>.</p>
+<p>Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
+to any text questions included in the assessment. The easiest ways to create this file are:</p>
 <ul class="simple">
-<li><p>The <strong>global memory</strong> is a block of memory accessible by all threads in a device. This is the largest chunk of memory and the place where we create GPU buffers to store our input to computations and output results. While a GPU typically has a few gigabytes of global memory, access to it is relatively slow from the individual threads.</p></li>
-<li><p>All threads within a given block have access to local <strong>shared memory</strong>. This shared memory is fast and available within the lifetime of the thread block. Together with local synchronisation it can be efficiently used to process workload within a given thread block without having to write back and forth to the global memory.</p></li>
-<li><p>Each thread has its own <strong>private memory</strong>. This is very fast and used to store local intermediate results that are only needed in the current thread.</p></li>
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
 </ul>
+<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this headline">#</a></h2>
+<section id="part-1-solving-a-wave-problem-with-sparse-matrices">
+<h3>Part 1: Solving a wave problem with sparse matrices<a class="headerlink" href="#part-1-solving-a-wave-problem-with-sparse-matrices" title="Permalink to this headline">#</a></h3>
+<p>In this part of the assignment, we want to compute the solution to the following (time-harmonic) wave problem:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\frac{\mathrm{d}^2 u}{\mathrm{d}x^2} + k^2u &amp;= 0&amp;&amp;\text{in }(0, 1),\\
+u &amp;= 0&amp;&amp;\text{if }x=0,\\
+u &amp;= 1&amp;&amp;\text{if }x=1,\\
+\end{align*}
+\end{split}\]</div>
+<p>with wavenumber <span class="math notranslate nohighlight">\(k=29\mathrm{\pi}/2\)</span>.</p>
+<p>In this part, we will approximately solving this problem using the method of finite differences.
+We do this by taking an evenly spaced values
+<span class="math notranslate nohighlight">\(x_0=0, x_1, x_2, ..., x_N=1\)</span>
+and approximating the value of <span class="math notranslate nohighlight">\(u\)</span> for each value: we will call these approximations <span class="math notranslate nohighlight">\(u_i\)</span>.
+To compute these approximations, we use the approximation</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\mathrm{d}^2u_{i}}{\mathrm{d}x^2} \approx \frac{
+u_{i-1}-2u_i+u_{i+1}
+}{h^2},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(h = 1/N\)</span>.</p>
+<p>With a bit of algebra, we see that the wave problem can be written as</p>
+<div class="math notranslate nohighlight">
+\[
+(2-h^2k^2)u_i-u_{i-1}-u_{i+1} = 0
+\]</div>
+<p>if <span class="math notranslate nohighlight">\(x_i\)</span> is not 0 or 1, and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+u_i &amp;= 0
+&amp;&amp;\text{if }x_i=0,\\
+u_i &amp;= 1
+&amp;&amp;\text{if }x_i=1.
+\end{align*}
+\end{split}\]</div>
+<p>This information can be used to re-write the problem as the matrix-vector problem
+<span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{u}=\mathbf{f},\)</span>
+where <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is a known matrix, <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> is a known vector, and <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> is an unknown vector that we want to compute.
+The entries of
+<span class="math notranslate nohighlight">\(\mathbf{f}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\left[\mathbf{u}\right]_i &amp;= u_i,\\
+\left[\mathbf{f}\right]_i &amp;= \begin{cases}
+1&amp;\text{if }i=N,\\
+0&amp;\text{otherwise}.
+\end{cases}
+\end{align*}
+\end{split}\]</div>
+<p>The rows of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[\mathrm{A}\right]_i = 
+\begin{cases}
+1&amp;\text{if }k=i,\\
+0&amp;\text{otherwise},
+\end{cases}
+\end{split}\]</div>
+<p>if <span class="math notranslate nohighlight">\(i=0\)</span> or <span class="math notranslate nohighlight">\(i=N\)</span>; and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[\mathrm{A}\right]_{i, k} = 
+\begin{cases}
+2-h^2k^2&amp;\text{if }k=i,\\
+-1&amp;\text{if }k=i+1,\\
+-1&amp;\text{if }k=i-1.\\
+0&amp;\text{otherwise},
+\end{cases}
+\end{split}\]</div>
+<p>otherwise.</p>
+<p><strong>Write a Python function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and vector <span class="math notranslate nohighlight">\(\mathrm{f}\)</span></strong>.
+You should use an appropriate sparse storage format for the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> can be used to solve a sparse matrix-vector problem. Use this to <strong>compute
+the approximate solution for your problem for <span class="math notranslate nohighlight">\(N=10\)</span>, <span class="math notranslate nohighlight">\(N=100\)</span>, and <span class="math notranslate nohighlight">\(N=1000\)</span></strong>. Use <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (or any other plotting library)
+to <strong>plot the solutions for these three values of <span class="math notranslate nohighlight">\(N\)</span></strong>.</p>
+<p><strong>Briefly (1-2 sentences) comment on your plots</strong>: How different are they to each other? Which do you expect to be closest to the
+actual solution of the wave problem?</p>
+<p>This wave problem was carefully chosen so that its exact solution is known: this solution is
+<span class="math notranslate nohighlight">\(u_\text{exact}(x) = \sin(kx/2)\)</span>. (You can check this by differentiating this twice and substituting, but you
+do not need to do this part of this assignment.)</p>
+<p>A possible approximate measure of the error in your solution can be found by computing</p>
+<div class="math notranslate nohighlight">
+\[
+\max_i\left|u_i-u_\text{exact}(x_i)\right|.
+\]</div>
+<p><strong>Compute this error for a range of values for <span class="math notranslate nohighlight">\(N\)</span> of your choice, for the methods you wrote in both parts 1 and 2</strong>. On axes that both use log scales,
+<strong>plot <span class="math notranslate nohighlight">\(N\)</span> against the error in your solution</strong>. You should pick a range of values for <span class="math notranslate nohighlight">\(N\)</span> so that this plot will give you useful information about the
+methods.</p>
+<p>For the same values of <span class="math notranslate nohighlight">\(N\)</span>, <strong>measure the time taken to compute your approximations for both functions</strong>. On axes that both use log scales,
+<strong>plot <span class="math notranslate nohighlight">\(N\)</span> against the time taken to compute a solution</strong>.</p>
+<p>We now want to compute an approximate solution where the measure of error is <span class="math notranslate nohighlight">\(10^{-8}\)</span> or less. By looking at your plots, <strong>pick a value of <span class="math notranslate nohighlight">\(N\)</span>
+that you would expect to give error of <span class="math notranslate nohighlight">\(10^{-8}\)</span> or less</strong>. <strong>Briefly (1-2 sentences) explain how you picked your value of <span class="math notranslate nohighlight">\(N\)</span>
+and predict how long the computation will take</strong>.</p>
+<p><strong>Compute the approximate solution with your value of <span class="math notranslate nohighlight">\(N\)</span></strong>. Measure the time taken and the error, and <strong>briefly (1-2 sentences) comment
+on how these compare to your predictions</strong>.</p>
 </section>
+<section id="part-2-solving-the-heat-equation-with-gpu-acceleration">
+<h3>Part 2: Solving the heat equation with GPU acceleration<a class="headerlink" href="#part-2-solving-the-heat-equation-with-gpu-acceleration" title="Permalink to this headline">#</a></h3>
+<p>In this part of the assignment, we want to solve the heat equation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\frac{\mathrm{d}u}{\mathrm{d}t} &amp;= \frac{1}{1000}\frac{\mathrm{d}^2u}{\mathrm{d}x^2}&amp;&amp;\text{for }x\in(0,1),\\
+u(x, 0) &amp;= 0,\\
+u(0,t) &amp;= 10,\\
+u(1,t) &amp;= 10.
+\end{align*}
+\end{split}\]</div>
+<p>This represents a rod that starts at 0 temperature which is heated to a temperature of 10 at both ends.</p>
+<p>Again, we will approximately solve this by taking an evenly spaced values
+<span class="math notranslate nohighlight">\(x_0=0, x_1, x_2, ..., x_N=1\)</span>.
+Additionally, we will take a set of evenly spaced times
+<span class="math notranslate nohighlight">\(t_0=0,t_1=h, t_2=2h, t_3=3h, ...\)</span>, where <span class="math notranslate nohighlight">\(h=1/N\)</span>.
+We will write <span class="math notranslate nohighlight">\(u^{(j)}_{i}\)</span> for the approximate value of <span class="math notranslate nohighlight">\(u\)</span> at point <span class="math notranslate nohighlight">\(x_i\)</span> and time <span class="math notranslate nohighlight">\(t_j\)</span>
+(ie <span class="math notranslate nohighlight">\(u^{(j)}_{i}\approx u(x_i, t_j)\)</span>).</p>
+<p>Approximating both derivatives (similar to what we did in part 1), and doing some algebra, we can rewrite the
+heat equation as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+u^{(j + 1)}_i&amp;=u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h},\\
+u^{(0)}_i &amp;= 0,\\
+u^{(j)}_{0}&amp;=10,\\
+u^{(j)}_{N}&amp;=10.
+\end{align*}
+\end{split}\]</div>
+<p>This leads us to an iterative method for solving this problem: first, at <span class="math notranslate nohighlight">\(t=0\)</span>, we set</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u^{(0)}_i =
+\begin{cases}
+10 &amp;\text{if }x=0\text{ or }x=N,\\
+0 &amp;\text{otherwise};
+\end{cases}
+\end{split}\]</div>
+<p>then for all later values of time, we set</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u^{(j)}_i =
+\begin{cases}
+10 &amp;\text{if }x=0\text{ or }x=N,\\
+\displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &amp;\text{otherwise}.
+\end{cases}
+\end{split}\]</div>
+<p><strong>Implement this iterative scheme in Python</strong>. You should implement this as a function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input.</p>
+<p>Using a sensible value of <span class="math notranslate nohighlight">\(N\)</span>, <strong>plot the temperature of the rod at <span class="math notranslate nohighlight">\(t=1\)</span>, <span class="math notranslate nohighlight">\(t=2\)</span> and <span class="math notranslate nohighlight">\(t=10\)</span></strong>. <strong>Briefly (1-2 sentences)
+comment on how you picked a value for <span class="math notranslate nohighlight">\(N\)</span></strong>.</p>
+<p><strong>Use <code class="docutils literal notranslate"><span class="pre">numba.cuda</span></code> to parallelise your implementation on a GPU</strong>.
+You should think carefully about when data needs to be copied, and be careful not to copy data to/from the GPU when not needed.</p>
+<p><strong>Use your code to estimate the time at which the temperature of the midpoint of the rod first exceeds a temperature of 9.8</strong>.
+<strong>Briefly (2-3 sentences) describe how you estimated this time</strong>. You may choose to use a plot or diagram to aid your description,
+but it is not essential to include a plot.</p>
 </section>
-<section id="an-example">
-<h2>An example<a class="headerlink" href="#an-example" title="Permalink to this headline">#</a></h2>
-<p>The following example from the <a class="reference external" href="https://numba.pydata.org/numba-doc/dev/cuda/examples.html#matrix-multiplication">official Numba documentation</a> uses all of the above mentioned principles. It is an implementation of a matrix-matrix product that makes use of shared memory for block-wise multiplication.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span><span class="p">,</span> <span class="n">float32</span>
-
-<span class="c1"># Controls threads per block and shared memory usage.</span>
-<span class="c1"># The computation will be done on blocks of TPBxTPB elements.</span>
-<span class="n">TPB</span> <span class="o">=</span> <span class="mi">16</span>
-
-<span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">fast_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
-    <span class="c1"># Define an array in the shared memory</span>
-    <span class="c1"># The size and type of the arrays must be known at compile time</span>
-    <span class="n">sA</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">TPB</span><span class="p">,</span> <span class="n">TPB</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">sB</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">TPB</span><span class="p">,</span> <span class="n">TPB</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
-
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span>
-    <span class="n">bpg</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridDim</span><span class="o">.</span><span class="n">x</span>    <span class="c1"># blocks per grid</span>
-
-    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="c1"># Quit if (x, y) is outside of valid C boundary</span>
-        <span class="k">return</span>
-
-    <span class="c1"># Each thread computes one element in the result matrix.</span>
-    <span class="c1"># The dot product is chunked into dot products of TPB-long vectors.</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="mf">0.</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bpg</span><span class="p">):</span>
-        <span class="c1"># Preload data into shared memory</span>
-        <span class="n">sA</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">]</span>
-        <span class="n">sB</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">tx</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
-
-        <span class="c1"># Wait until all threads finish preloading</span>
-        <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
-
-        <span class="c1"># Computes partial product on the shared memory</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">TPB</span><span class="p">):</span>
-            <span class="n">tmp</span> <span class="o">+=</span> <span class="n">sA</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">sB</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span>
-
-        <span class="c1"># Wait until all threads finish computing</span>
-        <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
-
-    <span class="n">C</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
-</pre></div>
-</div>
 </section>
 </section>
 
@@ -653,17 +729,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="gpu_introduction.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="2022-assignment_1.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">An Introduction to GPU Computing</p>
+            <p class="prev-next-title">Assignment 1 - Matrix-matrix multiplication</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="numba_cuda.html" title="next page">
+    <a class='right-next' id="next-link" href="2022-class_1.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Numba Cuda in Practice</p>
+        <p class="prev-next-title">Class 1 (Monday 10 October)</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

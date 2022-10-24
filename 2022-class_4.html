@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>A tour of CUDA &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Class 4 (Monday 31 October) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -53,8 +53,6 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Numba Cuda in Practice" href="numba_cuda.html" />
-    <link rel="prev" title="An Introduction to GPU Computing" href="gpu_introduction.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -119,7 +117,7 @@ const thebe_selector_output = ".output, .cell_output"
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -165,8 +163,8 @@ const thebe_selector_output = ".output, .cell_output"
    An Introduction to GPU Computing
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="cuda_introduction.html">
    A tour of CUDA
   </a>
  </li>
@@ -405,7 +403,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/cuda_introduction.md"
+        <a href="_sources/2022-class_4.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -465,30 +463,18 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cuda-device-model">
-   CUDA Device Model
+  <a class="reference internal nav-link" href="#plan">
+   Plan
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#threads-cuda-cores-warps-and-streaming-multiprocessors">
-     Threads, Cuda Cores, Warps and Streaming Multiprocessors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#numbering-of-threads">
-     Numbering of threads
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#memory-hierarchy">
-     Memory Hierarchy
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example">
-   An example
+  <a class="reference internal nav-link" href="#comparing-sparse-formats">
+   Comparing sparse formats
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-sparse">
+   How sparse
   </a>
  </li>
 </ul>
@@ -500,7 +486,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>A tour of CUDA</h1>
+                <h1>Class 4 (Monday 31 October)</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -511,30 +497,18 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cuda-device-model">
-   CUDA Device Model
+  <a class="reference internal nav-link" href="#plan">
+   Plan
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#threads-cuda-cores-warps-and-streaming-multiprocessors">
-     Threads, Cuda Cores, Warps and Streaming Multiprocessors
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#numbering-of-threads">
-     Numbering of threads
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#memory-hierarchy">
-     Memory Hierarchy
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example">
-   An example
+  <a class="reference internal nav-link" href="#comparing-sparse-formats">
+   Comparing sparse formats
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#how-sparse">
+   How sparse
   </a>
  </li>
 </ul>
@@ -547,82 +521,31 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="a-tour-of-cuda">
-<h1>A tour of CUDA<a class="headerlink" href="#a-tour-of-cuda" title="Permalink to this headline">#</a></h1>
-<p>In this chapter we will dive into CUDA, the standard GPU development model for Nvidia devices. To understand the basics of CUDA we first need to understand how GPU devices are organised.</p>
-<section id="cuda-device-model">
-<h2>CUDA Device Model<a class="headerlink" href="#cuda-device-model" title="Permalink to this headline">#</a></h2>
-<p>At the most basic level, GPU accelerators are massively parallel compute devices that can run a huge number of threads concurrently. Compute devices have global memory, shared memory and local memory for threads. Moreover, threads are grouped into thread blocks that allow shared memory access. We will discuss all these points in more detail below.</p>
-<section id="threads-cuda-cores-warps-and-streaming-multiprocessors">
-<h3>Threads, Cuda Cores, Warps and Streaming Multiprocessors<a class="headerlink" href="#threads-cuda-cores-warps-and-streaming-multiprocessors" title="Permalink to this headline">#</a></h3>
-<p>A GPU device is organised into a number of Streaming Multiprocessors (SM). Each SM is responsible for scheduling and executing a number of thread blocks. Below we show the design of a SM for the Nvidia A100 Architecture (see <a class="reference external" href="https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/">https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/</a>).</p>
-<p><img alt="SM Architecture" src="_images/a100_sm.png" /></p>
-<p>Each SM in the A100 architecture consists of integer cores, floating point cores and tensor cores. Tensor cores are relatively new and optimised for mixed precision multiply/add operations for deep learning. The SM is responsible for scheduling threads onto the different compute cores. For the developer the lowest logical entity is a thread. Threads are organised by thread blocks in CUDA. A thread block is a group of thread that is allowed to access fast shared memory together. In terms of implementation thread blocks are divided into Warps, where as each Warp contains 32 threads. Within a Warp all threads must follow the same execution path, which has implications for branch statements that we will discuss later. A Warp is roughly comparable to a SIMD vector register in CPU architectures.</p>
-<p>The scheduling into Warps is important for the organisation of thread blocks. Ideally, these are multiples of 32. If a thread block is not a multiple of 32 Cores may be underutilised. Consider a thread block of 48 threads. This will take up two Warps as we have 32 + 16 threads. Hence, the second Warp will not be fully utilised.</p>
-</section>
-<section id="numbering-of-threads">
-<h3>Numbering of threads<a class="headerlink" href="#numbering-of-threads" title="Permalink to this headline">#</a></h3>
-<p>The numbering of a thread is shown in the following Figure (see <a class="reference external" href="https://developer.nvidia.com/blog/even-easier-introduction-cuda/">https://developer.nvidia.com/blog/even-easier-introduction-cuda/</a>).</p>
-<p><img alt="Thread Numbering" src="_images/thread_numbering.png" /></p>
-<p>As mentioned above, threads are organised in thread blocks. All thread blocks together form a thread grid. The thread grid does not need to be one-dimensional. It can also be two or three dimensional. This is convenient if the computational domain is better represented in two or three dimensions. The figure demonstrates how for one dimension the global thread number of a thread block is computed.</p>
-</section>
-<section id="memory-hierarchy">
-<h3>Memory Hierarchy<a class="headerlink" href="#memory-hierarchy" title="Permalink to this headline">#</a></h3>
-<p>CUDA knows three types of memory</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="class-4-monday-31-october">
+<h1>Class 4 (Monday 31 October)<a class="headerlink" href="#class-4-monday-31-october" title="Permalink to this headline">#</a></h1>
+<p>These tasks are designed to be worked on in the practical class on Monday 31 October.</p>
+<p>In this class, we will make heavy use of the <span class="xref myst">finite difference code for solving a Poisson problem</span>
+that we wrote in lectures.</p>
+<section id="plan">
+<h2>Plan<a class="headerlink" href="#plan" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p>The <strong>global memory</strong> is a block of memory accessible by all threads in a device. This is the largest chunk of memory and the place where we create GPU buffers to store our input to computations and output results. While a GPU typically has a few gigabytes of global memory, access to it is relatively slow from the individual threads.</p></li>
-<li><p>All threads within a given block have access to local <strong>shared memory</strong>. This shared memory is fast and available within the lifetime of the thread block. Together with local synchronisation it can be efficiently used to process workload within a given thread block without having to write back and forth to the global memory.</p></li>
-<li><p>Each thread has its own <strong>private memory</strong>. This is very fast and used to store local intermediate results that are only needed in the current thread.</p></li>
+<li><p>Write versions of code with sparse and dense matrices.</p></li>
+<li><p>Plot of memory used vs size of problem.</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">scipy.sparse.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code>, plot of time to solve vs size of problem.</p></li>
 </ul>
 </section>
+<section id="comparing-sparse-formats">
+<h2>Comparing sparse formats<a class="headerlink" href="#comparing-sparse-formats" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Plot memory vs size for different sparse formats</p></li>
+</ul>
 </section>
-<section id="an-example">
-<h2>An example<a class="headerlink" href="#an-example" title="Permalink to this headline">#</a></h2>
-<p>The following example from the <a class="reference external" href="https://numba.pydata.org/numba-doc/dev/cuda/examples.html#matrix-multiplication">official Numba documentation</a> uses all of the above mentioned principles. It is an implementation of a matrix-matrix product that makes use of shared memory for block-wise multiplication.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span><span class="p">,</span> <span class="n">float32</span>
-
-<span class="c1"># Controls threads per block and shared memory usage.</span>
-<span class="c1"># The computation will be done on blocks of TPBxTPB elements.</span>
-<span class="n">TPB</span> <span class="o">=</span> <span class="mi">16</span>
-
-<span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">fast_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
-    <span class="c1"># Define an array in the shared memory</span>
-    <span class="c1"># The size and type of the arrays must be known at compile time</span>
-    <span class="n">sA</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">TPB</span><span class="p">,</span> <span class="n">TPB</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">sB</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">TPB</span><span class="p">,</span> <span class="n">TPB</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">)</span>
-
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span>
-    <span class="n">bpg</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">gridDim</span><span class="o">.</span><span class="n">x</span>    <span class="c1"># blocks per grid</span>
-
-    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="c1"># Quit if (x, y) is outside of valid C boundary</span>
-        <span class="k">return</span>
-
-    <span class="c1"># Each thread computes one element in the result matrix.</span>
-    <span class="c1"># The dot product is chunked into dot products of TPB-long vectors.</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="mf">0.</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bpg</span><span class="p">):</span>
-        <span class="c1"># Preload data into shared memory</span>
-        <span class="n">sA</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">]</span>
-        <span class="n">sB</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">tx</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">TPB</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
-
-        <span class="c1"># Wait until all threads finish preloading</span>
-        <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
-
-        <span class="c1"># Computes partial product on the shared memory</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">TPB</span><span class="p">):</span>
-            <span class="n">tmp</span> <span class="o">+=</span> <span class="n">sA</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">sB</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span>
-
-        <span class="c1"># Wait until all threads finish computing</span>
-        <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
-
-    <span class="n">C</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
-</pre></div>
-</div>
+<section id="how-sparse">
+<h2>How sparse<a class="headerlink" href="#how-sparse" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Create 10 by 10 matrix with 1s in N random positions. How big can N get before dense storage becomes better?</p></li>
+<li><p>Do the same for 100 by 100 matrix.</p></li>
+</ul>
 </section>
 </section>
 
@@ -653,20 +576,6 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="gpu_introduction.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">An Introduction to GPU Computing</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="numba_cuda.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Numba Cuda in Practice</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
 </div>
             </footer>
         </div>
