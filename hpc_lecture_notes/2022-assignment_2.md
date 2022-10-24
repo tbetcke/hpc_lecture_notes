@@ -96,7 +96,6 @@ You should use an appropriate sparse storage format for the matrix $\mathrm{A}$.
 The function `scipy.sparse.linalg.spsolve` can be used to solve a sparse matrix-vector problem. Use this to **compute
 the approximate solution for your problem for $N=10$, $N=100$, and $N=1000$**. Use `matplotlib` (or any other plotting library)
 to **plot the solutions for these three values of $N$**.
-You may wish to time your functions at this point, as you will need these timings later.
 
 **Briefly (1-2 sentences) comment on your plots**: How different are they to each other? Which do you expect to be closest to the
 actual solution of the wave problem?
@@ -128,17 +127,16 @@ u^{(n+1)}_i &=
 \end{cases}
 $$
 
-**Implement this iterative scheme in Python, using `numba.cuda` to parallelise your implementation on a GPU.**
+**Implement this iterative scheme in Python, using `numba.cuda` to parallelise your implementation on a GPU**.
 You should think carefully about which values need to be copied between thread blocks, and which values can be kept in
 local memory, and be careful not to copy data to/from the GPU when not needed.
 
 You will need to pick a sensible number of iterations to complete to get your approximate solution:
 too few iterations and your solution will be inaccurate; too many iterations and your solution will take longer to compute.
-**Briefly (1-2 sentences) comment on how you pick the number of iterations or when you decide to stop iterating.**
+**Briefly (1-2 sentences) comment on how you pick the number of iterations or when you decide to stop iterating**.
 
 **Compute the approximate solution for your problem for $N=10$, $N=100$, and $N=1000$**. Use `matplotlib` (or any other plotting library)
 to **plot the solutions for these three values of $N$**.
-You may wish to time your functions at this point, as you will need these timings later.
 
 **Briefly (1-2 sentences) comment on your plots**: How do they compare to the plots from part 1?
 
@@ -152,14 +150,15 @@ A possible approximate measure of the error in your solution can be found by com
 $$
 \max_i\left|u_i-u_\text{exact}(x_i)\right|.
 $$
-**Compute this error for $N=10$, $N=100$, and $N=1000$ for your solutions computed in both parts 1 and 2**. On axes that both use log scales,
-**plot $N$ against the error in your solution.**
+**Compute this error for a range of values for $N$ of your choice, for the methods you wrote in both parts 1 and 2**. On axes that both use log scales,
+**plot $N$ against the error in your solution**. You should pick a range of values for $N$ so that this plot will give you useful information about the
+methods.
 
-**Measure the time taken to compute your approximations in parts 1 and 2**. On axes that both use log scales,
-**plot $N$ against the time taken to compute a solution.**
+For the same values of $N$, **measure the time taken to compute your approximations for both functions**. On axes that both use log scales,
+**plot $N$ against the time taken to compute a solution**.
 
-We now want to compute an approximate solution for $N=1000$. By looking at your two plots, **decide which of the two methods you think would be best for this
-larger computation**. **Briefly (2-3 sentences) explain why you think the method you have picked is the better choice.**
+We now want to compute an approximate solution for $N=1000000$ (one million). By looking at your two plots, **decide which of the two methods you think would be best for this
+larger computation**. **Briefly (2-3 sentences) explain why you think the method you have picked is the better choice**.
 
-**Compute the approximate solution with $N=1000$ using the method your have picked**, and **add the time taken and the error of the solution to the two plots you
-made**.
+**Compute the approximate solution with $N=1000000$ using the method your have picked**, and **add the time taken and the error of the solution to the two plots you
+made for that method**.
