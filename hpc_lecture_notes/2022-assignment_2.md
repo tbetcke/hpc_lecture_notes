@@ -1,4 +1,4 @@
-# Assignment 2 - Solving a wave problem
+# Assignment 2 - Solving two 1D problems
 
 This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 4 November 2022**.
 
@@ -12,7 +12,8 @@ Tasks you are required to carry out and questions you are required to answer are
 
 ## The assignment
 
-In this assignment, we want to compute the solution to the following (time-harmonic) wave problem:
+### Part 1: Solving a wave problem with sparse matrices
+In this part of the assignment, we want to compute the solution to the following (time-harmonic) wave problem:
 
 $$
 \begin{align*}
@@ -23,7 +24,6 @@ u &= 1&&\text{if }x=1,\\
 $$
 with wavenumber $k=29\mathrm{\pi}/2$.
 
-### Part 1: Solving with finite differences and sparse matrices
 In this part, we will approximately solving this problem using the method of finite differences.
 We do this by taking an evenly spaced values
 $x_0=0, x_1, x_2, ..., x_N=1$
@@ -100,48 +100,7 @@ to **plot the solutions for these three values of $N$**.
 **Briefly (1-2 sentences) comment on your plots**: How different are they to each other? Which do you expect to be closest to the
 actual solution of the wave problem?
 
-### Part 2: Iterative method with GPU acceleration
-The equation $(2-h^2k^2)u_i-u_{i-1}-u_{i+1} = 0$ (that we worked out above) can be rewritten as
-
-$$
-u_i=\frac{u_{i-1}+u_{i+1}}{2-h^2k^2}.
-$$
-
-We can use this to formulate an iterative method for computing an approximation of $u$. We first pick an "inital guess" for the values of
-$u_i$:
-
-$$
-u^{(0)}_i = \begin{cases}
-1&\text{if }i=N,\\
-0&\text{otherwise}.
-\end{cases}
-$$
-We then compute the next guess for the values of $u_i$ using
-
-$$
-u^{(n+1)}_i &=
-\begin{cases}
-0&\text{if }i=0,\\
-1&\text{if }i=N,\\
-\displaystyle\frac{u^{(n)}_{i-1}+u^{(n)}_{i+1}}{2-h^2k^2}&\text{otherwise}.
-\end{cases}
-$$
-
-**Implement this iterative scheme in Python, using `numba.cuda` to parallelise your implementation on a GPU**.
-You should think carefully about which values need to be copied between thread blocks, and which values can be kept in
-local memory, and be careful not to copy data to/from the GPU when not needed.
-
-You will need to pick a sensible number of iterations to complete to get your approximate solution:
-too few iterations and your solution will be inaccurate; too many iterations and your solution will take longer to compute.
-**Briefly (1-2 sentences) comment on how you pick the number of iterations or when you decide to stop iterating**.
-
-**Compute the approximate solution for your problem for $N=10$, $N=100$, and $N=1000$**. Use `matplotlib` (or any other plotting library)
-to **plot the solutions for these three values of $N$**.
-
-**Briefly (1-2 sentences) comment on your plots**: How do they compare to the plots from part 1?
-
-### Part 3: Comparing errors and timings
-The problem above was carefully chosen so that its exact solution is known: this solution is
+This wave problem was carefully chosen so that its exact solution is known: this solution is
 $u_\text{exact}(x) = \sin(kx/2)$. (You can check this by differentiating this twice and substituting, but you
 do not need to do this part of this assignment.)
 
@@ -157,8 +116,74 @@ methods.
 For the same values of $N$, **measure the time taken to compute your approximations for both functions**. On axes that both use log scales,
 **plot $N$ against the time taken to compute a solution**.
 
-We now want to compute an approximate solution for $N=1000000$ (one million). By looking at your two plots, **decide which of the two methods you think would be best for this
-larger computation**. **Briefly (2-3 sentences) explain why you think the method you have picked is the better choice**.
+We now want to compute an approximate solution where the measure of error is $10^{-8}$ or less. By looking at your plots, **pick a value of $N$
+that you would expect to give error of $10^{-8}$ or less**. **Briefly (1-2 sentences) explain how you picked your value of $N$
+and predict how long the computation will take**.
 
-**Compute the approximate solution with $N=1000000$ using the method your have picked**, and **add the time taken and the error of the solution to the two plots you
-made for that method**.
+**Compute the approximate solution with your value of $N$**. Measure the time taken and the error, and **briefly (1-2 sentences) comment
+on how these compare to your predictions**.
+
+### Part 2: Solving the heat equation with GPU acceleration
+
+In this part of the assignment, we want to solve the heat equation
+
+$$
+\begin{align*}
+\frac{\mathrm{d}u}{\mathrm{d}t} &= \frac{1}{1000}\frac{\mathrm{d}^2u}{\mathrm{d}x^2}&&\text{for }x\in(0,1),\\
+u(x, 0) &= 0,\\
+u(0,t) &= 10,\\
+u(1,t) &= 10.
+\end{align*}
+$$
+This represents a rod that starts at 0 temperature which is heated to a temperature of 10 at both ends.
+
+Again, we will approximately solve this by taking an evenly spaced values
+$x_0=0, x_1, x_2, ..., x_N=1$.
+Additionally, we will take a set of evenly spaced times
+$t_0=0,t_1=h, t_2=2h, t_3=3h, ...$, where $h=1/N$.
+We will write $u^{(j)}_{i}$ for the approximate value of $u$ at point $x_i$ and time $t_j$
+(ie $u^{(j)}_{i}\approx u(x_i, t_j)$).
+
+Approximating both derivatives (similar to what we did in part 1), and doing some algebra, we can rewrite the
+heat equation as
+
+$$
+\begin{align*}
+u^{(j + 1)}_i&=u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h},\\
+u^{(0)}_i &= 0,\\
+u^{(j)}_{0}&=10,\\
+u^{(j)}_{N}&=10.
+\end{align*}
+$$
+
+This leads us to an iterative method for solving this problem: first, at $t=0$, we set
+
+$$
+u^{(0)}_i =
+\begin{cases}
+10 &\text{if }x=0\text{ or }x=N,\\
+0 &\text{otherwise};
+\end{cases}
+$$
+then for all later values of time, we set
+
+$$
+u^{(j)}_i =
+\begin{cases}
+10 &\text{if }x=0\text{ or }x=N,\\
+\displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &\text{otherwise}.
+\end{cases}
+$$
+
+**Implement this iterative scheme in Python**. You should implement this as a function that takes $N$ as an input.
+
+Using a sensible value of $N$, **plot the temperature of the rod at $t=1$, $t=2$ and $t=10$**. **Briefly (1-2 sentences)
+comment on how you picked a value for $N$**.
+
+**Use `numba.cuda` to parallelise your implementation on a GPU**.
+You should think carefully about when data needs to be copied, and be careful not to copy data to/from the GPU when not needed.
+
+
+**Use your code to estimate the time at which the temperature of the midpoint of the rod first exceeds a temperature of 8**.
+**Briefly (2-3 sentences) describe how you estimated this time**. You may choose to use a plot or diagram to aid your description,
+but it is not essential to include a plot.
