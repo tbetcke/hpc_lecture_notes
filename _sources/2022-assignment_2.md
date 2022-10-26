@@ -109,11 +109,11 @@ A possible approximate measure of the error in your solution can be found by com
 $$
 \max_i\left|u_i-u_\text{exact}(x_i)\right|.
 $$
-**Compute this error for a range of values for $N$ of your choice, for the methods you wrote in both parts 1 and 2**. On axes that both use log scales,
+**Compute this error for a range of values for $N$ of your choice, for the method you wrote above**. On axes that both use log scales,
 **plot $N$ against the error in your solution**. You should pick a range of values for $N$ so that this plot will give you useful information about the
 methods.
 
-For the same values of $N$, **measure the time taken to compute your approximations for both functions**. On axes that both use log scales,
+For the same values of $N$, **measure the time taken to compute your approximation for your function**. On axes that both use log scales,
 **plot $N$ against the time taken to compute a solution**.
 
 We now want to compute an approximate solution where the measure of error is $10^{-8}$ or less. By looking at your plots, **pick a value of $N$
