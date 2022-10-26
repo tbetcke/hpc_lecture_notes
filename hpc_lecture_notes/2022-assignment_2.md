@@ -101,7 +101,7 @@ to **plot the solutions for these three values of $N$**.
 actual solution of the wave problem?
 
 This wave problem was carefully chosen so that its exact solution is known: this solution is
-$u_\text{exact}(x) = \sin(kx/2)$. (You can check this by differentiating this twice and substituting, but you
+$u_\text{exact}(x) = \sin(kx)$. (You can check this by differentiating this twice and substituting, but you
 do not need to do this part of this assignment.)
 
 A possible approximate measure of the error in your solution can be found by computing
