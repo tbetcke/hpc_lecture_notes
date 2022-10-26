@@ -73,18 +73,18 @@ The rows of $\mathrm{A}$ are given by
 $$
 \left[\mathrm{A}\right]_i = 
 \begin{cases}
-1&\text{if }k=i,\\
+1&\text{if }i=N,\\
 0&\text{otherwise},
 \end{cases}
 $$
 if $i=0$ or $i=N$; and
 
 $$
-\left[\mathrm{A}\right]_{i, k} = 
+\left[\mathrm{A}\right]_{i, j} = 
 \begin{cases}
-2-h^2k^2&\text{if }k=i,\\
--1&\text{if }k=i+1,\\
--1&\text{if }k=i-1.\\
+2-h^2k^2&\text{if }j=i,\\
+-1&\text{if }j=i+1,\\
+-1&\text{if }j=i-1.\\
 0&\text{otherwise},
 \end{cases}
 $$
