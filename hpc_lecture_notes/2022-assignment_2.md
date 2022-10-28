@@ -71,9 +71,9 @@ $$
 The rows of $\mathrm{A}$ are given by
 
 $$
-\left[\mathrm{A}\right]_i = 
+\left[\mathrm{A}\right]_{i,j} = 
 \begin{cases}
-1&\text{if }i=N,\\
+1&\text{if }i=j,\\
 0&\text{otherwise},
 \end{cases}
 $$
