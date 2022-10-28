@@ -34,6 +34,7 @@ parts:
 - caption: Conclusions
   chapters:
   - file: further_topics
+
 - caption: Assignments
   chapters:
   - file: 2022-assignment_1
@@ -44,6 +45,11 @@ parts:
   - file: 2022-class_2
   - file: 2022-class_3
   - file: 2022-class_4
+
+- caption: Additional notes from 2022
+  chapters:
+  - file: 2022_matrices_and_simultaneous_equations
+
 - caption: Assignments from past years
   chapters:
   - file: 2021-assignment_1
