@@ -640,7 +640,8 @@ methods.</p>
 that you would expect to give error of <span class="math notranslate nohighlight">\(10^{-8}\)</span> or less</strong>. <strong>Briefly (1-2 sentences) explain how you picked your value of <span class="math notranslate nohighlight">\(N\)</span>
 and predict how long the computation will take</strong>.</p>
 <p><strong>Compute the approximate solution with your value of <span class="math notranslate nohighlight">\(N\)</span></strong>. Measure the time taken and the error, and <strong>briefly (1-2 sentences) comment
-on how these compare to your predictions</strong>.</p>
+on how these compare to your predictions</strong>. Your error may turn out to be higher than <span class="math notranslate nohighlight">\(10^{-8}\)</span> for your value of <span class="math notranslate nohighlight">\(N\)</span>: if so, you can still get full marks for commenting on
+why your prediction was not correct.</p>
 </section>
 <section id="part-2-solving-the-heat-equation-with-gpu-acceleration">
 <h3>Part 2: Solving the heat equation with GPU acceleration<a class="headerlink" href="#part-2-solving-the-heat-equation-with-gpu-acceleration" title="Permalink to this headline">#</a></h3>
@@ -677,14 +678,14 @@ u^{(j)}_{N}&amp;=10.
 \[\begin{split}
 u^{(0)}_i =
 \begin{cases}
-10 &amp;\text{if }x=0\text{ or }x=N,\\
+10 &amp;\text{if }i=0\text{ or }i=N,\\
 0 &amp;\text{otherwise};
 \end{cases}
 \end{split}\]</div>
 <p>then for all later values of time, we set</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
-u^{(j)}_i =
+u^{(j+1)}_i =
 \begin{cases}
 10 &amp;\text{if }x=0\text{ or }x=N,\\
 \displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &amp;\text{otherwise}.
