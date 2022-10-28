@@ -121,7 +121,8 @@ that you would expect to give error of $10^{-8}$ or less**. **Briefly (1-2 sente
 and predict how long the computation will take**.
 
 **Compute the approximate solution with your value of $N$**. Measure the time taken and the error, and **briefly (1-2 sentences) comment
-on how these compare to your predictions**.
+on how these compare to your predictions**. Your error may turn out to be higher than $10^{-8}$ for your value of $N$: if so, you can still get full marks for commenting on
+why your prediction was not correct.
 
 ### Part 2: Solving the heat equation with GPU acceleration
 
@@ -161,14 +162,14 @@ This leads us to an iterative method for solving this problem: first, at $t=0$, 
 $$
 u^{(0)}_i =
 \begin{cases}
-10 &\text{if }x=0\text{ or }x=N,\\
+10 &\text{if }i=0\text{ or }i=N,\\
 0 &\text{otherwise};
 \end{cases}
 $$
 then for all later values of time, we set
 
 $$
-u^{(j)}_i =
+u^{(j+1)}_i =
 \begin{cases}
 10 &\text{if }x=0\text{ or }x=N,\\
 \displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &\text{otherwise}.
