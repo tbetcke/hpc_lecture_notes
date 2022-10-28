@@ -47,13 +47,16 @@ $$
 u_{0,0}\\
 u_{1,0}\\
 u_{2,0}\\
-\vdots
+\vdots\\
 u_{N,0}\\
 u_{0,1}\\
 u_{1,1}\\
 u_{2,1}\\
-\vdots
+\vdots\\
 u_{N,N}\\
 \end{pmatrix}
-=\mathbb{b}.
+=\mathbf{b}.
 $$
+
+If you didn't follow how I got the matrix during the lecture, take a look at [the code we wrote during the lecture](https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1),
+and see if you can work out how the matrix corresponds to the simultaneous equations.
