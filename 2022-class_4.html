@@ -55,6 +55,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Assignment 1 - Matrix multiplication in Numba" href="2021-assignment_1.html" />
+    <link rel="prev" title="Class 3 (Monday 24 October)" href="2022-class_3.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -289,7 +291,7 @@ const thebe_selector_output = ".output, .cell_output"
   Tasks for Monday Practical Classes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-class_1.html">
    Class 1 (Monday 10 October)
@@ -303,6 +305,11 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1">
   <a class="reference internal" href="2022-class_3.html">
    Class 3 (Monday 24 October)
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Class 4 (Monday 31 October)
   </a>
  </li>
 </ul>
@@ -526,12 +533,27 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="class-4-monday-31-october">
 <h1>Class 4 (Monday 31 October)<a class="headerlink" href="#class-4-monday-31-october" title="Permalink to this headline">#</a></h1>
 <p>These tasks are designed to be worked on in the practical class on Monday 31 October.</p>
-<p>In this class, we will make heavy use of the [finite difference code for solving a Poisson problem](TODO: add link)
-that we wrote in lectures. You can find this code [here](TODO: add link).</p>
+<p>In this class, we will make heavy use of the <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">finite difference code for solving a Poisson problem</a>
+that we wrote in lectures. You can find this code <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">here</a>.</p>
 <section id="comparing-dense-and-sparse-storage">
 <h2>Comparing dense and sparse storage<a class="headerlink" href="#comparing-dense-and-sparse-storage" title="Permalink to this headline">#</a></h2>
 <p>Copy the codes we that wrote to generate the matrix in dense and sparse formats.</p>
-<p>For a sensible range of <span class="math notranslate nohighlight">\(N\)</span>, create a plot that shows the memory used by the dense and COO sparse format against <span class="math notranslate nohighlight">\(N\)</span>.
+<p>For a sensible range of <span class="math notranslate nohighlight">\(N\)</span>, measure how much memory a dense matrix and a COO matrix use.
+You can print the amount of memory a dense matrix uses by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can print the amount of memory a COO matrix uses by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a plot that shows the memory used by the dense and COO sparse format against <span class="math notranslate nohighlight">\(N\)</span>.
 What do you notice?</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">scipy.sparse.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code> to solve the problem for a range of values of <span class="math notranslate nohighlight">\(N\)</span>.
 Plot the time both solution methods taks against <span class="math notranslate nohighlight">\(N\)</span>.
@@ -540,22 +562,34 @@ What do you notice?</p>
 <section id="comparing-sparse-formats">
 <h2>Comparing sparse formats<a class="headerlink" href="#comparing-sparse-formats" title="Permalink to this headline">#</a></h2>
 <p>SciPy can convert between different sparse formats, for example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span>, measure how much storage space is needed to store the matrix for the Poisson problem. Make a plot
-showing the amount of memory needed vs <span class="math notranslate nohighlight">\(N\)</span>. Which format is the most memory efficient?</p>
+<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span>, measure how much storage space is needed to store the matrix for the Poisson problem if the matrix is stored as
+a COO matrix, a CSR matrix, or a CSC matrix.
+For a CSR matrix, the amount of memory used can be printed by running</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indptr</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Make a plot showing the amount of memory needed vs <span class="math notranslate nohighlight">\(N\)</span>. Which format is the most memory efficient?</p>
+<p>Optional extension: Scipy also supports LIL, DIA, DOK, and BSR sparse formats. Add these to your plot.</p>
 </section>
 <section id="when-is-a-sparse-matrix-worth-it">
 <h2>When is a sparse matrix worth it?<a class="headerlink" href="#when-is-a-sparse-matrix-worth-it" title="Permalink to this headline">#</a></h2>
 <p>In this section, we will investigate how many zeros we need a matrix to have for sparse storage to be worth doing.</p>
 <p>Create a 10 by 10 matrix which is all zeros except for <span class="math notranslate nohighlight">\(M\)</span> random numbers in random positions.
-Measure the amount of memory needed to store this as a dense and a sparse matrix.
+Measure the amount of memory needed to store this as a dense and different sparse matrix formats.
 Make a plot showing the amount of memory needed against <span class="math notranslate nohighlight">\(M\)</span>.
-What proportion of the matrix needs to be zeros for sparse storage to use less space?</p>
+What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
 <p>Repeat this with a 40 by 40 matrix.
-What proportion of the matrix needs to be zeros for sparse storage to use less space?</p>
+What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
 </section>
 </section>
 
@@ -586,6 +620,20 @@ What proportion of the matrix needs to be zeros for sparse storage to use less s
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="2022-class_3.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Class 3 (Monday 24 October)</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="2021-assignment_1.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Assignment 1 - Matrix multiplication in Numba</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>
