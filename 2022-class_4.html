@@ -50,6 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -463,8 +465,8 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plan">
-   Plan
+  <a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">
+   Comparing dense and sparse storage
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -473,8 +475,8 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#how-sparse">
-   How sparse
+  <a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">
+   When is a sparse matrix worth it?
   </a>
  </li>
 </ul>
@@ -497,8 +499,8 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plan">
-   Plan
+  <a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">
+   Comparing dense and sparse storage
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -507,8 +509,8 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#how-sparse">
-   How sparse
+  <a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">
+   When is a sparse matrix worth it?
   </a>
  </li>
 </ul>
@@ -524,28 +526,36 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="class-4-monday-31-october">
 <h1>Class 4 (Monday 31 October)<a class="headerlink" href="#class-4-monday-31-october" title="Permalink to this headline">#</a></h1>
 <p>These tasks are designed to be worked on in the practical class on Monday 31 October.</p>
-<p>In this class, we will make heavy use of the <span class="xref myst">finite difference code for solving a Poisson problem</span>
-that we wrote in lectures.</p>
-<section id="plan">
-<h2>Plan<a class="headerlink" href="#plan" title="Permalink to this headline">#</a></h2>
-<ul class="simple">
-<li><p>Write versions of code with sparse and dense matrices.</p></li>
-<li><p>Plot of memory used vs size of problem.</p></li>
-<li><p>Using <code class="docutils literal notranslate"><span class="pre">scipy.sparse.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code>, plot of time to solve vs size of problem.</p></li>
-</ul>
+<p>In this class, we will make heavy use of the [finite difference code for solving a Poisson problem](TODO: add link)
+that we wrote in lectures. You can find this code [here](TODO: add link).</p>
+<section id="comparing-dense-and-sparse-storage">
+<h2>Comparing dense and sparse storage<a class="headerlink" href="#comparing-dense-and-sparse-storage" title="Permalink to this headline">#</a></h2>
+<p>Copy the codes we that wrote to generate the matrix in dense and sparse formats.</p>
+<p>For a sensible range of <span class="math notranslate nohighlight">\(N\)</span>, create a plot that shows the memory used by the dense and COO sparse format against <span class="math notranslate nohighlight">\(N\)</span>.
+What do you notice?</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">scipy.sparse.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code> to solve the problem for a range of values of <span class="math notranslate nohighlight">\(N\)</span>.
+Plot the time both solution methods taks against <span class="math notranslate nohighlight">\(N\)</span>.
+What do you notice?</p>
 </section>
 <section id="comparing-sparse-formats">
 <h2>Comparing sparse formats<a class="headerlink" href="#comparing-sparse-formats" title="Permalink to this headline">#</a></h2>
-<ul class="simple">
-<li><p>Plot memory vs size for different sparse formats</p></li>
-</ul>
+<p>SciPy can convert between different sparse formats, for example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span>, measure how much storage space is needed to store the matrix for the Poisson problem. Make a plot
+showing the amount of memory needed vs <span class="math notranslate nohighlight">\(N\)</span>. Which format is the most memory efficient?</p>
 </section>
-<section id="how-sparse">
-<h2>How sparse<a class="headerlink" href="#how-sparse" title="Permalink to this headline">#</a></h2>
-<ul class="simple">
-<li><p>Create 10 by 10 matrix with 1s in N random positions. How big can N get before dense storage becomes better?</p></li>
-<li><p>Do the same for 100 by 100 matrix.</p></li>
-</ul>
+<section id="when-is-a-sparse-matrix-worth-it">
+<h2>When is a sparse matrix worth it?<a class="headerlink" href="#when-is-a-sparse-matrix-worth-it" title="Permalink to this headline">#</a></h2>
+<p>In this section, we will investigate how many zeros we need a matrix to have for sparse storage to be worth doing.</p>
+<p>Create a 10 by 10 matrix which is all zeros except for <span class="math notranslate nohighlight">\(M\)</span> random numbers in random positions.
+Measure the amount of memory needed to store this as a dense and a sparse matrix.
+Make a plot showing the amount of memory needed against <span class="math notranslate nohighlight">\(M\)</span>.
+What proportion of the matrix needs to be zeros for sparse storage to use less space?</p>
+<p>Repeat this with a 40 by 40 matrix.
+What proportion of the matrix needs to be zeros for sparse storage to use less space?</p>
 </section>
 </section>
 
