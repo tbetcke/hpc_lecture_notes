@@ -1,6 +1,6 @@
 # Assignment 2 - Solving two 1D problems
 
-This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 4 November 2022**.
+This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 3 November 2022**.
 
 Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
 to any text questions included in the assessment. The easiest ways to create this file are:
