@@ -171,7 +171,7 @@ then for all later values of time, we set
 $$
 u^{(j+1)}_i =
 \begin{cases}
-10 &\text{if }x=0\text{ or }x=N,\\
+10 &\text{if }i=0\text{ or }i=N,\\
 \displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &\text{otherwise}.
 \end{cases}
 $$
