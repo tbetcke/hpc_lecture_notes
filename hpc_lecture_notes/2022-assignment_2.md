@@ -122,7 +122,8 @@ and predict how long the computation will take**.
 
 **Compute the approximate solution with your value of $N$**. Measure the time taken and the error, and **briefly (1-2 sentences) comment
 on how these compare to your predictions**. Your error may turn out to be higher than $10^{-8}$ for your value of $N$: if so, you can still get full marks for commenting on
-why your prediction was not correct.
+why your prediction was not correct. Depending on your implementation and your prediction,
+a valid conclusion in the section could be "My value of $N$ is too large for it to be feasible to complete this computation in a reasonable amount of time / without running out of memory".
 
 ### Part 2: Solving the heat equation with GPU acceleration
 
