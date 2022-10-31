@@ -131,7 +131,7 @@ In this part of the assignment, we want to solve the heat equation
 $$
 \begin{align*}
 \frac{\mathrm{d}u}{\mathrm{d}t} &= \frac{1}{1000}\frac{\mathrm{d}^2u}{\mathrm{d}x^2}&&\text{for }x\in(0,1),\\
-u(x, 0) &= 0,\\
+u(x, 0) &= 0,&&\text{if }x\not=0\text{ and }x\not=1\\
 u(0,t) &= 10,\\
 u(1,t) &= 10.
 \end{align*}
