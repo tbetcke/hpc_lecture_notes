@@ -43,9 +43,3 @@ parts:
   - file: 2022-class_1
   - file: 2022-class_2
   - file: 2022-class_3
-- caption: Assignments from past years
-  chapters:
-  - file: 2021-assignment_1
-  - file: 2021-assignment_2
-  - file: 2021-assignment_3
-  - file: 2021-assignment_4
