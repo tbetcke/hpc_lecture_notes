@@ -1,6 +1,6 @@
 # Assignment 2 - Solving two 1D problems
 
-This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 4 November 2022**.
+This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 3 November 2022**.
 
 Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
 to any text questions included in the assessment. The easiest ways to create this file are:
@@ -71,9 +71,9 @@ $$
 The rows of $\mathrm{A}$ are given by
 
 $$
-\left[\mathrm{A}\right]_i = 
+\left[\mathrm{A}\right]_{i,j} = 
 \begin{cases}
-1&\text{if }i=N,\\
+1&\text{if }i=j,\\
 0&\text{otherwise},
 \end{cases}
 $$
@@ -121,7 +121,9 @@ that you would expect to give error of $10^{-8}$ or less**. **Briefly (1-2 sente
 and predict how long the computation will take**.
 
 **Compute the approximate solution with your value of $N$**. Measure the time taken and the error, and **briefly (1-2 sentences) comment
-on how these compare to your predictions**.
+on how these compare to your predictions**. Your error may turn out to be higher than $10^{-8}$ for your value of $N$: if so, you can still get full marks for commenting on
+why your prediction was not correct. Depending on your implementation and your prediction,
+a valid conclusion in the section could be "My value of $N$ is too large for it to be feasible to complete this computation in a reasonable amount of time / without running out of memory".
 
 ### Part 2: Solving the heat equation with GPU acceleration
 
@@ -130,7 +132,7 @@ In this part of the assignment, we want to solve the heat equation
 $$
 \begin{align*}
 \frac{\mathrm{d}u}{\mathrm{d}t} &= \frac{1}{1000}\frac{\mathrm{d}^2u}{\mathrm{d}x^2}&&\text{for }x\in(0,1),\\
-u(x, 0) &= 0,\\
+u(x, 0) &= 0,&&\text{if }x\not=0\text{ and }x\not=1\\
 u(0,t) &= 10,\\
 u(1,t) &= 10.
 \end{align*}
@@ -161,16 +163,16 @@ This leads us to an iterative method for solving this problem: first, at $t=0$, 
 $$
 u^{(0)}_i =
 \begin{cases}
-10 &\text{if }x=0\text{ or }x=N,\\
+10 &\text{if }i=0\text{ or }i=N,\\
 0 &\text{otherwise};
 \end{cases}
 $$
 then for all later values of time, we set
 
 $$
-u^{(j)}_i =
+u^{(j+1)}_i =
 \begin{cases}
-10 &\text{if }x=0\text{ or }x=N,\\
+10 &\text{if }i=0\text{ or }i=N,\\
 \displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &\text{otherwise}.
 \end{cases}
 $$
