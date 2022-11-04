@@ -558,15 +558,15 @@ A\left(x_0 + V_my_m\right) \approx b.
 <p>In the FOM we imposed the condition that <span class="math notranslate nohighlight">\(r_m\bot V_m\)</span>, that is <span class="math notranslate nohighlight">\(V_m^Tr_m = 0\)</span>. In GMRES we impose a different condition, namely we choose <span class="math notranslate nohighlight">\(y_m\)</span> such that it minimises the residual <span class="math notranslate nohighlight">\(r_m\)</span>. Hence,</p>
 <div class="math notranslate nohighlight">
 \[
-y_m = \text{arg min}_{y\in\mathbb{R}^m}\|AV_my_m - r_0\|_2.
+y_m = \text{arg min}_{y\in\mathbb{R}^m}\left\|AV_my_m - r_0\right\|_2.
 \]</div>
 <p>We can use the Arnoldi recurrence relation <span class="math notranslate nohighlight">\(AV_m = V_mH_m + h_{m+1, m}v_{m+1}e_m^T\)</span> to simply the above expression, namely</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\|AV_my_m - r_0\|_2 &amp;= \|\left(V_mH_m + h_{m+1, m}v_{m+1}e_m^T\right)y_m - r_0\|_2\nonumber\\
-&amp;= \|V_{m + 1}\left(\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \|r_0\|_2e_1\right)\|_2\nonumber\\
-&amp;= \|\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \|r_0\|_2e_1\|_2
+\left\|AV_my_m - r_0\right\|_2 &amp;= \left\|\left(V_mH_m + h_{m+1, m}v_{m+1}e_m^T\right)y_m - r_0\right\|_2\nonumber\\
+&amp;= \left\|V_{m + 1}\left(\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \right\|r_0\left\|_2e_1\right)\right\|_2\nonumber\\
+&amp;= \left\|\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \right\|r_0\left\|_2e_1\right\|_2
 \end{align}
 \end{split}\]</div>
 <p>We see that we are left with a small dimensional least-squares problem that can easily be solved. A beautiful feature about GMRES is that due to the structure of <span class="math notranslate nohighlight">\(H_m\)</span> we can just update our solution <span class="math notranslate nohighlight">\(y\)</span> from step <span class="math notranslate nohighlight">\(m\)</span> to step <span class="math notranslate nohighlight">\(m+1\)</span> without solving the whole least-squares problem again.</p>
