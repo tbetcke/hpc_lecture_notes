@@ -529,7 +529,7 @@ title="Print to PDF"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">identity_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Solve <span class="math notranslate nohighlight">\(\mathrm{I}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES.
+<p>Solve <span class="math notranslate nohighlight">\(\mathrm{I}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES (<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.gmres</span></code>).
 Make a plot showing the number of iterations vs the size of the residual.</p>
 </section>
 <section id="experimenting-with-gmres">
@@ -541,6 +541,8 @@ Make a plot showing the number of iterations vs the size of the residual.</p>
 <p>Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES.
 Make a plot showing the number of iterations vs the size of the residual.
 Compare this plot to the plot for the identity matrix.</p>
+<p>You can control the stopping criteria of GMRES by passing <code class="docutils literal notranslate"><span class="pre">tol</span></code> and <code class="docutils literal notranslate"><span class="pre">atol</span></code> parameters into GMRES (eg <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.solve(A,</span> <span class="pre">b,</span> <span class="pre">tol=1e-8,</span> <span class="pre">atol=1e-8)</span></code>).
+Adjust these parameters so that GMRES gets to a lower residual than the default values. What is the lowest you can get the size of the residual to be?</p>
 <p>Consider the matrix <span class="math notranslate nohighlight">\(\mathrm{A}+\alpha\mathrm{I}\)</span> for some constant <span class="math notranslate nohighlight">\(\alpha\)</span>.
 Solve <span class="math notranslate nohighlight">\((\mathrm{A}+\alpha\mathrm{I})\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES
 for a range of values of <span class="math notranslate nohighlight">\(\alpha\)</span>.
