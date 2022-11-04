@@ -569,9 +569,9 @@ y_m = \text{arg min}_{y\in\mathbb{R}^m}\left\|AV_my_m - r_0\right\|_2.
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{align}
-\left\|AV_my_m - r_0\right\|_2 &amp;= \left\|\left(V_mH_m + h_{m+1, m}v_{m+1}e_m^T\right)y_m - r_0\right\|_2\nonumber\\
-&amp;= \left\|V_{m + 1}\left(\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \right\|r_0\left\|_2e_1\right)\right\|_2\nonumber\\
-&amp;= \left\|\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \right\|r_0\left\|_2e_1\right\|_2
+\left\|AV_my_m - r_0\right\|_2 &amp;= \left\|{\left(V_mH_m + h_{m+1, m}v_{m+1}e_m^T\right)}y_m - r_0\right\|_2\nonumber\\
+&amp;= \left\|V_{m + 1}{\left(\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - {\left\|r_0\right\|_2}e_1\right)}\right\|_2\nonumber\\
+&amp;= \left\|{\begin{bmatrix}H_m \\ h_{m+1, m}e_m^T\end{bmatrix}y_m - \left\|r_0\right\|_2e_1}\right\|_2
 \end{align}
 \end{split}\]</div>
 <p>We see that we are left with a small dimensional least-squares problem that can easily be solved. A beautiful feature about GMRES is that due to the structure of <span class="math notranslate nohighlight">\(H_m\)</span> we can just update our solution <span class="math notranslate nohighlight">\(y\)</span> from step <span class="math notranslate nohighlight">\(m\)</span> to step <span class="math notranslate nohighlight">\(m+1\)</span> without solving the whole least-squares problem again.</p>
