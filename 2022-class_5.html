@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>A Numexpr example &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Class 5 (Monday 14 November) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,11 +50,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="An Introduction to GPU Computing" href="gpu_introduction.html" />
-    <link rel="prev" title="SIMD Autovectorization in Numba" href="simd.html" />
+    <link rel="next" title="Matrices and simultaneous equations" href="2022_matrices_and_simultaneous_equations.html" />
+    <link rel="prev" title="Class 4 (Monday 31 October)" href="2022-class_4.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -119,7 +121,7 @@ const thebe_selector_output = ".output, .cell_output"
   High-Performance Computing with Python
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="what_is_hpc.html">
    What is High-Performance Computing?
@@ -155,8 +157,8 @@ const thebe_selector_output = ".output, .cell_output"
    SIMD Autovectorization in Numba
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="numexpr.html">
    A Numexpr example
   </a>
  </li>
@@ -289,7 +291,7 @@ const thebe_selector_output = ".output, .cell_output"
   Tasks for Monday Practical Classes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-class_1.html">
    Class 1 (Monday 10 October)
@@ -310,8 +312,8 @@ const thebe_selector_output = ".output, .cell_output"
    Class 4 (Monday 31 October)
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_5.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Class 5 (Monday 14 November)
   </a>
  </li>
@@ -378,35 +380,6 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/numexpr.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -429,7 +402,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/numexpr.ipynb"
+        <a href="_sources/2022-class_5.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -440,7 +413,7 @@ title="Download source file"
 <span class="headerbtn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="headerbtn__text-container">.md</span>
 </a>
 
       </li>
@@ -466,23 +439,80 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-gmres">
+   Using GMRES
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#experimenting-with-gmres">
+   Experimenting with GMRES
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting-eigenvalues">
+   Plotting eigenvalues
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>A Numexpr example</h1>
+                <h1>Class 5 (Monday 14 November)</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-gmres">
+   Using GMRES
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#experimenting-with-gmres">
+   Experimenting with GMRES
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plotting-eigenvalues">
+   Plotting eigenvalues
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -490,109 +520,51 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="a-numexpr-example">
-<h1>A Numexpr example<a class="headerlink" href="#a-numexpr-example" title="Permalink to this headline">#</a></h1>
-<p>Numexpr is a library for the fast execution of array transformation. One can define complex elementwise operations on array and Numexpr will generate efficient code to execute the operations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numexpr</span> <span class="k">as</span> <span class="nn">ne</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="class-5-monday-14-november">
+<h1>Class 5 (Monday 14 November)<a class="headerlink" href="#class-5-monday-14-november" title="Permalink to this headline">#</a></h1>
+<p>These tasks are designed to be worked on in the practical class on Monday 24 November.</p>
+<section id="using-gmres">
+<h2>Using GMRES<a class="headerlink" href="#using-gmres" title="Permalink to this headline">#</a></h2>
+<p>You can create an identity matrix (<span class="math notranslate nohighlight">\(\mathrm{I}\)</span>) with Numpy by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">identity_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<p>Numexpr provides fast multithreaded operations on array elements. Let’s test it on some large arrays.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+<p>Solve <span class="math notranslate nohighlight">\(\mathrm{I}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES.
+Make a plot showing the number of iterations vs the size of the residual.</p>
+</section>
+<section id="experimenting-with-gmres">
+<h2>Experimenting with GMRES<a class="headerlink" href="#experimenting-with-gmres" title="Permalink to this headline">#</a></h2>
+<p>You can create a random matrix (<span class="math notranslate nohighlight">\(\mathrm{A}\)</span>) with Numpy by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<p>Componentwise addition is easy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + 1&quot;</span><span class="p">)</span>
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;a + b&quot;</span><span class="p">)</span>
+<p>Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES.
+Make a plot showing the number of iterations vs the size of the residual.
+Compare this plot to the plot for the identity matrix.</p>
+<p>Consider the matrix <span class="math notranslate nohighlight">\(\mathrm{A}+\alpha\mathrm{I}\)</span> for some constant <span class="math notranslate nohighlight">\(\alpha\)</span>.
+Solve <span class="math notranslate nohighlight">\((\mathrm{A}+\alpha\mathrm{I})\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES
+for a range of values of <span class="math notranslate nohighlight">\(\alpha\)</span>.
+Make a plot showing the number of iterations vs the size of the residual for the value of <span class="math notranslate nohighlight">\(\alpha\)</span>
+that you chose. How is the value of <span class="math notranslate nohighlight">\(\alpha\)</span> related to the performance of GMRES.</p>
+<p>Have you considered what happens if <span class="math notranslate nohighlight">\(\alpha\)</span> is negative? Or complex?</p>
+</section>
+<section id="plotting-eigenvalues">
+<h2>Plotting eigenvalues<a class="headerlink" href="#plotting-eigenvalues" title="Permalink to this headline">#</a></h2>
+<p>The performance of GMRES is related to the eigenvalues of the matrix. You can plot
+the eigenvalues of a matrix <code class="docutils literal notranslate"><span class="pre">A</span></code> with the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eigvals</span>
+
+<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.3195833 , 0.92546223, 1.68758307, ..., 1.19557921, 1.19559017,
-       0.24145174])
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can evaluate complex expressions.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False, False, False, ..., False, False, False])
-</pre></div>
-</div>
-</div>
-</div>
-<p>Let’s compare the performance with Numpy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mf">4.1</span> <span class="o">*</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">b</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.89 ms ± 91.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;a*b-4.1*a &gt; 2.5*b&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>995 µs ± 40.5 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<p>Numexpr is a factor 10 faster compared to Numpy, a nice improvement with very little effort. Let us compare some more complex operations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">ne</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;sin(a) + arcsinh(a/b)&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.4 ms ± 100 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<p>We can compare it with Numpy.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39.5 ms ± 664 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
-</pre></div>
-</div>
-</div>
-</div>
+<p>Plot the eigenvalues of the matrices you used in the previous section. What do you notice about the eigenvalues
+when GMRES does not perform well? Based on your observations, pick a value of <span class="math notranslate nohighlight">\(\alpha\)</span> for which you think
+GMRES will perform badly, and a value for which you think it will perform well? Make plots
+showing the number of iterations vs the size of the residual for these values of <span class="math notranslate nohighlight">\(\alpha\)</span>. Were your predictions correct?</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -604,16 +576,16 @@ title="Print to PDF"
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "conda-env-jupyter-book-py"
+            mode: "python"
         },
         kernelOptions: {
-            kernelName: "conda-env-jupyter-book-py",
+            kernelName: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'conda-env-jupyter-book-py'</script>
+    <script>kernelName = 'python3'</script>
 
               </div>
               
@@ -622,17 +594,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="simd.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="2022-class_4.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">SIMD Autovectorization in Numba</p>
+            <p class="prev-next-title">Class 4 (Monday 31 October)</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="gpu_introduction.html" title="next page">
+    <a class='right-next' id="next-link" href="2022_matrices_and_simultaneous_equations.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">An Introduction to GPU Computing</p>
+        <p class="prev-next-title">Matrices and simultaneous equations</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
