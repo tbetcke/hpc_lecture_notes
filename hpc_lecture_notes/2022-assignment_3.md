@@ -37,5 +37,8 @@ class CSRMatrix(LinearOperator):
 
 **Time `matvec`, compared to a dense matrix**. TODO: for which matrix?
 
+For any matrix, **use this with `gmres` and `cg`**. Check if the solutions are the same. Comment.
+
+
 ### Part 2: Implementing a ... matrix
 From that paper?
