@@ -62,6 +62,7 @@ Let $\mathrm{A}$ by a $2n$ by $2n$ matrix with the following structure:
 - The bottom right $n$ by $n$ block of $\mathrm{A}$ is dense (but has a special structure defined below)
 
 In other words, $\mathrm{A}$ looks like this, where $*$ represents a non-zero value
+
 $$
 \mathrm{A}=\begin{pmatrix}
 *&0&0&\cdots&0&\hspace{3mm}0&0&\cdots&0\\
@@ -73,10 +74,12 @@ $$
 0&0&0&\cdots&0&\hspace{3mm}*&*&\cdots&*\\
 \vdots&\vdots&\vdots&\ddots&\vdots&\hspace{3mm}\vdots&\vdots&\ddots&\vdots\\
 0&0&0&\cdots&0&\hspace{3mm}*&*&\cdots&*
+\end{pmatrix}
 $$
 
 Let $\tilde{\mathrm{A}}$ be the bottom right $n$ by $n$ block of $\mathrm{A}$.
 For some matrices $\tilde{\mathrm{A}}$ can be written as
+
 $$
 \tilde{\mathrm{A}} = \mathrm{T}\mathrm{W},
 $$
