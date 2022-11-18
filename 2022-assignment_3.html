@@ -586,8 +586,9 @@ Check if the two solutions obtained are the same.
 <li><p>The bottom left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
 <li><p>The bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is dense (but has a special structure defined below)</p></li>
 </ul>
-<p>In other words, <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> looks like this, where <span class="math notranslate nohighlight">\(*\)</span> represents a non-zero value
-$<span class="math notranslate nohighlight">\(
+<p>In other words, <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> looks like this, where <span class="math notranslate nohighlight">\(*\)</span> represents a non-zero value</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \mathrm{A}=\begin{pmatrix}
 *&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
 0&amp;*&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
@@ -598,15 +599,17 @@ $<span class="math notranslate nohighlight">\(
 0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
 \vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;\vdots&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
 0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*
-\)</span>$</p>
+\end{pmatrix}
+\end{split}\]</div>
 <p>Let <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> be the bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.
-For some matrices <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> can be written as
-$<span class="math notranslate nohighlight">\(
+For some matrices <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> can be written as</p>
+<div class="math notranslate nohighlight">
+\[
 \tilde{\mathrm{A}} = \mathrm{T}\mathrm{W},
-\)</span><span class="math notranslate nohighlight">\(
-where \)</span>\mathrm{T}<span class="math notranslate nohighlight">\( is a \)</span>n<span class="math notranslate nohighlight">\( by 2 matrix (a tall matrix);
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> is a <span class="math notranslate nohighlight">\(n\)</span> by 2 matrix (a tall matrix);
 and
-where \)</span>\mathrm{W}<span class="math notranslate nohighlight">\( is a 2 by \)</span>n$ matrix (a wide matrix).</p>
+where <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> is a 2 by <span class="math notranslate nohighlight">\(n\)</span> matrix (a wide matrix).</p>
 <p><strong>Implement a Scipy <code class="docutils literal notranslate"><span class="pre">LinearOperator</span></code> for matrices of this form</strong>. Your implementation must include a matrix-vector product (<code class="docutils literal notranslate"><span class="pre">matvec</span></code>) and the shape of the matrix (<code class="docutils literal notranslate"><span class="pre">self.shape</span></code>), but
 does not need to include and <code class="docutils literal notranslate"><span class="pre">__add__</span></code> function. In your implementation of <code class="docutils literal notranslate"><span class="pre">matvec</span></code>, you should be careful to ensure that the product does not have more computational complexity then necessary.</p>
 <p>For a range of values of <span class="math notranslate nohighlight">\(n\)</span>, <strong>create matrices where the entries on the diagonal of the top-left block and in the matrices <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> are random numbers</strong>.
