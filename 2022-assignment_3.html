@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Class 5 (Monday 14 November) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 3 - Sparse matrices &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -55,8 +55,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Matrices and simultaneous equations" href="2022_matrices_and_simultaneous_equations.html" />
-    <link rel="prev" title="Class 4 (Monday 31 October)" href="2022-class_4.html" />
+    <link rel="next" title="Class 1 (Monday 10 October)" href="2022-class_1.html" />
+    <link rel="prev" title="Assignment 2 - Solving two 1D problems" href="2022-assignment_2.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -274,7 +274,7 @@ const thebe_selector_output = ".output, .cell_output"
   Assignments
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-assignment_1.html">
    Assignment 1 - Matrix-matrix multiplication
@@ -285,8 +285,8 @@ const thebe_selector_output = ".output, .cell_output"
    Assignment 2 - Solving two 1D problems
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_3.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Assignment 3 - Sparse matrices
   </a>
  </li>
@@ -296,7 +296,7 @@ const thebe_selector_output = ".output, .cell_output"
   Tasks for Monday Practical Classes
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-class_1.html">
    Class 1 (Monday 10 October)
@@ -317,8 +317,8 @@ const thebe_selector_output = ".output, .cell_output"
    Class 4 (Monday 31 October)
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_5.html">
    Class 5 (Monday 14 November)
   </a>
  </li>
@@ -407,7 +407,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/2022-class_5.md"
+        <a href="_sources/2022-assignment_3.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -467,19 +467,21 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#using-gmres">
-   Using GMRES
+  <a class="reference internal nav-link" href="#the-assignment">
+   The assignment
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#experimenting-with-gmres">
-   Experimenting with GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plotting-eigenvalues">
-   Plotting eigenvalues
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-1-implementing-a-csr-matrix">
+     Part 1: Implementing a CSR matrix
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-2-implementing-a-custom-matrix">
+     Part 2: Implementing a custom matrix
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -490,7 +492,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Class 5 (Monday 14 November)</h1>
+                <h1>Assignment 3 - Sparse matrices</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -501,19 +503,21 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#using-gmres">
-   Using GMRES
+  <a class="reference internal nav-link" href="#the-assignment">
+   The assignment
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#experimenting-with-gmres">
-   Experimenting with GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plotting-eigenvalues">
-   Plotting eigenvalues
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-1-implementing-a-csr-matrix">
+     Part 1: Implementing a CSR matrix
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-2-implementing-a-custom-matrix">
+     Part 2: Implementing a custom matrix
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -525,52 +529,91 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="class-5-monday-14-november">
-<h1>Class 5 (Monday 14 November)<a class="headerlink" href="#class-5-monday-14-november" title="Permalink to this headline">#</a></h1>
-<p>These tasks are designed to be worked on in the practical class on Monday 24 November.</p>
-<section id="using-gmres">
-<h2>Using GMRES<a class="headerlink" href="#using-gmres" title="Permalink to this headline">#</a></h2>
-<p>You can create an identity matrix (<span class="math notranslate nohighlight">\(\mathrm{I}\)</span>) with Numpy by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">identity_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Solve <span class="math notranslate nohighlight">\(\mathrm{I}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES (<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.gmres</span></code>).
-Make a plot showing the number of iterations vs the size of the residual.</p>
-</section>
-<section id="experimenting-with-gmres">
-<h2>Experimenting with GMRES<a class="headerlink" href="#experimenting-with-gmres" title="Permalink to this headline">#</a></h2>
-<p>You can create a random matrix (<span class="math notranslate nohighlight">\(\mathrm{A}\)</span>) with Numpy by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES.
-Make a plot showing the number of iterations vs the size of the residual.
-Compare this plot to the plot for the identity matrix.</p>
-<p>You can control the stopping criteria of GMRES by passing <code class="docutils literal notranslate"><span class="pre">tol</span></code> and <code class="docutils literal notranslate"><span class="pre">atol</span></code> parameters into GMRES (eg <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.solve(A,</span> <span class="pre">b,</span> <span class="pre">tol=1e-8,</span> <span class="pre">atol=1e-8)</span></code>).
-Adjust these parameters so that GMRES gets to a lower residual than the default values. What is the lowest you can get the size of the residual to be?</p>
-<p>Consider the matrix <span class="math notranslate nohighlight">\(\mathrm{A}+\alpha\mathrm{I}\)</span> for some constant <span class="math notranslate nohighlight">\(\alpha\)</span>.
-Solve <span class="math notranslate nohighlight">\((\mathrm{A}+\alpha\mathrm{I})\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES
-for a range of values of <span class="math notranslate nohighlight">\(\alpha\)</span>.
-Make a plot showing the number of iterations vs the size of the residual for the value of <span class="math notranslate nohighlight">\(\alpha\)</span>
-that you chose. How is the value of <span class="math notranslate nohighlight">\(\alpha\)</span> related to the performance of GMRES.</p>
-<p>Have you considered what happens if <span class="math notranslate nohighlight">\(\alpha\)</span> is negative? Or complex?</p>
-</section>
-<section id="plotting-eigenvalues">
-<h2>Plotting eigenvalues<a class="headerlink" href="#plotting-eigenvalues" title="Permalink to this headline">#</a></h2>
-<p>The performance of GMRES is related to the eigenvalues of the matrix. You can plot
-the eigenvalues of a matrix <code class="docutils literal notranslate"><span class="pre">A</span></code> with the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eigvals</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="assignment-3-sparse-matrices">
+<h1>Assignment 3 - Sparse matrices<a class="headerlink" href="#assignment-3-sparse-matrices" title="Permalink to this headline">#</a></h1>
+<p>This assignment makes up 30% of the overall marks for the course. The deadline for submitting this assignment is <strong>5pm on Thursday 1 December 2022</strong>.</p>
+<p>Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
+to any text questions included in the assessment. The easiest ways to create this file are:</p>
+<ul class="simple">
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
+</ul>
+<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this headline">#</a></h2>
+<section id="part-1-implementing-a-csr-matrix">
+<h3>Part 1: Implementing a CSR matrix<a class="headerlink" href="#part-1-implementing-a-csr-matrix" title="Permalink to this headline">#</a></h3>
+<p>Scipy allows you to define your own objects that can be used with their sparse solvers. You can do this
+by creating a subclass of <code class="docutils literal notranslate"><span class="pre">scipy.sparse.LinearOperator</span></code>. In the first part of this assignment, you are going to
+implement your own CSR matrix format.</p>
+<p>The following code snippet shows how you can define your own matrix-like operator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">LinearOperator</span>
 
-<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CSRMatrix</span><span class="p">(</span><span class="n">LinearOperator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coo_matrix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add the CSR matrix other to this matrix.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a matrix-vector product.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 </pre></div>
 </div>
-<p>Plot the eigenvalues of the matrices you used in the previous section. What do you notice about the eigenvalues
-when GMRES does not perform well? Based on your observations, pick a value of <span class="math notranslate nohighlight">\(\alpha\)</span> for which you think
-GMRES will perform badly, and a value for which you think it will perform well? Make plots
-showing the number of iterations vs the size of the residual for these values of <span class="math notranslate nohighlight">\(\alpha\)</span>. Were your predictions correct?</p>
+<p>Make a copy of this code snippet and <strong>implement the methods <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code>.</strong>
+The method <code class="docutils literal notranslate"><span class="pre">__init__</span></code> takes a COO matrix as input and will initialise the CSR matrix: it currently includes one line
+that will store the shape of the input matrix. You should add code here that converts from COO to CSR format and stores the appropriate data
+for the CSR matrix.
+The method <code class="docutils literal notranslate"><span class="pre">__add__</span></code> will overload <code class="docutils literal notranslate"><span class="pre">+</span></code> and so allow you to add two of your CSR matrices together.
+The method <code class="docutils literal notranslate"><span class="pre">matvec</span></code> will define a matrix-vector product: Scipy will use this when you tell it to use a sparse solver on your operator.</p>
+<p><strong>Write tests to check that the <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code> methods that you have written are correct.</strong> These test should use appropriate <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements.</p>
+<p>For a collection of sparse matrices of your choice and a random vector, <strong>measure the time taken to perform a <code class="docutils literal notranslate"><span class="pre">matvec</span></code> product</strong>. Convert the same matrices to dense matrices and <strong>measure
+the time taken to compute a dense matrix-vector product using Numpy</strong>. <strong>Create a plot showing the times of <code class="docutils literal notranslate"><span class="pre">matvec</span></code> and Numpy for a range of matrix sizes</strong> and
+<strong>briefly (1-2 sentence) comment on what your plot shows</strong>.</p>
+<p>For a matrix of your choice and a random vector, <strong>use Scipy’s <code class="docutils literal notranslate"><span class="pre">gmres</span></code> and <code class="docutils literal notranslate"><span class="pre">cg</span></code> sparse solvers to solve a matrix problem using your CSR matrix</strong>.
+Check if the two solutions obtained are the same.
+<strong>Briefly comment (1-2 sentences) on why the solutions are or are not the same.</strong></p>
+</section>
+<section id="part-2-implementing-a-custom-matrix">
+<h3>Part 2: Implementing a custom matrix<a class="headerlink" href="#part-2-implementing-a-custom-matrix" title="Permalink to this headline">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> by a <span class="math notranslate nohighlight">\(2n\)</span> by <span class="math notranslate nohighlight">\(2n\)</span> matrix with the following structure:</p>
+<ul class="simple">
+<li><p>The top left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is a diagonal matrix</p></li>
+<li><p>The top right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
+<li><p>The bottom left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
+<li><p>The bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is dense (but has a special structure defined below)</p></li>
+</ul>
+<p>In other words, <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> looks like this, where <span class="math notranslate nohighlight">\(*\)</span> represents a non-zero value
+$<span class="math notranslate nohighlight">\(
+\mathrm{A}=\begin{pmatrix}
+*&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+0&amp;*&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+0&amp;0&amp;*&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;0&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;*&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\[3mm]
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;\vdots&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*
+\)</span>$</p>
+<p>Let <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> be the bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.
+For some matrices <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> can be written as
+$<span class="math notranslate nohighlight">\(
+\tilde{\mathrm{A}} = \mathrm{T}\mathrm{W},
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\mathrm{T}<span class="math notranslate nohighlight">\( is a \)</span>n<span class="math notranslate nohighlight">\( by 2 matrix (a tall matrix);
+and
+where \)</span>\mathrm{W}<span class="math notranslate nohighlight">\( is a 2 by \)</span>n$ matrix (a wide matrix).</p>
+<p><strong>Implement a Scipy <code class="docutils literal notranslate"><span class="pre">LinearOperator</span></code> for matrices of this form</strong>. Your implementation must include a matrix-vector product (<code class="docutils literal notranslate"><span class="pre">matvec</span></code>) and the shape of the matrix (<code class="docutils literal notranslate"><span class="pre">self.shape</span></code>), but
+does not need to include and <code class="docutils literal notranslate"><span class="pre">__add__</span></code> function. In your implementation of <code class="docutils literal notranslate"><span class="pre">matvec</span></code>, you should be careful to ensure that the product does not have more computational complexity then necessary.</p>
+<p>For a range of values of <span class="math notranslate nohighlight">\(n\)</span>, <strong>create matrices where the entries on the diagonal of the top-left block and in the matrices <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> are random numbers</strong>.
+For each of these matrices, <strong>compute matrix-vector products using your implementation and measure the time taken to compute these</strong>. Create dense versions of the matrices,
+and <strong>measure the time taken by Numpy to compute matrix-vector products</strong>. <strong>Make a plot showing time taken against <span class="math notranslate nohighlight">\(n\)</span></strong>. <strong>Comment (2-4 sentences) on what your plot shows, and why you think
+one of these methods is faster than the other</strong> (or why they take the same amount of time if this is the case).</p>
+</section>
 </section>
 </section>
 
@@ -601,17 +644,17 @@ showing the number of iterations vs the size of the residual for these values of
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="2022-class_4.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="2022-assignment_2.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Class 4 (Monday 31 October)</p>
+            <p class="prev-next-title">Assignment 2 - Solving two 1D problems</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="2022_matrices_and_simultaneous_equations.html" title="next page">
+    <a class='right-next' id="next-link" href="2022-class_1.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Matrices and simultaneous equations</p>
+        <p class="prev-next-title">Class 1 (Monday 10 October)</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
