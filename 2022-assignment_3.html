@@ -552,7 +552,7 @@ to any text questions included in the assessment. The easiest ways to create thi
 by creating a subclass of <code class="docutils literal notranslate"><span class="pre">scipy.sparse.LinearOperator</span></code>. In the first part of this assignment, you are going to
 implement your own CSR matrix format.</p>
 <p>The following code snippet shows how you can define your own matrix-like operator.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">LinearOperator</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">LinearOperator</span>
 
 
 <span class="k">class</span> <span class="nc">CSRMatrix</span><span class="p">(</span><span class="n">LinearOperator</span><span class="p">):</span>
@@ -563,7 +563,7 @@ implement your own CSR matrix format.</p>
         <span class="sd">&quot;&quot;&quot;Add the CSR matrix other to this matrix.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute a matrix-vector product.&quot;&quot;&quot;</span>
         <span class="k">pass</span>
 </pre></div>

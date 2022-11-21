@@ -20,7 +20,7 @@ implement your own CSR matrix format.
 The following code snippet shows how you can define your own matrix-like operator.
 
 ```
-from scipy.sparse import LinearOperator
+from scipy.sparse.linalg import LinearOperator
 
 
 class CSRMatrix(LinearOperator):
@@ -31,7 +31,7 @@ class CSRMatrix(LinearOperator):
         """Add the CSR matrix other to this matrix."""
         pass
 
-    def matvec(self, vector):
+    def _matvec(self, vector):
         """Compute a matrix-vector product."""
         pass
 ```
