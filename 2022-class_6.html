@@ -543,16 +543,16 @@ Make a plot showing the number of iterations vs the size of the residual.</p>
 <p>The SPAI preconditioner is defined by</p>
 <div class="math notranslate nohighlight">
 \[
-\mathrm{C}_k &amp;= \mathrm{A} \mathrm{M}_k\]</div>
+\mathrm{C}_k = \mathrm{A} \mathrm{M}_k\]</div>
 <div class="math notranslate nohighlight">
 \[
-\mathrm{G}_k &amp;= \mathrm{I} - \mathrm{C}_k\]</div>
+\mathrm{G}_k = \mathrm{I} - \mathrm{C}_k\]</div>
 <div class="math notranslate nohighlight">
 \[
-\alpha_k &amp;=\operatorname{tr}(\mathrm{G\mathrm{_k^\text{T}\mathrm{A}\mathrm{G}_k) / \|\mathrm{A}\mathrm{G}_k\|_\text{F}^2\]</div>
+\alpha_k =\operatorname{tr}(\mathrm{G}_k^\text{T}\mathrm{A}\mathrm{G}_k) / \|\mathrm{A}\mathrm{G}_k\|_\text{F}^2\]</div>
 <div class="math notranslate nohighlight">
 \[
-\mathrm{M}_{k+1} &amp;= \mathrm{M{_k + \alpha_k \mathrm{G}_k
+\mathrm{M}_{k+1} = \mathrm{M}_k + \alpha_k \mathrm{G}_k
 \]</div>
 <p>Implement this preconditioner. Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> using <span class="math notranslate nohighlight">\(\mathrm{M}_m\)</span> as a preconditioner for a range of values of <span class="math notranslate nohighlight">\(m\)</span> and make a plot showing
 the number of iterations vs the size of the residual for each of these.
