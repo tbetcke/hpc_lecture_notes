@@ -550,6 +550,9 @@ Make a plot showing the number of iterations vs the size of the residual.</p>
 \mathrm{M}_{k+1} &amp;= \mathrm{M{_k + \alpha_k \mathrm{G}_k\\
 \end{align*}
 \end{split}\]</div>
+<p>Implement this preconditioner. Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> using <span class="math notranslate nohighlight">\(\mathrm{M}_m\)</span> as a preconditioner for a range of values of <span class="math notranslate nohighlight">\(m\)</span> and make a plot showing
+the number of iterations vs the size of the residual for each of these.
+If <span class="math notranslate nohighlight">\(m\)</span> is too large, the preconditioner will take a long time to compute; if <span class="math notranslate nohighlight">\(m\)</span> is too small, <span class="math notranslate nohighlight">\(\mathrm{M}_m\)</span> will not be a good preconditioner. Experiment to find a good value to use for <span class="math notranslate nohighlight">\(m\)</span>.</p>
 <p>You may wish to use the code included in <a class="reference external" href="https://tbetcke.github.io/hpc_lecture_notes/it_solvers4.html">the preconditioning section of the lecture notes</a>
 as a template.</p>
 </section>
