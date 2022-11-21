@@ -565,8 +565,8 @@ implement your own CSR matrix format.</p>
 </div>
 <p>Make a copy of this code snippet and <strong>implement the methods <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code>.</strong>
 The method <code class="docutils literal notranslate"><span class="pre">__init__</span></code> takes a COO matrix as input and will initialise the CSR matrix: it currently includes one line
-that will store the shape of the input matrix. You should add code here that converts from COO to CSR format and stores the appropriate data
-for the CSR matrix.
+that will store the shape of the input matrix. You should add code here that extracts important data from a Scipy COO to and computes and stores the appropriate data
+for a CSR matrix. You may use any functionality of Python and various libraries in your code, but you should not use an library’s implementation of a CSR matrix.
 The method <code class="docutils literal notranslate"><span class="pre">__add__</span></code> will overload <code class="docutils literal notranslate"><span class="pre">+</span></code> and so allow you to add two of your CSR matrices together.
 The method <code class="docutils literal notranslate"><span class="pre">matvec</span></code> will define a matrix-vector product: Scipy will use this when you tell it to use a sparse solver on your operator.</p>
 <p><strong>Write tests to check that the <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code> methods that you have written are correct.</strong> These test should use appropriate <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements.</p>
@@ -575,7 +575,7 @@ the time taken to compute a dense matrix-vector product using Numpy</strong>. <s
 <strong>briefly (1-2 sentence) comment on what your plot shows</strong>.</p>
 <p>For a matrix of your choice and a random vector, <strong>use Scipy’s <code class="docutils literal notranslate"><span class="pre">gmres</span></code> and <code class="docutils literal notranslate"><span class="pre">cg</span></code> sparse solvers to solve a matrix problem using your CSR matrix</strong>.
 Check if the two solutions obtained are the same.
-<strong>Briefly comment (1-2 sentences) on why the solutions are or are not the same.</strong></p>
+<strong>Briefly comment (1-2 sentences) on why the solutions are or are not the same (or are nearly but not exactly the same).</strong></p>
 </section>
 <section id="part-2-implementing-a-custom-matrix">
 <h3>Part 2: Implementing a custom matrix<a class="headerlink" href="#part-2-implementing-a-custom-matrix" title="Permalink to this headline">#</a></h3>
@@ -602,7 +602,7 @@ Check if the two solutions obtained are the same.
 \end{pmatrix}
 \end{split}\]</div>
 <p>Let <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> be the bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.
-For some matrices <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> can be written as</p>
+Suppose that <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> is a matrix that can be written as</p>
 <div class="math notranslate nohighlight">
 \[
 \tilde{\mathrm{A}} = \mathrm{T}\mathrm{W},
@@ -611,10 +611,11 @@ For some matrices <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}
 and
 where <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> is a 2 by <span class="math notranslate nohighlight">\(n\)</span> matrix (a wide matrix).</p>
 <p><strong>Implement a Scipy <code class="docutils literal notranslate"><span class="pre">LinearOperator</span></code> for matrices of this form</strong>. Your implementation must include a matrix-vector product (<code class="docutils literal notranslate"><span class="pre">matvec</span></code>) and the shape of the matrix (<code class="docutils literal notranslate"><span class="pre">self.shape</span></code>), but
-does not need to include and <code class="docutils literal notranslate"><span class="pre">__add__</span></code> function. In your implementation of <code class="docutils literal notranslate"><span class="pre">matvec</span></code>, you should be careful to ensure that the product does not have more computational complexity then necessary.</p>
+does not need to include an <code class="docutils literal notranslate"><span class="pre">__add__</span></code> function. In your implementation of <code class="docutils literal notranslate"><span class="pre">matvec</span></code>, you should be careful to ensure that the product does not have more computational complexity then necessary.</p>
 <p>For a range of values of <span class="math notranslate nohighlight">\(n\)</span>, <strong>create matrices where the entries on the diagonal of the top-left block and in the matrices <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> are random numbers</strong>.
-For each of these matrices, <strong>compute matrix-vector products using your implementation and measure the time taken to compute these</strong>. Create dense versions of the matrices,
-and <strong>measure the time taken by Numpy to compute matrix-vector products</strong>. <strong>Make a plot showing time taken against <span class="math notranslate nohighlight">\(n\)</span></strong>. <strong>Comment (2-4 sentences) on what your plot shows, and why you think
+For each of these matrices, <strong>compute matrix-vector products using your implementation and measure the time taken to compute these</strong>. Create an alternative version of each matrix,
+stored using a Scipy or Numpy format of your choice,
+and <strong>measure the time taken to compute matrix-vector products using this format</strong>. <strong>Make a plot showing time taken against <span class="math notranslate nohighlight">\(n\)</span></strong>. <strong>Comment (2-4 sentences) on what your plot shows, and why you think
 one of these methods is faster than the other</strong> (or why they take the same amount of time if this is the case).</p>
 </section>
 </section>
