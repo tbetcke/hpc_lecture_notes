@@ -542,18 +542,14 @@ Make a plot showing the number of iterations vs the size of the residual.</p>
 <h2>SPAI preconditioning<a class="headerlink" href="#spai-preconditioning" title="Permalink to this headline">#</a></h2>
 <p>The SPAI preconditioner is defined by</p>
 <div class="math notranslate nohighlight">
-\[
-\mathrm{C}_k = \mathrm{A} \mathrm{M}_k\]</div>
-<div class="math notranslate nohighlight">
-\[
-\mathrm{G}_k = \mathrm{I} - \mathrm{C}_k\]</div>
-<div class="math notranslate nohighlight">
-\[
-\alpha_k =\operatorname{tr}(\mathrm{G}_k^\text{T}\mathrm{A}\mathrm{G}_k) / \|\mathrm{A}\mathrm{G}_k\|_\text{F}^2\]</div>
-<div class="math notranslate nohighlight">
-\[
-\mathrm{M}_{k+1} = \mathrm{M}_k + \alpha_k \mathrm{G}_k
-\]</div>
+\[\begin{split}
+\begin{align*}
+\mathrm{C}_k &amp;= \mathrm{A} \mathrm{M}_k\\
+\mathrm{G}_k &amp;= \mathrm{I} - \mathrm{C}_k\\
+\alpha_k &amp;=\operatorname{tr}(\mathrm{G}_k^\text{T}\mathrm{A}\mathrm{G}_k) / \|\mathrm{A}\mathrm{G}_k\|_\text{F}^2\\
+\mathrm{M}_{k+1} &amp;= \mathrm{M}_k + \alpha_k \mathrm{G}_k
+\end{align*}
+\end{split}\]</div>
 <p>Implement this preconditioner. Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> using <span class="math notranslate nohighlight">\(\mathrm{M}_m\)</span> as a preconditioner for a range of values of <span class="math notranslate nohighlight">\(m\)</span> and make a plot showing
 the number of iterations vs the size of the residual for each of these.
 If <span class="math notranslate nohighlight">\(m\)</span> is too large, the preconditioner will take a long time to compute; if <span class="math notranslate nohighlight">\(m\)</span> is too small, <span class="math notranslate nohighlight">\(\mathrm{M}_m\)</span> will not be a good preconditioner. Experiment to find a good value to use for <span class="math notranslate nohighlight">\(m\)</span>.</p>
