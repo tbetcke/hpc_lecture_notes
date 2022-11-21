@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Class 5 (Monday 14 November) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Class 6 (Monday 21 November) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -55,8 +55,6 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Matrices and simultaneous equations" href="2022_matrices_and_simultaneous_equations.html" />
-    <link rel="prev" title="Class 4 (Monday 31 October)" href="2022-class_4.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -296,7 +294,7 @@ const thebe_selector_output = ".output, .cell_output"
   Tasks for Monday Practical Classes
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-class_1.html">
    Class 1 (Monday 10 October)
@@ -317,8 +315,8 @@ const thebe_selector_output = ".output, .cell_output"
    Class 4 (Monday 31 October)
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_5.html">
    Class 5 (Monday 14 November)
   </a>
  </li>
@@ -407,7 +405,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/2022-class_5.md"
+        <a href="_sources/2022-class_6.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -467,18 +465,13 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#using-gmres">
-   Using GMRES
+  <a class="reference internal nav-link" href="#using-cg">
+   Using CG
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#experimenting-with-gmres">
-   Experimenting with GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plotting-eigenvalues">
-   Plotting eigenvalues
+  <a class="reference internal nav-link" href="#spai-preconditioning">
+   SPAI preconditioning
   </a>
  </li>
 </ul>
@@ -490,7 +483,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Class 5 (Monday 14 November)</h1>
+                <h1>Class 6 (Monday 21 November)</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -501,18 +494,13 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#using-gmres">
-   Using GMRES
+  <a class="reference internal nav-link" href="#using-cg">
+   Using CG
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#experimenting-with-gmres">
-   Experimenting with GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#plotting-eigenvalues">
-   Plotting eigenvalues
+  <a class="reference internal nav-link" href="#spai-preconditioning">
+   SPAI preconditioning
   </a>
  </li>
 </ul>
@@ -525,52 +513,35 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="class-5-monday-14-november">
-<h1>Class 5 (Monday 14 November)<a class="headerlink" href="#class-5-monday-14-november" title="Permalink to this headline">#</a></h1>
-<p>These tasks are designed to be worked on in the practical class on Monday 14 November.</p>
-<section id="using-gmres">
-<h2>Using GMRES<a class="headerlink" href="#using-gmres" title="Permalink to this headline">#</a></h2>
-<p>You can create an identity matrix (<span class="math notranslate nohighlight">\(\mathrm{I}\)</span>) with Numpy by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">identity_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="class-6-monday-21-november">
+<h1>Class 6 (Monday 21 November)<a class="headerlink" href="#class-6-monday-21-november" title="Permalink to this headline">#</a></h1>
+<p>These tasks are designed to be worked on in the practical class on Monday 21 November.</p>
+<section id="using-cg">
+<h2>Using CG<a class="headerlink" href="#using-cg" title="Permalink to this headline">#</a></h2>
+<p>You can create a random 500 by 500 symmetric positive definite matrix by running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="n">Q</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">D</span> <span class="o">@</span> <span class="n">Q</span>
 </pre></div>
 </div>
-<p>Solve <span class="math notranslate nohighlight">\(\mathrm{I}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES (<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.gmres</span></code>).
+<p>Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using CG (<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg</span></code>).
 Make a plot showing the number of iterations vs the size of the residual.</p>
 </section>
-<section id="experimenting-with-gmres">
-<h2>Experimenting with GMRES<a class="headerlink" href="#experimenting-with-gmres" title="Permalink to this headline">#</a></h2>
-<p>You can create a random matrix (<span class="math notranslate nohighlight">\(\mathrm{A}\)</span>) with Numpy by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Solve <span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES.
-Make a plot showing the number of iterations vs the size of the residual.
-Compare this plot to the plot for the identity matrix.</p>
-<p>You can control the stopping criteria of GMRES by passing <code class="docutils literal notranslate"><span class="pre">tol</span></code> and <code class="docutils literal notranslate"><span class="pre">atol</span></code> parameters into GMRES (eg <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.solve(A,</span> <span class="pre">b,</span> <span class="pre">tol=1e-8,</span> <span class="pre">atol=1e-8)</span></code>).
-Adjust these parameters so that GMRES gets to a lower residual than the default values. What is the lowest you can get the size of the residual to be?</p>
-<p>Consider the matrix <span class="math notranslate nohighlight">\(\mathrm{A}+\alpha\mathrm{I}\)</span> for some constant <span class="math notranslate nohighlight">\(\alpha\)</span>.
-Solve <span class="math notranslate nohighlight">\((\mathrm{A}+\alpha\mathrm{I})\mathbf{x}=\mathrm{b}\)</span> for a random vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> using GMRES
-for a range of values of <span class="math notranslate nohighlight">\(\alpha\)</span>.
-Make a plot showing the number of iterations vs the size of the residual for the value of <span class="math notranslate nohighlight">\(\alpha\)</span>
-that you chose. How is the value of <span class="math notranslate nohighlight">\(\alpha\)</span> related to the performance of GMRES.</p>
-<p>Have you considered what happens if <span class="math notranslate nohighlight">\(\alpha\)</span> is negative? Or complex?</p>
-</section>
-<section id="plotting-eigenvalues">
-<h2>Plotting eigenvalues<a class="headerlink" href="#plotting-eigenvalues" title="Permalink to this headline">#</a></h2>
-<p>The performance of GMRES is related to the eigenvalues of the matrix. You can plot
-the eigenvalues of a matrix <code class="docutils literal notranslate"><span class="pre">A</span></code> with the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eigvals</span>
-
-<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Plot the eigenvalues of the matrices you used in the previous section. What do you notice about the eigenvalues
-when GMRES does not perform well? Based on your observations, pick a value of <span class="math notranslate nohighlight">\(\alpha\)</span> for which you think
-GMRES will perform badly, and a value for which you think it will perform well? Make plots
-showing the number of iterations vs the size of the residual for these values of <span class="math notranslate nohighlight">\(\alpha\)</span>. Were your predictions correct?</p>
+<section id="spai-preconditioning">
+<h2>SPAI preconditioning<a class="headerlink" href="#spai-preconditioning" title="Permalink to this headline">#</a></h2>
+<p>The SPAI preconditioner is defined by</p>
+<p>\begin{align*}
+\mathrm{C}_k &amp;= \mathrm{A} \mathrm{M}_k\
+\mathrm{G}_k &amp;= \mathrm{I} - \mathrm{C}_k\
+\alpha_k &amp;=\operatorname{tr}(\mathrm{G\mathrm{_k^\text{T}\mathrm{A}\mathrm{G}<em>k) / |\mathrm{A}\mathrm{G}<em>k|</em>\text{F}^2\
+\mathrm{M}</em>{k+1} &amp;= \mathrm{M{_k + \alpha_k \mathrm{G}_k\
+\end{align*}</p>
+<p>You may wish to use the code included in <a class="reference external" href="https://tbetcke.github.io/hpc_lecture_notes/it_solvers4.html">the preconditioning section of the lecture notes</a>
+as a template.</p>
 </section>
 </section>
 
@@ -601,20 +572,6 @@ showing the number of iterations vs the size of the residual for these values of
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="2022-class_4.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Class 4 (Monday 31 October)</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="2022_matrices_and_simultaneous_equations.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Matrices and simultaneous equations</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
 </div>
             </footer>
         </div>
