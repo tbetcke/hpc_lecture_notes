@@ -541,12 +541,15 @@ Make a plot showing the number of iterations vs the size of the residual.</p>
 <section id="spai-preconditioning">
 <h2>SPAI preconditioning<a class="headerlink" href="#spai-preconditioning" title="Permalink to this headline">#</a></h2>
 <p>The SPAI preconditioner is defined by</p>
-<p>\begin{align*}
-\mathrm{C}_k &amp;= \mathrm{A} \mathrm{M}_k\
-\mathrm{G}_k &amp;= \mathrm{I} - \mathrm{C}_k\
-\alpha_k &amp;=\operatorname{tr}(\mathrm{G\mathrm{_k^\text{T}\mathrm{A}\mathrm{G}<em>k) / |\mathrm{A}\mathrm{G}<em>k|</em>\text{F}^2\
-\mathrm{M}</em>{k+1} &amp;= \mathrm{M{_k + \alpha_k \mathrm{G}_k\
-\end{align*}</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\mathrm{C}_k &amp;= \mathrm{A} \mathrm{M}_k\\
+\mathrm{G}_k &amp;= \mathrm{I} - \mathrm{C}_k\\
+\alpha_k &amp;=\operatorname{tr}(\mathrm{G\mathrm{_k^\text{T}\mathrm{A}\mathrm{G}_k) / \|\mathrm{A}\mathrm{G}_k\|_\text{F}^2\\
+\mathrm{M}_{k+1} &amp;= \mathrm{M{_k + \alpha_k \mathrm{G}_k\\
+\end{align*}
+\end{split}\]</div>
 <p>You may wish to use the code included in <a class="reference external" href="https://tbetcke.github.io/hpc_lecture_notes/it_solvers4.html">the preconditioning section of the lecture notes</a>
 as a template.</p>
 </section>
