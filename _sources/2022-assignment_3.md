@@ -27,6 +27,7 @@ class CSRMatrix(LinearOperator):
     def __init__(self, coo_matrix):
         self.shape = coo_matrix.shape
         self.dtype = coo_matrix.dtype
+        # You'll need to put more code here
 
     def __add__(self, other):
         """Add the CSR matrix other to this matrix."""
