@@ -26,6 +26,7 @@ from scipy.sparse.linalg import LinearOperator
 class CSRMatrix(LinearOperator):
     def __init__(self, coo_matrix):
         self.shape = coo_matrix.shape
+        self.dtype = coo_matrix.dtype
 
     def __add__(self, other):
         """Add the CSR matrix other to this matrix."""
