@@ -52,3 +52,4 @@ parts:
 - caption: Additional notes from 2022
   chapters:
   - file: 2022_matrices_and_simultaneous_equations
+  - file: 2022_classes
