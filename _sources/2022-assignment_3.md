@@ -41,6 +41,8 @@ The method `__init__` takes a COO matrix as input and will initialise the CSR ma
 that will store the shape of the input matrix. You should add code here that extracts important data from a Scipy COO to and computes and stores the appropriate data
 for a CSR matrix. You may use any functionality of Python and various libraries in your code, but you should not use an library's implementation of a CSR matrix.
 The method `__add__` will overload `+` and so allow you to add two of your CSR matrices together.
+The `__add__` method should avoid converting any matrices to dense matrices. You could implement this in one of two ways: you could convert both matrices to COO matrices,
+compute the sum, then pass this into `CSRMatrix()`; or you could compute the data, indices and indptr for the sum, and use these to create a SciPy CSR matrix.
 The method `matvec` will define a matrix-vector product: Scipy will use this when you tell it to use a sparse solver on your operator.
 
 **Write tests to check that the `__add__` and `matvec` methods that you have written are correct.** These test should use appropriate `assert` statements.
