@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Class 4 (Monday 31 October) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Python classes &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,13 +50,10 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Class 5 (Monday 14 November)" href="2022-class_5.html" />
-    <link rel="prev" title="Class 3 (Monday 24 October)" href="2022-class_3.html" />
+    <link rel="prev" title="Matrices and simultaneous equations" href="2022_matrices_and_simultaneous_equations.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -296,7 +293,7 @@ const thebe_selector_output = ".output, .cell_output"
   Tasks for Monday Practical Classes
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022-class_1.html">
    Class 1 (Monday 10 October)
@@ -312,8 +309,8 @@ const thebe_selector_output = ".output, .cell_output"
    Class 3 (Monday 24 October)
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_4.html">
    Class 4 (Monday 31 October)
   </a>
  </li>
@@ -333,14 +330,14 @@ const thebe_selector_output = ".output, .cell_output"
   Additional notes from 2022
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">
    Matrices and simultaneous equations
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_classes.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Python classes
   </a>
  </li>
@@ -417,7 +414,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/2022-class_4.md"
+        <a href="_sources/2022_classes.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -454,80 +451,23 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">
-   Comparing dense and sparse storage
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#comparing-sparse-formats">
-   Comparing sparse formats
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">
-   When is a sparse matrix worth it?
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Class 4 (Monday 31 October)</h1>
+                <h1>Python classes</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">
-   Comparing dense and sparse storage
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#comparing-sparse-formats">
-   Comparing sparse formats
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">
-   When is a sparse matrix worth it?
-  </a>
- </li>
-</ul>
-
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -535,67 +475,74 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="class-4-monday-31-october">
-<h1>Class 4 (Monday 31 October)<a class="headerlink" href="#class-4-monday-31-october" title="Permalink to this headline">#</a></h1>
-<p>These tasks are designed to be worked on in the practical class on Monday 31 October.</p>
-<p>In this class, we will make heavy use of the <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">finite difference code for solving a Poisson problem</a>
-that we wrote in lectures. You can find this code <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">here</a>.</p>
-<section id="comparing-dense-and-sparse-storage">
-<h2>Comparing dense and sparse storage<a class="headerlink" href="#comparing-dense-and-sparse-storage" title="Permalink to this headline">#</a></h2>
-<p>Copy the codes we that wrote to generate the matrix in dense and sparse formats.</p>
-<p>For a sensible range of <span class="math notranslate nohighlight">\(N\)</span>, measure how much memory a dense matrix and a COO matrix use.
-You can print the amount of memory a dense matrix uses by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="python-classes">
+<h1>Python classes<a class="headerlink" href="#python-classes" title="Permalink to this headline">#</a></h1>
+<p>If you’ve not used Python classes before, this guide will give you an introduction to what they are and what they are used for.</p>
+<p>In general, a <code class="docutils literal notranslate"><span class="pre">class</span></code> is a set of instructions for how to create an object. An instance of a class is the object that is created from the class.
+As an example, we can create a class that defines a fraction.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">gcd</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Fraction</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A fraction.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">numerator</span><span class="p">,</span> <span class="n">denominator</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span> <span class="o">=</span> <span class="n">numerator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span> <span class="o">=</span> <span class="n">denominator</span>
+
+    <span class="k">def</span> <span class="nf">print_numerator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerator</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get string representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerator</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; over &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">denominator</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add two fractions.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="p">)</span>
+        <span class="n">new_numerator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denominator</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">numerator</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span>
+        <span class="n">new_denominator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denominator</span>
+        <span class="n">common_factor</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">new_numerator</span><span class="p">,</span> <span class="n">new_denominator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">new_numerator</span> <span class="o">//</span> <span class="n">common_factor</span><span class="p">,</span> <span class="n">new_denominator</span> <span class="o">//</span> <span class="n">common_factor</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Multiply two fractions.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="p">)</span>
+        <span class="n">new_numerator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerator</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">numerator</span>
+        <span class="n">new_denominator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">denominator</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">denominator</span>
+        <span class="n">common_factor</span> <span class="o">=</span> <span class="n">gcd</span><span class="p">(</span><span class="n">new_numerator</span><span class="p">,</span> <span class="n">new_denominator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">new_numerator</span> <span class="o">//</span> <span class="n">common_factor</span><span class="p">,</span> <span class="n">new_denominator</span> <span class="o">//</span> <span class="n">common_factor</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can print the amount of memory a COO matrix uses by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">b</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+<p>This class contains a number of functions: functions inside a class are called methods.
+Each method starts with the <code class="docutils literal notranslate"><span class="pre">self</span></code> input: this refers to the instance of the class itself and can be used to store information
+that other methods will need. (You could use another name instead of <code class="docutils literal notranslate"><span class="pre">self</span></code> but it’s very very common practice to use <code class="docutils literal notranslate"><span class="pre">self</span></code>.)
+Function that start and end with a double underscore (<code class="docutils literal notranslate"><span class="pre">__</span></code>) are special methods.</p>
+<p>The special method <code class="docutils literal notranslate"><span class="pre">__init__</span></code> is run when an instance of the class is created. In this function, we store the numerator and denominator of the
+fraction as <code class="docutils literal notranslate"><span class="pre">self.numerator</span></code> and <code class="docutils literal notranslate"><span class="pre">self.denominator</span></code>.</p>
+<p>We can create a fraction and call the <code class="docutils literal notranslate"><span class="pre">print_numerator</span></code> method like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">half</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">half</span><span class="o">.</span><span class="n">print_numerator</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Create a plot that shows the memory used by the dense and COO sparse format against <span class="math notranslate nohighlight">\(N\)</span>.
-What do you notice?</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code> to solve the problem for a range of values of <span class="math notranslate nohighlight">\(N\)</span>.
-Plot the time both solution methods taks against <span class="math notranslate nohighlight">\(N\)</span>.
-What do you notice?</p>
-</section>
-<section id="comparing-sparse-formats">
-<h2>Comparing sparse formats<a class="headerlink" href="#comparing-sparse-formats" title="Permalink to this headline">#</a></h2>
-<p>SciPy can convert between different sparse formats, for example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+<p>This first line will run <code class="docutils literal notranslate"><span class="pre">__init__</span></code> with <code class="docutils literal notranslate"><span class="pre">half</span></code> as <code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code> as <code class="docutils literal notranslate"><span class="pre">numerator</span></code> and <code class="docutils literal notranslate"><span class="pre">2</span></code> as <code class="docutils literal notranslate"><span class="pre">denominator</span></code>. The second line will run <code class="docutils literal notranslate"><span class="pre">print_numerator</span></code> with <code class="docutils literal notranslate"><span class="pre">half</span></code> as <code class="docutils literal notranslate"><span class="pre">self</span></code>, and will therefore
+print <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+<p>The special method <code class="docutils literal notranslate"><span class="pre">__str__</span></code> defines what happens when you <code class="docutils literal notranslate"><span class="pre">print</span></code> an instance of your class. In our example, <code class="docutils literal notranslate"><span class="pre">print(half)</span></code> will print <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">over</span> <span class="pre">2</span></code>.</p>
+<p>The special method <code class="docutils literal notranslate"><span class="pre">__add__</span></code> defines what the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator does. If you read the implementation above, you can see that <code class="docutils literal notranslate"><span class="pre">__add__</span></code>
+is adding fractions in the way you would expect. For example, you can add two fractions like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">half</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">third</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">half</span> <span class="o">+</span> <span class="n">third</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span>, measure how much storage space is needed to store the matrix for the Poisson problem if the matrix is stored as
-a COO matrix, a CSR matrix, or a CSC matrix.
-For a CSR matrix, the amount of memory used can be printed by running</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indptr</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+<p>The special method <code class="docutils literal notranslate"><span class="pre">__mul__</span></code> defines what the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator does. For example, you can multiply two fractions like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">half</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">third</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">half</span> <span class="o">*</span> <span class="n">third</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Make a plot showing the amount of memory needed vs <span class="math notranslate nohighlight">\(N\)</span>. Which format is the most memory efficient?</p>
-<p>Optional extension: Scipy also supports LIL, DIA, DOK, and BSR sparse formats. Add these to your plot.</p>
-</section>
-<section id="when-is-a-sparse-matrix-worth-it">
-<h2>When is a sparse matrix worth it?<a class="headerlink" href="#when-is-a-sparse-matrix-worth-it" title="Permalink to this headline">#</a></h2>
-<p>In this section, we will investigate how many zeros we need a matrix to have for sparse storage to be worth doing.</p>
-<p>Create a 10 by 10 matrix which is all zeros except for <span class="math notranslate nohighlight">\(M\)</span> random numbers in random positions.
-Measure the amount of memory needed to store this as a dense and different sparse matrix formats.
-Make a plot showing the amount of memory needed against <span class="math notranslate nohighlight">\(M\)</span>.
-What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
-<p>Repeat this with a 40 by 40 matrix.
-What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
-</section>
+<p>There are a lot more special methods that you can use, including those to define the behaviour of <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">//</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, <code class="docutils literal notranslate"><span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>. You can find
+(details of these in the Python documentation](<a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#specialnames">https://docs.python.org/3/reference/datamodel.html#specialnames</a>)</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -625,19 +572,12 @@ What proportion of the matrix needs to be zeros for sparse storage to use less s
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="2022-class_3.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="2022_matrices_and_simultaneous_equations.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Class 3 (Monday 24 October)</p>
+            <p class="prev-next-title">Matrices and simultaneous equations</p>
         </div>
-    </a>
-    <a class='right-next' id="next-link" href="2022-class_5.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Class 5 (Monday 14 November)</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>
