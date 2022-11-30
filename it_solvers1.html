@@ -327,6 +327,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -575,20 +580,20 @@ Ax = b.
 <p>This subspace collects all the vectors that we can form by combining powers of <span class="math notranslate nohighlight">\(A\)</span> times b. Let us try out this subspace numerically.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 
-<span class="k">def</span> <span class="nf">compute_krylov_basis</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generates a numerical basis for the m-dimensional Krylov subspace.&quot;&quot;&quot;</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+def compute_krylov_basis(A, b, m):
+    &quot;&quot;&quot;Generates a numerical basis for the m-dimensional Krylov subspace.&quot;&quot;&quot;
+    n = A.shape[0]
     
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    result = np.empty((n, m), dtype=np.float64)
     
-    <span class="n">result</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+    result[:, 0] = b
     
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-        <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    for index in range(1, m):
+        result[:, index] = A @ result[:, index - 1]
         
-    <span class="k">return</span> <span class="n">result</span>
+    return result
 </pre></div>
 </div>
 </div>
@@ -597,19 +602,19 @@ Ax = b.
 <p>Let us measure the condition number of the Krylov subspace basis as <span class="math notranslate nohighlight">\(m\)</span> increases.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Matrix dimension</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 100 # Matrix dimension
 
-<span class="n">m_max</span> <span class="o">=</span> <span class="mi">20</span>
+m_max = 20
 
-<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+rand = np.random.RandomState(0)
+A = rand.rand(n, n)
+b = rand.rand(n)
 
-<span class="n">krylov_basis</span> <span class="o">=</span> <span class="n">compute_krylov_basis</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="p">)</span>
+krylov_basis = compute_krylov_basis(A, b, m_max)
 
-<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m_max</span><span class="p">):</span>
-    <span class="n">cond_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">krylov_basis</span><span class="p">[:,:</span><span class="n">m</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1:2.1e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">cond_number</span><span class="p">))</span>
+for m in range(1, m_max):
+    cond_number = np.linalg.cond(krylov_basis[:,:m])
+    print(&quot;{0}: {1:2.1e}&quot;.format(m, cond_number))
 </pre></div>
 </div>
 </div>
@@ -641,27 +646,27 @@ Ax = b.
 <p>This is accomplished by the following modified algorithm that after each multiplication with the matrix <span class="math notranslate nohighlight">\(A\)</span> orthogonalizes the new vector against all previous vectors.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 
-<span class="k">def</span> <span class="nf">compute_krylov_basis_orthogonal</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generates an orthogonal basis for the m-dimensional Krylov subspace.&quot;&quot;&quot;</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+def compute_krylov_basis_orthogonal(A, b, m):
+    &quot;&quot;&quot;Generates an orthogonal basis for the m-dimensional Krylov subspace.&quot;&quot;&quot;
+    n = A.shape[0]
     
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    result = np.empty((n, m), dtype=np.float64)
     
-    <span class="n">result</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    result[:, 0] = b / np.linalg.norm(b)
     
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-        <span class="c1"># Multiply the previous vector with A</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="c1"># Now orthogonalise against the previous basis vectors</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:,</span> <span class="p">:</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp</span> <span class="c1"># h contains all inner products against previous vectors</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">result</span><span class="p">[:,</span> <span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">@</span> <span class="n">h</span> <span class="c1"># Subtract the components in the directions of the previous vectors</span>
-        <span class="c1"># Normalise and store</span>
-        <span class="n">htilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-        <span class="n">result</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span> <span class="o">/</span> <span class="n">htilde</span>
+    for index in range(1, m):
+        # Multiply the previous vector with A
+        tmp = A @ result[:, index - 1]
+        # Now orthogonalise against the previous basis vectors
+        h = result[:, :index].T @ tmp # h contains all inner products against previous vectors
+        w = tmp - result[:, :index] @ h # Subtract the components in the directions of the previous vectors
+        # Normalise and store
+        htilde = np.linalg.norm(w)
+        result[:, index] = w[:] / htilde
                 
-    <span class="k">return</span> <span class="n">result</span>
+    return result
 </pre></div>
 </div>
 </div>
@@ -669,19 +674,19 @@ Ax = b.
 <p>Let us test this algorithm.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Matrix dimension</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 100 # Matrix dimension
 
-<span class="n">m_max</span> <span class="o">=</span> <span class="mi">20</span>
+m_max = 20
 
-<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+rand = np.random.RandomState(0)
+A = rand.rand(n, n)
+b = rand.rand(n)
 
-<span class="n">krylov_basis</span> <span class="o">=</span> <span class="n">compute_krylov_basis_orthogonal</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="p">)</span>
+krylov_basis = compute_krylov_basis_orthogonal(A, b, m_max)
 
-<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m_max</span><span class="p">):</span>
-    <span class="n">cond_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">krylov_basis</span><span class="p">[:,:</span><span class="n">m</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1:2.1e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">cond_number</span><span class="p">))</span>
+for m in range(1, m_max):
+    cond_number = np.linalg.cond(krylov_basis[:,:m])
+    print(&quot;{0}: {1:2.1e}&quot;.format(m, cond_number))
 </pre></div>
 </div>
 </div>
@@ -759,53 +764,53 @@ H_my_m = \|r_0\|_2e_1.
 <p>What have we won here? The original linear system of equations is of size <span class="math notranslate nohighlight">\(n\times n\)</span>. The new system is of size <span class="math notranslate nohighlight">\(m\times m\)</span>. If we can get a good approximation of the solution with <span class="math notranslate nohighlight">\(m\ll n\)</span>, then we have had a massive saving. Let’s try it out.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span>
+import numpy as np
+from scipy.linalg import solve
 
-<span class="k">def</span> <span class="nf">fom</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Explore the full orthogonalization method.&quot;&quot;&quot;</span>
+def fom(A, b, m_max = 100):
+    &quot;&quot;&quot;Explore the full orthogonalization method.&quot;&quot;&quot;
 
     
-    <span class="n">r</span> <span class="o">=</span> <span class="n">b</span> <span class="c1"># Here we assume that we start with x_0 = 0</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    r = b # Here we assume that we start with x_0 = 0
+    beta = np.linalg.norm(r)
     
-    <span class="c1"># V stores the basis vectors</span>
-    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m_max</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
-    <span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">/</span> <span class="n">beta</span>
+    # V stores the basis vectors
+    V = np.empty((A.shape[0], m_max), dtype=&#39;float64&#39;)
+    V[:, 0] = r / beta
     
-    <span class="c1"># H stores the projected matrix</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">m_max</span><span class="p">,</span> <span class="n">m_max</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    # H stores the projected matrix
+    H = np.zeros((m_max, m_max), dtype=&#39;float64&#39;)
     
-    <span class="c1"># We also want to store the residual norms</span>
-    <span class="n">rel_residuals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    # We also want to store the residual norms
+    rel_residuals = [1]
         
-    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m_max</span><span class="p">):</span>
-        <span class="c1"># Multiply the previous vector with A</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="c1"># Now orthogonalise against the previous basis vectors</span>
-        <span class="n">H</span><span class="p">[:</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">tmp</span> <span class="c1"># Compute the next column of H</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span> <span class="o">@</span> <span class="n">H</span><span class="p">[:</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Subtract the components in the directions of the previous vectors</span>
-        <span class="c1"># Normalise and store</span>
-        <span class="n">htilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-        <span class="n">V</span><span class="p">[:,</span> <span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span> <span class="o">/</span> <span class="n">htilde</span>
-        <span class="n">H</span><span class="p">[</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">htilde</span> 
+    for m in range(1, m_max):
+        # Multiply the previous vector with A
+        tmp = A @ V[:, m - 1]
+        # Now orthogonalise against the previous basis vectors
+        H[:m, m - 1] = V[:, :m].T @ tmp # Compute the next column of H
+        w = tmp - V[:, :m] @ H[:m, m - 1] # Subtract the components in the directions of the previous vectors
+        # Normalise and store
+        htilde = np.linalg.norm(w)
+        V[:, m] = w[:] / htilde
+        H[m, m - 1] = htilde 
 
-        <span class="c1"># Now solve the projected system</span>
+        # Now solve the projected system
         
-        <span class="n">y</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">H</span><span class="p">[:</span><span class="n">m</span><span class="p">,</span> <span class="p">:</span><span class="n">m</span><span class="p">],</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">b</span><span class="p">)</span>
+        y = solve(H[:m, :m], V[:, :m].T @ b)
         
-        <span class="n">x</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="p">:</span><span class="n">m</span><span class="p">]</span> <span class="o">@</span> <span class="n">y</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
-        <span class="n">rnorm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-        <span class="n">rel_residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rnorm</span> <span class="o">/</span> <span class="n">beta</span><span class="p">)</span>            
+        x = V[:, :m] @ y
+        r = b - A @ x
+        rnorm = np.linalg.norm(r)
+        rel_residuals.append(rnorm / beta)            
             
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">rel_residuals</span><span class="p">)</span>
+    plt.figure()
+    plt.semilogy(rel_residuals)
     
-    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">V</span>
+    return x, V
     
 </pre></div>
 </div>
@@ -815,19 +820,19 @@ H_my_m = \|r_0\|_2e_1.
 <p>The following defines a well conditioned random matrix of dimension 1000 and tries out the algorithm.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">gmres</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.sparse.linalg import gmres
 
-<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+rand = np.random.RandomState(0)
 
-<span class="n">dim</span> <span class="o">=</span> <span class="mi">1000</span>
+dim = 1000
 
-<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+w = np.linspace(0.1, 1, dim)
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+A = np.diag(w)
+b = rand.randn(dim)
+np.linalg.cond(A)
 
-<span class="n">x</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">fom</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+x, V = fom(A, b, m_max=20)
 </pre></div>
 </div>
 </div>
@@ -840,7 +845,7 @@ H_my_m = \|r_0\|_2e_1.
 <p>Let’s make a plot of the matrix <span class="math notranslate nohighlight">\(M = V^TV\)</span>. Theoretically, its diagonal values should be one and all other values <span class="math notranslate nohighlight">\(0\)</span>. Let’s check this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">fom</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m_max</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x, V = fom(A, b, m_max=100)
 </pre></div>
 </div>
 </div>
@@ -851,10 +856,10 @@ H_my_m = \|r_0\|_2e_1.
 <p>Up until around <span class="math notranslate nohighlight">\(m=30\)</span> we converge nicely. But then the solution deteriorates again until we lose all our accuracy. Let’s check the matrix <span class="math notranslate nohighlight">\(M = V^TV\)</span>. If <span class="math notranslate nohighlight">\(V\)</span> is orthogonal then this matrix has ones on the diagonal and zeros everywhere else.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">V</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>M = V.T @ V
 
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">M</span><span class="p">)),</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">15</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+plt.imshow(np.log10(np.abs(M)), vmin=-15, vmax=1)
+plt.colorbar()
 </pre></div>
 </div>
 </div>

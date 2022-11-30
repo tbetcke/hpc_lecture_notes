@@ -327,6 +327,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -654,32 +659,32 @@ A = \begin{bmatrix}2    &amp;   -1     &amp;      &amp;      &amp;    \\
 <p>In order to later understand how multigrid works we need to investigate the behaviour of the eigenvalues and eigenvectors of <span class="math notranslate nohighlight">\(A\)</span>. Let us define <span class="math notranslate nohighlight">\(A\)</span> and compute them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+import numpy as np
 
-<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+n = 20
 
-<span class="n">d1</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">d2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+d1 = 2. * np.ones(n)
+d2 = -1. * np.ones(n - 1)
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+A = np.diag(d1) + np.diag(d2, k=1) + np.diag(d2, k=-1)
 
-<span class="n">lam</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=1&#39;</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=2&#39;</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=10&#39;</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=15&#39;</span><span class="p">);</span>
+lam, V = np.linalg.eigh(A)
+fig = plt.figure(figsize=(8, 8))
+ax = fig.add_subplot(221)
+ax.plot(V[:, 0], &#39;k-x&#39;)
+ax.set_title(&#39;k=1&#39;)
+ax = fig.add_subplot(222)
+ax.plot(V[:, 1], &#39;k-x&#39;)
+ax.set_title(&#39;k=2&#39;)
+ax = fig.add_subplot(223)
+ax.plot(V[:, 10], &#39;k-x&#39;)
+ax.set_title(&#39;k=10&#39;)
+ax = fig.add_subplot(224)
+ax.plot(V[:, 15], &#39;k-x&#39;)
+ax.set_title(&#39;k=15&#39;);
 </pre></div>
 </div>
 </div>
@@ -748,30 +753,30 @@ e_j = \sum_i\left(1 - \frac{\lambda_i}{\gamma}\right)^j\alpha_iv_i,
 <p>Now remember that the eigenvalues of <span class="math notranslate nohighlight">\(A\)</span> are given by <span class="math notranslate nohighlight">\(\lambda_j = 4\sin^2\frac{\theta_j}{2}\)</span>. An upper bound is therefore immediately obtained as <span class="math notranslate nohighlight">\(\lambda_n &lt; 4\)</span>. We hence choose <span class="math notranslate nohighlight">\(\omega = \frac{1}{4}\)</span>. The following code implements the Richardson iteration with this parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">richardson</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Performs n steps of Richardson iteration. Returns residual.&quot;&quot;&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def richardson(A, b, nsteps):
+    &quot;&quot;&quot;Performs n steps of Richardson iteration. Returns residual.&quot;&quot;&quot;
     
-    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">b</span>
+    x = 0
+    res = b
     
-    <span class="n">residuals</span> <span class="o">=</span> <span class="p">[]</span>
+    residuals = []
     
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsteps</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">res</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
-        <span class="n">residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+    for index in range(nsteps):
+        x = x + .25 * res
+        res = b - A @ x
+        residuals.append(np.linalg.norm(res))
         
-    <span class="k">return</span> <span class="n">residuals</span>
+    return residuals
 
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+b = np.ones(n, dtype=np.float64)
     
-<span class="n">residuals</span> <span class="o">=</span> <span class="n">richardson</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+residuals = richardson(A, b, 500)
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;residual&#39;</span><span class="p">);</span>
+fig = plt.figure(figsize=(8, 8))
+ax = fig.add_subplot(111)
+ax.semilogy(residuals)
+ax.set_xlabel(&#39;j&#39;)
+ax.set_ylabel(&#39;residual&#39;);
 </pre></div>
 </div>
 </div>
@@ -792,16 +797,17 @@ e_j = \sum_i\left(1 - \frac{\lambda_i}{\gamma}\right)^j\alpha_iv_i,
 <p>Hence, the high-frequency errors (those associated with higher oscillatory eigenvectors) are reduced rapidly. The reduction factors behave as follows with respect to the index <span class="math notranslate nohighlight">\(k\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+n = 50
 
-<span class="n">krange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">factors</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">krange</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
+krange = np.arange(1, n + 1)
+factors = 1 - np.sin(krange * np.pi / (2 * (n + 1)))**2
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">krange</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;reduction factor&#39;</span><span class="p">);</span>
+fig = plt.figure(figsize=(8, 8))
+ax = fig.add_subplot(111)
+ax.plot(krange, factors)
+ax.set_xlabel(&#39;k&#39;)
+ax.set_ylabel(&#39;reduction factor&#39;);
 </pre></div>
 </div>
 </div>
@@ -812,16 +818,16 @@ e_j = \sum_i\left(1 - \frac{\lambda_i}{\gamma}\right)^j\alpha_iv_i,
 <p>The above plot shows the reduction factors. The ones associated with the smaller <span class="math notranslate nohighlight">\(k\)</span> belong to low frequency eigenmodes. The once associated with higher <span class="math notranslate nohighlight">\(k\)</span> belong to high frequency eigenmodes. The plot below shows a low oscillatory mode and a high oscillatory mode. We talk about low frequency up until <span class="math notranslate nohighlight">\(k\leq n/2\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
-<span class="n">low_mode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">xrange</span><span class="p">)</span>
-<span class="n">high_mode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">40</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">xrange</span><span class="p">)</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xrange</span><span class="p">,</span> <span class="n">low_mode</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;lowly frequency mode (k=5)&#39;</span><span class="p">)</span>
-<span class="n">ax2</span> <span class="o">=</span>  <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xrange</span><span class="p">,</span> <span class="n">high_mode</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;high frequency mode (k=40)&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>xrange = np.linspace(0, 1, 5000)
+low_mode = np.sin(5 * np.pi * xrange)
+high_mode = np.sin(40 * np.pi * xrange)
+fig = plt.figure(figsize=(20, 8))
+ax1 = fig.add_subplot(121)
+ax1.plot(xrange, low_mode)
+ax1.set_title(&#39;lowly frequency mode (k=5)&#39;)
+ax2 =  fig.add_subplot(122)
+ax2.plot(xrange, high_mode)
+ax2.set_title(&#39;high frequency mode (k=40)&#39;)
 </pre></div>
 </div>
 </div>

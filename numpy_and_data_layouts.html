@@ -327,6 +327,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -627,7 +632,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>To get started we import Numpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 </pre></div>
 </div>
 </div>
@@ -635,7 +640,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>The basic data type in Numpy is the array. The following creates a double precision array with three entries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">18.1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a = np.array([3.5, 4, 18.1], dtype=&#39;float64&#39;)
 </pre></div>
 </div>
 </div>
@@ -644,11 +649,11 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>Below are some ways to create an array with Numpy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># A random array with 10 components</span>
-<span class="n">a_ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1"># A 10x10 matrix of ones, stored as double precision (float64) type</span>
-<span class="n">a_zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;complex128&#39;</span><span class="p">)</span> <span class="c1"># A complex three dim. Tensor with all entries set to zero.</span>
-<span class="n">a_empty</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;byte&#39;</span><span class="p">)</span> <span class="c1"># An unitialized byte array that can store 50 bytes.</span>
-<span class="n">a_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="c1"># The first 50 integers, starting at 0.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_random = np.random.rand(10) # A random array with 10 components
+a_ones = np.ones((10, 10), dtype=&#39;float64&#39;) # A 10x10 matrix of ones, stored as double precision (float64) type
+a_zeros = np.zeros(((10, 10, 10)), dtype=&#39;complex128&#39;) # A complex three dim. Tensor with all entries set to zero.
+a_empty = np.empty(50, dtype=&#39;byte&#39;) # An unitialized byte array that can store 50 bytes.
+a_range = np.arange(50) # The first 50 integers, starting at 0.
 </pre></div>
 </div>
 </div>
@@ -656,8 +661,8 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>We can easily access the shape of an array</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">a_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a_zeros</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(a_range.shape)
+print(a_zeros.shape)
 </pre></div>
 </div>
 </div>
@@ -671,7 +676,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>Accessing elements is easy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_random</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Element 0</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_random[0] # Element 0
 </pre></div>
 </div>
 </div>
@@ -683,7 +688,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_random</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># The first two elements </span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_random[:2] # The first two elements 
 </pre></div>
 </div>
 </div>
@@ -695,7 +700,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_random</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="c1"># The last two elements</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_random[-2:] # The last two elements
 </pre></div>
 </div>
 </div>
@@ -707,7 +712,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_ones</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="c1"># The third to fifth column in the first three rows</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_ones[:3, 2:5] # The third to fifth column in the first three rows
 </pre></div>
 </div>
 </div>
@@ -721,7 +726,7 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_zeros</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># The element with indices (3, 2, 1)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_zeros[3, 2, 1] # The element with indices (3, 2, 1)
 </pre></div>
 </div>
 </div>
@@ -734,10 +739,10 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>Assigning elements works similarly.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_ones</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">a_ones</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">a_ones</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># This sets the whole of row 8 to the entry 10</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a_ones</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>a_ones[3, 3] = 10
+a_ones[:, 4] = np.arange(10)
+a_ones[8] = 10 # This sets the whole of row 8 to the entry 10
+print(a_ones)
 </pre></div>
 </div>
 </div>
@@ -759,15 +764,15 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>Together with Matplotlib we can easily plot data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;exp(-x^2)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+x = np.linspace(-10, 10, 10000)
+y = np.exp(-x**2)
+plt.plot(x, y)
+plt.xlabel(&#39;x&#39;)
+plt.ylabel(&#39;exp(-x^2)&#39;)
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -778,10 +783,10 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 <p>Matrix/Matrix and Matrix/vector products in Numpy are executed as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A = np.random.randn(100, 100)
+B = np.random.randn(100, 100)
 
-<span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span> <span class="c1"># Product of the matrices A and B</span>
+C = A @ B # Product of the matrices A and B
 </pre></div>
 </div>
 </div>
@@ -791,9 +796,9 @@ A = \begin{bmatrix} 1 &amp; 2\\ 3 &amp; 4\end{bmatrix}
 To solve a linear system of equations, the following can be used.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A = np.random.rand(1000, 1000)
+b = np.random.rand(1000)
+x = np.linalg.solve(A, b)
 </pre></div>
 </div>
 </div>
@@ -801,8 +806,8 @@ To solve a linear system of equations, the following can be used.</p>
 <p>We can easily compute the relative residual of this solve as</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>residual = np.linalg.norm(b - A @ x) / (np.linalg.norm(A) * np.linalg.norm(x))
+print(residual)
 </pre></div>
 </div>
 </div>

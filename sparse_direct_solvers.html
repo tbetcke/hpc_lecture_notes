@@ -327,6 +327,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -628,43 +633,43 @@ PA = LU,
 <p>This decomposition can be obtained through Gaussian Elimination. Below you find a very simple Python implementation of this method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 
-<span class="k">def</span> <span class="nf">lu</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implementation of a pivoted LU decomposition.</span>
-<span class="sd">    </span>
-<span class="sd">    Returns matrices P, L, U, such that</span>
-<span class="sd">    PA = LU.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+def lu(A):
+    &quot;&quot;&quot;
+    Implementation of a pivoted LU decomposition.
     
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    Returns matrices P, L, U, such that
+    PA = LU.
+    &quot;&quot;&quot;
     
-    <span class="c1"># Return an error if matrix is not square</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input matrix must be square&quot;</span><span class="p">)</span>
+    import numpy as np
+    
+    # Return an error if matrix is not square
+    if not A.shape[0]==A.shape[1]:
+        raise ValueError(&quot;Input matrix must be square&quot;)
         
-    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># The number of rows/columns of A</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># The permutation vector</span>
+    n = A.shape[0] # The number of rows/columns of A
+    p = np.arange(n) # The permutation vector
     
-    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1"># Reserve space for L</span>
-    <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1"># Reserve space for U</span>
-    <span class="n">U</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">A</span> <span class="c1"># Copy A into U as we do not want to modify A</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># fill the diagonal of L with 1</span>
+    L = np.zeros((n,n),dtype=&#39;float64&#39;) # Reserve space for L
+    U = np.zeros((n,n),dtype=&#39;float64&#39;) # Reserve space for U
+    U[:] = A # Copy A into U as we do not want to modify A
+    np.fill_diagonal(L,1) # fill the diagonal of L with 1
     
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># The outer iteration</span>
-        <span class="c1"># Permute the rows to ensure the element with largest magnitude is on top</span>
-        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">:,</span><span class="n">i</span><span class="p">]))</span>
-        <span class="n">U</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">max_index</span><span class="p">],:]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[[</span><span class="n">max_index</span><span class="p">,</span><span class="n">i</span><span class="p">],:]</span>
-        <span class="n">L</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">max_index</span><span class="p">],:</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">[[</span><span class="n">max_index</span><span class="p">,</span><span class="n">i</span><span class="p">],:</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">p</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">max_index</span><span class="p">]]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[[</span><span class="n">max_index</span><span class="p">,</span><span class="n">i</span><span class="p">]]</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">:]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">:]</span>
-            <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="n">p</span><span class="p">,:]</span> 
-    <span class="k">return</span> <span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">U</span><span class="p">)</span>
+    for i in range(n-1):
+        # The outer iteration
+        # Permute the rows to ensure the element with largest magnitude is on top
+        max_index = i+np.argmax(np.abs(U[i:,i]))
+        U[[i,max_index],:] = U[[max_index,i],:]
+        L[[i,max_index],:i] = L[[max_index,i],:i]
+        p[[i,max_index]] = p[[max_index,i]]
+        for j in range(i+1,n):
+            L[j,i] = U[j,i]/U[i,i]
+            U[j,i:] = U[j,i:]-L[j,i]*U[i,i:]
+            U[j,i] = 0
+    P = np.eye(n)[p,:] 
+    return (P,L,U)
 </pre></div>
 </div>
 </div>
@@ -672,12 +677,12 @@ PA = LU,
 <p>Let us try this out.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="o">=</span> <span class="n">lu</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">rel_residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span> <span class="p">(</span><span class="n">P</span> <span class="o">@</span> <span class="n">A</span> <span class="o">-</span> <span class="n">L</span> <span class="o">@</span> <span class="n">U</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The relative residual is </span><span class="si">{</span><span class="n">rel_residual</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rand = np.random.RandomState(0)
+n = 50
+A = rand.randn(n, n)
+P, L, U, = lu(A)
+rel_residual = np.linalg.norm (P @ A - L @ U) / np.linalg.norm(A)
+print(f&quot;The relative residual is {rel_residual}.&quot;)
 </pre></div>
 </div>
 </div>
@@ -692,12 +697,12 @@ PA = LU,
 <p>An example code is given below. Instead of implementing the triangular solve we use the corresponding method from Scipy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve_triangular</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.linalg import solve_triangular
 
-<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span>
-    <span class="n">U</span><span class="p">,</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">P</span> <span class="o">@</span> <span class="n">b</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual with partial pivot LU: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+b = rand.randn(n)
+x = solve_triangular(
+    U, solve_triangular(L, P @ b, lower=True))
+print(f&quot;Residual with partial pivot LU: {np.linalg.norm(b - A @ x) / np.linalg.norm(b)}.&quot;)
 </pre></div>
 </div>
 </div>
@@ -715,27 +720,27 @@ PA = LU,
 <p>Let us consider the example of the following tridiagonal matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+from scipy.sparse import diags
+n = 20
 
-<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
-        <span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+data = [4. * np.ones(n),
+        -2. * np.ones(n - 1),
+        -1. * np.ones(n - 1)]
 
-<span class="n">offsets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+offsets = [0, 1, -1]
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="n">offsets</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+A = diags(data, offsets=offsets, shape=(n, n), format=&#39;csr&#39;).todense()
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
 
-<span class="n">plt</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+plt.spy(A)
 </pre></div>
 </div>
 </div>
@@ -749,22 +754,22 @@ PA = LU,
 <p>We compute the LU factors and visualize them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">lu</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
+from scipy.linalg import lu
 
-<span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">lu</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+P, L, U = lu(A)
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
-<span class="n">im1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">)</span>
-<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span>
-<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">);</span>
+fig = plt.figure(figsize = (21, 8))
+ax1 = fig.add_subplot(131)
+im1 = ax1.spy(P)
+ax1.set_title(&#39;P&#39;)
+ax2 = fig.add_subplot(132)
+ax2.spy(L)
+ax2.set_title(&#39;L&#39;)
+ax3 = fig.add_subplot(133)
+ax3.spy(U)
+ax3.set_title(&#39;U&#39;);
 </pre></div>
 </div>
 </div>
@@ -782,21 +787,21 @@ PA = LU,
 <p>Another example of matrices, for which the LU decomposition is highly efficient, are matrices with certain arrow structures. Consider the following example.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 20
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
-<span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">.5</span>
-<span class="n">A</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">.5</span>
+A = np.diag(np.ones(n, dtype=np.float64))
+A[-1, :] = .5
+A[:, -1] = .5
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+fig = plt.figure(figsize=(20, 8))
+ax1 = fig.add_subplot(121)
+ax1.spy(A)
 
-<span class="n">reversal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-<span class="n">Apermuted</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">reversal</span><span class="p">,</span> <span class="p">:][:,</span> <span class="n">reversal</span><span class="p">]</span>
+reversal = np.flip(np.arange(n))
+Apermuted = A[reversal, :][:, reversal]
 
-<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">Apermuted</span><span class="p">)</span>
+ax2 = fig.add_subplot(122)
+ax2.spy(Apermuted)
 </pre></div>
 </div>
 </div>
@@ -822,44 +827,44 @@ PA = LU,
 <p>It is possible to combine ideas from the LU decomposition and iterative solvers. If a complete LU decomposition is too expensive we may still be able to perform an incomplete LU decomposition. The idea is to heuristically reduce the generated fill-in through the course of the LU decomposition by using a dropping criterion. The difficulty with the incomplete LU decomposition is that it may lead to a singular approximate decomposition. In the following example we use the ILU applied to the matrix <span class="math notranslate nohighlight">\(A\)</span> from the <code class="docutils literal notranslate"><span class="pre">discretise_poisson</span></code> example to demonstrate how it can be used as a preconditioner.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+from scipy.sparse import coo_matrix
 
-<span class="k">def</span> <span class="nf">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate the matrix and rhs associated with the discrete Poisson operator.&quot;&quot;&quot;</span>
+def discretise_poisson(N):
+    &quot;&quot;&quot;Generate the matrix and rhs associated with the discrete Poisson operator.&quot;&quot;&quot;
     
-    <span class="n">nelements</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">16</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">16</span>
+    nelements = 5 * N**2 - 16 * N + 16
     
-    <span class="n">row_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">col_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    row_ind = np.empty(nelements, dtype=np.float64)
+    col_ind = np.empty(nelements, dtype=np.float64)
+    data = np.empty(nelements, dtype=np.float64)
     
-    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    f = np.empty(N * N, dtype=np.float64)
     
-    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">row_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span>  <span class="mi">1</span>
-                <span class="n">f</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    count = 0
+    for j in range(N):
+        for i in range(N):
+            if i == 0 or i == N - 1 or j == 0 or j == N - 1:
+                row_ind[count] = col_ind[count] = j * N + i
+                data[count] =  1
+                f[j * N + i] = 0
+                count += 1
                 
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">row_ind</span><span class="p">[</span><span class="n">count</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
-                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+            else:
+                row_ind[count : count + 5] = j * N + i
+                col_ind[count] = j * N + i
+                col_ind[count + 1] = j * N + i + 1
+                col_ind[count + 2] = j * N + i - 1
+                col_ind[count + 3] = (j + 1) * N + i
+                col_ind[count + 4] = (j - 1) * N + i
                                 
-                <span class="n">data</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-                <span class="n">f</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                data[count] = 4 * (N - 1)**2
+                data[count + 1 : count + 5] = - (N - 1)**2
+                f[j * N + i] = 1
                 
-                <span class="n">count</span> <span class="o">+=</span> <span class="mi">5</span>
+                count += 5
                                                 
-    <span class="k">return</span> <span class="n">coo_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">row_ind</span><span class="p">,</span> <span class="n">col_ind</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(),</span> <span class="n">f</span>
+    return coo_matrix((data, (row_ind, col_ind)), shape=(N**2, N**2)).tocsr(), f
 </pre></div>
 </div>
 </div>
@@ -867,36 +872,36 @@ PA = LU,
 <p>The following code solves the Poisson problem with <span class="math notranslate nohighlight">\(N=100\)</span> using GMRES, once with preconditioning and once without preconditioning.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">spilu</span><span class="p">,</span> <span class="n">LinearOperator</span><span class="p">,</span> <span class="n">gmres</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.sparse.linalg import spilu, LinearOperator, gmres
 
-<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">A</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+N = 100
+A, f = discretise_poisson(N)
 
-<span class="n">M</span> <span class="o">=</span> <span class="n">LinearOperator</span><span class="p">(</span><span class="n">matvec</span><span class="o">=</span><span class="n">spilu</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">fill_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">drop_rule</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">solve</span><span class="p">,</span>
-                   <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> 
-                   <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+M = LinearOperator(matvec=spilu(A, fill_factor=20, drop_rule=&#39;dynamic&#39;).solve,
+                   shape=(N**2, N**2), 
+                   dtype=np.float64)
 
-<span class="n">residuals1</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">callback1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="n">residuals1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> 
-<span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback1</span><span class="p">,</span> <span class="n">callback_type</span><span class="o">=</span><span class="s1">&#39;pr_norm&#39;</span><span class="p">)</span>
+residuals1 = []
+callback1 = lambda res: residuals1.append(res) 
+x, _ = gmres(A, f, callback=callback1, callback_type=&#39;pr_norm&#39;)
 
 
-<span class="n">residuals2</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">callback2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="n">residuals2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> 
-<span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback2</span><span class="p">,</span> <span class="n">callback_type</span><span class="o">=</span><span class="s1">&#39;pr_norm&#39;</span><span class="p">)</span>
+residuals2 = []
+callback2 = lambda res: residuals2.append(res) 
+x, _ = gmres(A, f, M=M, callback=callback2, callback_type=&#39;pr_norm&#39;)
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals1</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;No preconditioning&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;iteration count&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;relative residual&#39;</span><span class="p">)</span>
+fig = plt.figure(figsize=(20, 8))
+ax1 = fig.add_subplot(121)
+ax1.semilogy(residuals1)
+ax1.set_title(&#39;No preconditioning&#39;)
+ax1.set_xlabel(&#39;iteration count&#39;)
+ax1.set_ylabel(&#39;relative residual&#39;)
 
-<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals2</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ILU Preconditioning&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;iteration count&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;relative residual&#39;</span><span class="p">);</span>
+ax2 = fig.add_subplot(122)
+ax2.semilogy(residuals2)
+ax2.set_title(&#39;ILU Preconditioning&#39;)
+ax2.set_xlabel(&#39;iteration count&#39;)
+ax2.set_ylabel(&#39;relative residual&#39;);
 </pre></div>
 </div>
 </div>

@@ -327,6 +327,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -587,21 +592,21 @@ f(x_i) = \sum_{j} g(x_i, y_j) c_j
 <p>We first write a parallel CPU implementation for comparison</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numba</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import numba
 
-<span class="n">sigma</span> <span class="o">=</span> <span class="mf">.1</span>
+sigma = .1
 
-<span class="nd">@numba</span><span class="o">.</span><span class="n">njit</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">rbf_evaluation</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Evaluate the RBF sum.&quot;&quot;&quot;</span>
+@numba.njit(parallel=True)
+def rbf_evaluation(sources, targets, weights, result):
+    &quot;&quot;&quot;Evaluate the RBF sum.&quot;&quot;&quot;
     
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+    n = len(sources)
+    m = len(targets)
         
-    <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">numba</span><span class="o">.</span><span class="n">prange</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">targets</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">sources</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span>
+    result[:] = 0
+    for index in numba.prange(m):
+        result[index] = np.sum(np.exp(-np.sum(np.abs(targets[index] - sources)**2, axis=1) / (2 * sigma**2)) * weights)
 </pre></div>
 </div>
 </div>
@@ -609,28 +614,28 @@ f(x_i) = \sum_{j} g(x_i, y_j) c_j
 <p>Let us test this implementation. We choose sources randomly in the unit box <span class="math notranslate nohighlight">\([0, 1]^3\)</span> and as targets we pick points in a grid along the three planes <span class="math notranslate nohighlight">\(xy\)</span>, <span class="math notranslate nohighlight">\(xz\)</span> and <span class="math notranslate nohighlight">\(zy\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">npoints</span> <span class="o">=</span> <span class="mi">400</span>
-<span class="n">nsources</span> <span class="o">=</span> <span class="mi">50</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>npoints = 400
+nsources = 50
 
-<span class="n">plot_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="n">npoints</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="n">npoints</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+plot_grid = np.mgrid[0:1:npoints * 1j, 0:1:npoints * 1j]
 
-<span class="n">targets_xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">plot_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
-                        <span class="n">plot_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">plot_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
-<span class="n">targets_xz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">plot_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">plot_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
-                        <span class="n">plot_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
-<span class="n">targets_yz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">plot_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
-                       <span class="n">plot_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
-                       <span class="n">plot_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
+targets_xy = np.vstack((plot_grid[0].ravel(),
+                        plot_grid[1].ravel(),
+                        np.zeros(plot_grid[0].size))).T
+targets_xz = np.vstack((plot_grid[0].ravel(),
+                        np.zeros(plot_grid[0].size),
+                        plot_grid[1].ravel())).T
+targets_yz = np.vstack((np.zeros(plot_grid[0].size),
+                       plot_grid[0].ravel(),
+                       plot_grid[1].ravel())).T
 
-<span class="n">targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">targets_xy</span><span class="p">,</span> <span class="n">targets_xz</span><span class="p">,</span> <span class="n">targets_yz</span><span class="p">))</span>
+targets = np.vstack((targets_xy, targets_xz, targets_yz))
 
-<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+rand = np.random.RandomState(0)
 
-<span class="c1"># We are picking random sources</span>
+# We are picking random sources
 
-<span class="n">sources</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">nsources</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+sources = rand.rand(nsources, 3)
 </pre></div>
 </div>
 </div>
@@ -638,45 +643,45 @@ f(x_i) = \sum_{j} g(x_i, y_j) c_j
 <p>Let us run the code and visualize the result using random weights.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
+from matplotlib.colors import LogNorm
 
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>
+plt.rcParams[&quot;font.size&quot;] = 16
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+result = np.zeros(len(targets), dtype=np.float64)
 
-<span class="n">weights</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="p">))</span>
+weights = rand.rand(len(sources))
 
-<span class="n">rbf_evaluation</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+rbf_evaluation(sources, targets, weights, result)
 
-<span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">npoints</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A helper function for visualization&quot;&quot;&quot;</span>
+def visualize(result, npoints):
+    &quot;&quot;&quot;A helper function for visualization&quot;&quot;&quot;
     
-    <span class="n">result_xy</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:</span> <span class="n">npoints</span> <span class="o">*</span> <span class="n">npoints</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">npoints</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">result_xz</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">npoints</span> <span class="o">*</span> <span class="n">npoints</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">npoints</span> <span class="o">*</span> <span class="n">npoints</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">npoints</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-    <span class="n">result_yz</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">npoints</span> <span class="o">*</span> <span class="n">npoints</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">npoints</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    result_xy = result[: npoints * npoints].reshape(npoints, npoints).T
+    result_xz = result[npoints * npoints : 2 * npoints * npoints].reshape(npoints, npoints).T
+    result_yz = result[2 * npoints * npoints:].reshape(npoints, npoints).T
 
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>    
+    fig = plt.figure(figsize=(20, 20))    
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   
-    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result_xy</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    ax = fig.add_subplot(1, 3, 1)   
+    im = ax.imshow(result_xy, extent=[0, 1, 0, 1], origin=&#39;lower&#39;)
+    ax.set_xlabel(&#39;x&#39;)
+    ax.set_ylabel(&#39;y&#39;)
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>   
-    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result_xz</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    ax = fig.add_subplot(1, 3, 2)   
+    im = ax.imshow(result_xz, extent=[0, 1, 0, 1], origin=&#39;lower&#39;)
+    ax.set_xlabel(&#39;x&#39;)
+    ax.set_ylabel(&#39;z&#39;)
 
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>   
-    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result_yz</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    ax = fig.add_subplot(1, 3, 3)   
+    im = ax.imshow(result_yz, extent=[0, 1, 0, 1], origin=&#39;lower&#39;)
+    ax.set_xlabel(&#39;y&#39;)
+    ax.set_ylabel(&#39;z&#39;)
 
     
     
-<span class="n">visualize</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+visualize(result, npoints)
 </pre></div>
 </div>
 </div>
@@ -690,83 +695,83 @@ f(x_i) = \sum_{j} g(x_i, y_j) c_j
 <p>We will now implement a CUDA version of this code. We assume that we have many more evaluation points than sources for the subsequent code. Each thread block will perform the evaluation for a small chunk of the target points and all source points. This strategy will not work if we have as many sources as there are targets.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numba</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
-<span class="kn">import</span> <span class="nn">math</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numba
+from numba import cuda
+import math
 
 
-<span class="n">SX</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="n">SY</span> <span class="o">=</span> <span class="n">nsources</span>
+SX = 16
+SY = nsources
 
 
 
-<span class="nd">@cuda</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">rbf_evaluation_cuda</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-    <span class="n">local_result</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">SX</span><span class="p">,</span> <span class="n">nsources</span><span class="p">),</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">local_targets</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">SX</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">local_sources</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">SY</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">local_weights</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">SY</span><span class="p">,</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+@cuda.jit
+def rbf_evaluation_cuda(sources, targets, weights, result):
+    local_result = cuda.shared.array((SX, nsources), numba.float32)
+    local_targets = cuda.shared.array((SX, 3), numba.float32)
+    local_sources = cuda.shared.array((SY, 3), numba.float32)
+    local_weights = cuda.shared.array(SY, numba.float32)
     
-    <span class="n">tx</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">ty</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span>
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
     
-    <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">cuda</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    px, py = cuda.grid(2)
     
-    <span class="k">if</span> <span class="n">px</span> <span class="o">&gt;=</span> <span class="n">targets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="k">return</span>
+    if px &gt;= targets.shape[0]:
+        return
 
-    <span class="c1"># At first we are loading all the targets into the shared memory</span>
-    <span class="c1"># We use only the first column of threads to do this.</span>
+    # At first we are loading all the targets into the shared memory
+    # We use only the first column of threads to do this.
     
-    <span class="k">if</span> <span class="n">ty</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-            <span class="n">local_targets</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="n">px</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span>
+    if ty == 0:
+        for index in range(3):
+            local_targets[tx, index] = targets[px, index]
     
-    <span class="c1"># We are now loading all the sources and weights.</span>
-    <span class="c1"># We only require the first row of threads to do this.</span>
+    # We are now loading all the sources and weights.
+    # We only require the first row of threads to do this.
     
-    <span class="k">if</span> <span class="n">tx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-            <span class="n">local_sources</span><span class="p">[</span><span class="n">ty</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">sources</span><span class="p">[</span><span class="n">py</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span>
-        <span class="n">local_weights</span><span class="p">[</span><span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">ty</span><span class="p">]</span>
+    if tx == 0:
+        for index in range(3):
+            local_sources[ty, index] = sources[py, index]
+        local_weights[ty] = weights[ty]
         
-    <span class="c1"># Let us now sync all threads</span>
+    # Let us now sync all threads
     
-    <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
+    cuda.syncthreads()
     
-    <span class="c1"># Now compute the interactions</span>
+    # Now compute the interactions
     
-    <span class="n">squared_diff</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    squared_diff = numba.float32(0)
     
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-        <span class="n">squared_diff</span> <span class="o">+=</span> <span class="p">(</span><span class="n">local_targets</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">local_sources</span><span class="p">[</span><span class="n">ty</span><span class="p">,</span> <span class="n">index</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
-    <span class="n">local_result</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">squared_diff</span> <span class="o">/</span> <span class="p">(</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">local_weights</span><span class="p">[</span><span class="n">ty</span><span class="p">]</span>
+    for index in range(3):
+        squared_diff += (local_targets[tx, index] - local_sources[ty, index])**2
+    local_result[tx, ty] = math.exp(-squared_diff / ( numba.float32(2) * numba.float32(sigma)**2)) * local_weights[ty]
     
-    <span class="n">cuda</span><span class="o">.</span><span class="n">syncthreads</span><span class="p">()</span>
+    cuda.syncthreads()
     
-    <span class="c1"># Now sum up all the local results</span>
+    # Now sum up all the local results
     
-    <span class="k">if</span> <span class="n">ty</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">numba</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsources</span><span class="p">):</span>
-            <span class="n">res</span> <span class="o">+=</span> <span class="n">local_result</span><span class="p">[</span><span class="n">tx</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">px</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>    
+    if ty == 0:
+        res = numba.float32(0)
+        for index in range(nsources):
+            res += local_result[tx, index]
+        result[px] = res    
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nblocks</span> <span class="o">=</span> <span class="p">(</span><span class="n">targets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">SX</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">SX</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">rbf_evaluation_cuda</span><span class="p">[(</span><span class="n">nblocks</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">SX</span><span class="p">,</span> <span class="n">SY</span><span class="p">)](</span><span class="n">sources</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">),</span> <span class="n">targets</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">),</span> <span class="n">weights</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">),</span> <span class="n">result</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>nblocks = (targets.shape[0] + SX - 1) // SX
+result = np.zeros(len(targets), dtype=np.float32)
+rbf_evaluation_cuda[(nblocks, 1), (SX, SY)](sources.astype(&#39;float32&#39;), targets.astype(&#39;float32&#39;), weights.astype(&#39;float32&#39;), result)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visualize</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>visualize(result, npoints)
 </pre></div>
 </div>
 </div>
@@ -777,7 +782,7 @@ f(x_i) = \sum_{j} g(x_i, y_j) c_j
 <p>Now let us benchmark the two versions against each other.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> rbf_evaluation_cuda[(nblocks, 1), (SX, SY)](sources.astype(&#39;float32&#39;), targets.astype(&#39;float32&#39;), weights.astype(&#39;float32&#39;), result)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%timeit rbf_evaluation_cuda[(nblocks, 1), (SX, SY)](sources.astype(&#39;float32&#39;), targets.astype(&#39;float32&#39;), weights.astype(&#39;float32&#39;), result)
 </pre></div>
 </div>
 </div>
@@ -789,7 +794,7 @@ f(x_i) = \sum_{j} g(x_i, y_j) c_j
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> rbf_evaluation(sources, targets, weights, result)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%timeit rbf_evaluation(sources, targets, weights, result)
 </pre></div>
 </div>
 </div>

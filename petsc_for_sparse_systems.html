@@ -327,6 +327,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -579,16 +584,16 @@ title="Print to PDF"
 <p>Let’s get started and specify a matrix of dimension 1000 x 1000. We want to have a tridiagonal matrix, so will have two entries in the first and last row, and three entries in each other row. PETSc can dynamically grow sizes needed to store matrix entries. But this is inefficient and it is useful to preallocate the storage size.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">petsc4py</span> <span class="kn">import</span> <span class="n">PETSc</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from petsc4py import PETSc
+import numpy as np
 
-<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+n = 1000
 
-<span class="n">nnz</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-<span class="n">nnz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">nnz</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+nnz = 3 * np.ones(1000, dtype=np.int32)
+nnz[0] = nnz[-1] = 2
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Mat</span><span class="p">()</span>
-<span class="n">A</span><span class="o">.</span><span class="n">createAIJ</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="n">nnz</span><span class="o">=</span><span class="n">nnz</span><span class="p">)</span>
+A = PETSc.Mat()
+A.createAIJ([n, n], nnz=nnz)
 </pre></div>
 </div>
 </div>
@@ -601,18 +606,18 @@ title="Print to PDF"
 <p>We can now fill the matrix elements.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First set the first row</span>
-<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># Now we fill the last row</span>
-<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">999</span><span class="p">,</span> <span class="mi">998</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mi">999</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># First set the first row
+A.setValue(0, 0, 2)
+A.setValue(0, 1, -1)
+# Now we fill the last row
+A.setValue(999, 998, -1)
+A.setValue(999, 999, 2)
 
-<span class="c1"># And now everything else</span>
-<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">A</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>    
+# And now everything else
+for index in range(1, n - 1):
+    A.setValue(index, index - 1, -1)
+    A.setValue(index, index, 2)
+    A.setValue(index, index + 1, -1)    
 </pre></div>
 </div>
 </div>
@@ -620,7 +625,7 @@ title="Print to PDF"
 <p>Finally, we can assemble the matrix. This lets PETsc create all necessary internal data structures.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A.assemble()
 </pre></div>
 </div>
 </div>
@@ -629,7 +634,7 @@ title="Print to PDF"
 <p>Get the size of the matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">size</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A.size
 </pre></div>
 </div>
 </div>
@@ -642,7 +647,7 @@ title="Print to PDF"
 <p>Get the local size. This is the storage in the current process and only relevant for parallel operation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">local_size</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A.local_size
 </pre></div>
 </div>
 </div>
@@ -655,7 +660,7 @@ title="Print to PDF"
 <p>Check if the matrix is symmetric.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">isSymmetric</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A.isSymmetric()
 </pre></div>
 </div>
 </div>
@@ -668,8 +673,8 @@ title="Print to PDF"
 <p>There are lots of convenience functions to access matrix elements. For example, to get the diagonal values we can do the following.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diagonals</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">getDiagonal</span><span class="p">()</span><span class="o">.</span><span class="n">array</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">diagonals</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>diagonals = A.getDiagonal().array
+print(diagonals.shape)
 </pre></div>
 </div>
 </div>
@@ -682,7 +687,7 @@ title="Print to PDF"
 <p>Get memory information about the matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>A.getInfo()
 </pre></div>
 </div>
 </div>
@@ -704,7 +709,7 @@ title="Print to PDF"
 <p>Return the data structurs associated with the CSR matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indexptr</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">getValuesCSR</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>indexptr, indices, data = A.getValuesCSR()
 </pre></div>
 </div>
 </div>
@@ -715,7 +720,7 @@ title="Print to PDF"
 <p>We now want to solve a linear system of equations with this matrix. The basic solver object is <code class="docutils literal notranslate"><span class="pre">ksp</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ksp = PETSc.KSP().create()
 </pre></div>
 </div>
 </div>
@@ -723,7 +728,7 @@ title="Print to PDF"
 <p>We need to let <code class="docutils literal notranslate"><span class="pre">ksp</span></code> know about the operator.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ksp.setOperators(A)
 </pre></div>
 </div>
 </div>
@@ -731,8 +736,8 @@ title="Print to PDF"
 <p>We need to define our right-hand side. It is important to choose vectors that are compatible with the data distribution of <span class="math notranslate nohighlight">\(A\)</span>. Let <span class="math notranslate nohighlight">\(y=Ax\)</span>. Then to get the data distribution for <span class="math notranslate nohighlight">\(A\)</span> we need <code class="docutils literal notranslate"><span class="pre">A.createVecLeft</span></code>. To get the data distribution for <span class="math notranslate nohighlight">\(x\)</span> we need to use <code class="docutils literal notranslate"><span class="pre">A.createVecRight</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecLeft</span><span class="p">()</span>
-<span class="n">b</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>b = A.createVecLeft()
+b.array[:] = 1
 </pre></div>
 </div>
 </div>
@@ -741,14 +746,14 @@ title="Print to PDF"
 As preconditioner we set <code class="docutils literal notranslate"><span class="pre">none</span></code>, which disables preconditioning for now. We also save the convergence history so that we can plot it afterwards.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecRight</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = A.createVecRight()
 
-<span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;bcgs&#39;</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setConvergenceHistory</span><span class="p">()</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">getPC</span><span class="p">()</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+ksp = PETSc.KSP().create()
+ksp.setOperators(A)
+ksp.setType(&#39;bcgs&#39;)
+ksp.setConvergenceHistory()
+ksp.getPC().setType(&#39;none&#39;)
+ksp.solve(b, x)
 </pre></div>
 </div>
 </div>
@@ -756,11 +761,11 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
 <p>We can now plot the residual curve.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
+from matplotlib import pyplot as plt
 
-<span class="n">residuals</span> <span class="o">=</span> <span class="n">ksp</span><span class="o">.</span><span class="n">getConvergenceHistory</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+residuals = ksp.getConvergenceHistory()
+plt.semilogy(residuals)
 </pre></div>
 </div>
 </div>
@@ -774,15 +779,15 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
 <p>PETSc knows a huge number of preconditioners. For example, the following uses SOR as preconditioner.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecRight</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = A.createVecRight()
 
-<span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;bcgs&#39;</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setConvergenceHistory</span><span class="p">()</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">getPC</span><span class="p">()</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;sor&#39;</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">ksp</span><span class="o">.</span><span class="n">getConvergenceHistory</span><span class="p">())</span>
+ksp = PETSc.KSP().create()
+ksp.setOperators(A)
+ksp.setType(&#39;bcgs&#39;)
+ksp.setConvergenceHistory()
+ksp.getPC().setType(&#39;sor&#39;)
+ksp.solve(b, x)
+plt.semilogy(ksp.getConvergenceHistory())
 </pre></div>
 </div>
 </div>
@@ -796,17 +801,17 @@ As preconditioner we set <code class="docutils literal notranslate"><span class=
 <p>If we want to use a direct solver with PETSc we neeed to specify the direct solver as preconditioner and tell PETSc to only evaluate the precondtiioner. This seems a bit strange but allows iterative and direct solvers to have the same interface.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">createVecRight</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = A.createVecRight()
 
-<span class="n">ksp</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">KSP</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setOperators</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;preonly&#39;</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setConvergenceHistory</span><span class="p">()</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">getPC</span><span class="p">()</span><span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="s1">&#39;lu&#39;</span><span class="p">)</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+ksp = PETSc.KSP().create()
+ksp.setOperators(A)
+ksp.setType(&#39;preonly&#39;)
+ksp.setConvergenceHistory()
+ksp.getPC().setType(&#39;lu&#39;)
+ksp.solve(b, x)
 
-<span class="n">residual</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">b</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The relative residual is: </span><span class="si">{</span><span class="n">residual</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">/</span> <span class="n">b</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+residual = A * x - b
+print(f&quot;The relative residual is: {residual.norm() / b.norm()}.&quot;)
 </pre></div>
 </div>
 </div>

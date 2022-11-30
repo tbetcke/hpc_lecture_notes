@@ -325,6 +325,11 @@ const thebe_selector_output = ".output, .cell_output"
    Class 6 (Monday 21 November)
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2022-class_7.html">
+   Class 7 (Monday 5 December)
+  </a>
+ </li>
 </ul>
 <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
@@ -575,8 +580,8 @@ title="Print to PDF"
 <p>These wide instructions typically operate on as many values as will fit into an input register.  For AVX instructions, this means that either 8 float32 values or 4 float64 values can be processed as a single input.  As a result, the NumPy dtype that you use can potentially impact performance to a greater degree than when SIMD is not in use.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+from numba import jit
 </pre></div>
 </div>
 </div>
@@ -592,16 +597,16 @@ title="Print to PDF"
 <p><strong>Note</strong>: The method we use below to find SIMD instructions will only work on Intel/AMD CPUs.  Other platforms have entirely different assembly language syntax for SIMD instructions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_instr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">func</span><span class="o">.</span><span class="n">inspect_asm</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">signatures</span><span class="p">[</span><span class="n">sig</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
-            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">:</span>
-                <span class="k">break</span>
-    <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No instructions found&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def find_instr(func, keyword, sig=0, limit=5):
+    count = 0
+    for l in func.inspect_asm(func.signatures[sig]).split(&#39;\n&#39;):
+        if keyword in l:
+            count += 1
+            print(l)
+            if count &gt;= limit:
+                break
+    if count == 0:
+        print(&#39;No instructions found&#39;)
 </pre></div>
 </div>
 </div>
@@ -611,21 +616,21 @@ title="Print to PDF"
 <p>Let’s start with a simple function that returns the square difference between two arrays, as you might write for a least-squares optimization:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">sqdiff</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
-    <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>@jit(nopython=True)
+def sqdiff(x, y):
+    out = np.empty_like(x)
+    for i in range(x.shape[0]):
+        out[i] = (x[i] - y[i])**2
+    return out
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">y32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">sqdiff</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x32 = np.linspace(1, 2, 10000, dtype=np.float32)
+y32 = np.linspace(2, 3, 10000, dtype=np.float32)
+sqdiff(x32, y32)
 </pre></div>
 </div>
 </div>
@@ -638,9 +643,9 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x64</span> <span class="o">=</span> <span class="n">x32</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-<span class="n">y64</span> <span class="o">=</span> <span class="n">y32</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-<span class="n">sqdiff</span><span class="p">(</span><span class="n">x64</span><span class="p">,</span> <span class="n">y64</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x64 = x32.astype(np.float64)
+y64 = y32.astype(np.float64)
+sqdiff(x64, y64)
 </pre></div>
 </div>
 </div>
@@ -654,7 +659,7 @@ title="Print to PDF"
 <p>Numba has created two different implementations of the function, one for <code class="docutils literal notranslate"><span class="pre">float32</span></code> 1-D arrays, and one for <code class="docutils literal notranslate"><span class="pre">float64</span></code> 1-D arrays:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sqdiff</span><span class="o">.</span><span class="n">signatures</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sqdiff.signatures
 </pre></div>
 </div>
 </div>
@@ -668,8 +673,8 @@ title="Print to PDF"
 <p>This allows Numba (and LLVM) to specialize the use of the SIMD instructions for each situation.  In particular, using lower precision floating point allows twice as many values to fit into a SIMD register.  We will see that for the same number of elements, the <code class="docutils literal notranslate"><span class="pre">float32</span></code> calculation goes twice as fast:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> sqdiff(x32, y32)
-<span class="o">%</span><span class="k">timeit</span> sqdiff(x64, y64)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%timeit sqdiff(x32, y32)
+%timeit sqdiff(x64, y64)
 </pre></div>
 </div>
 </div>
@@ -683,10 +688,10 @@ title="Print to PDF"
 <p>We can check for SIMD instructions in both cases.  (Due to the order of compilation above, signature 0 is the <code class="docutils literal notranslate"><span class="pre">float32</span></code> implementation and signature 1 is the <code class="docutils literal notranslate"><span class="pre">float64</span></code> implementation.)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;float32:&#39;</span><span class="p">)</span>
-<span class="n">find_instr</span><span class="p">(</span><span class="n">sqdiff</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---</span><span class="se">\n</span><span class="s1">float64:&#39;</span><span class="p">)</span>
-<span class="n">find_instr</span><span class="p">(</span><span class="n">sqdiff</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&#39;float32:&#39;)
+find_instr(sqdiff, keyword=&#39;subp&#39;, sig=0)
+print(&#39;---\nfloat64:&#39;)
+find_instr(sqdiff, keyword=&#39;subp&#39;, sig=1)
 </pre></div>
 </div>
 </div>
@@ -716,19 +721,19 @@ float64:
 <p>As a result, you would naturally assume a function like this would be OK:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">frac_diff1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>@jit(nopython=True)
+def frac_diff1(x, y):
+    out = np.empty_like(x)
+    for i in range(x.shape[0]):
+        out[i] = 2 * (x[i] - y[i]) / (x[i] + y[i])
+    return out
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff1</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>frac_diff1(x32, y32)
 </pre></div>
 </div>
 </div>
@@ -741,7 +746,7 @@ float64:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_instr</span><span class="p">(</span><span class="n">frac_diff1</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>find_instr(frac_diff1, keyword=&#39;subp&#39;, sig=0)
 </pre></div>
 </div>
 </div>
@@ -769,19 +774,19 @@ float64:
 <p>Fortunately, Numba allows you to override the “error model” of the function if you don’t want a <code class="docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code> to be raised:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_model</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">frac_diff2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>@jit(nopython=True, error_model=&#39;numpy&#39;)
+def frac_diff2(x, y):
+    out = np.empty_like(x)
+    for i in range(x.shape[0]):
+        out[i] = 2 * (x[i] - y[i]) / (x[i] + y[i])
+    return out
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff2</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>frac_diff2(x32, y32)
 </pre></div>
 </div>
 </div>
@@ -794,7 +799,7 @@ float64:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_instr</span><span class="p">(</span><span class="n">frac_diff2</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;subp&#39;</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>find_instr(frac_diff2, keyword=&#39;subp&#39;, sig=0)
 </pre></div>
 </div>
 </div>
@@ -811,8 +816,8 @@ float64:
 <p>We have SIMD instructions again, but when we check the speed:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> frac_diff2(x32, y32)
-<span class="o">%</span><span class="k">timeit</span> frac_diff2(x64, y64)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%timeit frac_diff2(x32, y32)
+%timeit frac_diff2(x64, y64)
 </pre></div>
 </div>
 </div>
@@ -827,7 +832,7 @@ float64:
 <p>The remaining issue is very subtle.  We can see it if we look at a type-annotated version of the function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff2</span><span class="o">.</span><span class="n">inspect_types</span><span class="p">(</span><span class="n">pretty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>frac_diff2.inspect_types(pretty=True)
 </pre></div>
 </div>
 </div>
@@ -2017,21 +2022,21 @@ float64:
 <p>Notice that the constant <code class="docutils literal notranslate"><span class="pre">2</span></code> has been typed as an int value.  Later, this causes the multiplication <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">(x[i]</span> <span class="pre">-</span> <span class="pre">y[i]</span></code> to promote up to float64, and then the rest of the calculation becomes float64.  This is a situation where Numba is being overly conservative (and should be fixed at some point), but we can tweak this behavior by casting the constant to the type we want:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">error_model</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">frac_diff3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="c1"># Cast the constant using the dtype of the input</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="c1"># Could also use np.float32(2) to always use same type, regardless of input</span>
-        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>@jit(nopython=True, error_model=&#39;numpy&#39;)
+def frac_diff3(x, y):
+    out = np.empty_like(x)
+    dt = x.dtype # Cast the constant using the dtype of the input
+    for i in range(x.shape[0]):
+        # Could also use np.float32(2) to always use same type, regardless of input
+        out[i] = dt.type(2) * (x[i] - y[i]) / (x[i] + y[i])
+    return out
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac_diff3</span><span class="p">(</span><span class="n">x32</span><span class="p">,</span> <span class="n">y32</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>frac_diff3(x32, y32)
 </pre></div>
 </div>
 </div>
@@ -2044,8 +2049,8 @@ float64:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> frac_diff3(x32, y32)
-<span class="o">%</span><span class="k">timeit</span> frac_diff3(x64, y64)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%timeit frac_diff3(x32, y32)
+%timeit frac_diff3(x64, y64)
 </pre></div>
 </div>
 </div>
@@ -2068,30 +2073,30 @@ float64:
 <p>To allow reordering of operations, we need to tell Numba to enable <code class="docutils literal notranslate"><span class="pre">fastmath</span></code> optimizations:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">do_sum</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
-    <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.</span>
-    <span class="c1"># without fastmath, this loop must accumulate in strict order</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
-        <span class="n">acc</span> <span class="o">+=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
-    <span class="k">return</span> <span class="n">acc</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>@jit(nopython=True)
+def do_sum(A):
+    acc = 0.
+    # without fastmath, this loop must accumulate in strict order
+    for x in A:
+        acc += x**2
+    return acc
 
-<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastmath</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">do_sum_fast</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
-    <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.</span>
-    <span class="c1"># with fastmath, the reduction can be vectorized as floating point</span>
-    <span class="c1"># reassociation is permitted.</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
-        <span class="n">acc</span> <span class="o">+=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
-    <span class="k">return</span> <span class="n">acc</span>
+@jit(nopython=True, fastmath=True)
+def do_sum_fast(A):
+    acc = 0.
+    # with fastmath, the reduction can be vectorized as floating point
+    # reassociation is permitted.
+    for x in A:
+        acc += x**2
+    return acc
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">do_sum</span><span class="p">(</span><span class="n">x32</span><span class="p">)</span>
-<span class="n">find_instr</span><span class="p">(</span><span class="n">do_sum</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;mulp&#39;</span><span class="p">)</span>  <span class="c1"># look for vector multiplication</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>do_sum(x32)
+find_instr(do_sum, keyword=&#39;mulp&#39;)  # look for vector multiplication
 </pre></div>
 </div>
 </div>
@@ -2103,8 +2108,8 @@ float64:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">do_sum_fast</span><span class="p">(</span><span class="n">x32</span><span class="p">)</span>
-<span class="n">find_instr</span><span class="p">(</span><span class="n">do_sum_fast</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;mulp&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>do_sum_fast(x32)
+find_instr(do_sum_fast, keyword=&#39;mulp&#39;)
 </pre></div>
 </div>
 </div>
@@ -2121,8 +2126,8 @@ float64:
 <p>The fast version is 2x faster:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> do_sum(x32)
-<span class="o">%</span><span class="k">timeit</span> do_sum_fast(x32)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%timeit do_sum(x32)
+%timeit do_sum_fast(x32)
 </pre></div>
 </div>
 </div>
