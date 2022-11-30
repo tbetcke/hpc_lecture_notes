@@ -48,6 +48,7 @@ parts:
   - file: 2022-class_4
   - file: 2022-class_5
   - file: 2022-class_6
+  - file: 2022-class_7
 
 - caption: Additional notes from 2022
   chapters:
