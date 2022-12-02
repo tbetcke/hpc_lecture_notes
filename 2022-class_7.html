@@ -525,8 +525,9 @@ title="Print to PDF"
 <p>These tasks are designed to be worked on in the practical class on Monday 5 December.</p>
 <section id="lu-for-a-tridiagonal-matrix">
 <h2>LU for a tridiagonal matrix<a class="headerlink" href="#lu-for-a-tridiagonal-matrix" title="Permalink to this headline">#</a></h2>
-<p>In Friday’s lecture, we computed the LU factorisation of a dense matrix. In today’s class, we are going to compute the LU
-decomposition of a tridiagonal matrix.</p>
+<p>In Friday’s lecture, we computed the LU factorisation of a dense matrix.
+The code we wrote during Friday’s lecture can be found <a class="reference external" href="https://gist.github.com/mscroggs/7c1b4440942fa48fe4a8cab0b9cb4a49">at this link</a>.
+In today’s class, we are going to compute the LU decomposition of a tridiagonal matrix.</p>
 <p>We will use the following <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span>matrix:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -541,8 +542,9 @@ a_0&amp;-1&amp;0&amp;0&amp;\cdots&amp;0\\
 \end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(a_0\)</span> to <span class="math notranslate nohighlight">\(a_{n-1}\)</span> are random decimal values between 5 and 10.</p>
 <p>Write a function that takes <span class="math notranslate nohighlight">\(n\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> stored in a sparse format of your choice.</p>
-<p>Write a function that computes the LU decomposition of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>, and returns the factors <span class="math notranslate nohighlight">\(\mathrm{L}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{U}\)</span> in a
-sparse format of your choice. Due to the structure of the matrix, you should not need to do and permuting of the rows.</p>
+<p>Using <a class="reference external" href="https://gist.github.com/mscroggs/7c1b4440942fa48fe4a8cab0b9cb4a49">the code we wrote in Friday’s lecture</a> as a template,
+write a function that computes the LU decomposition of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>, and returns the factors <span class="math notranslate nohighlight">\(\mathrm{L}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{U}\)</span> in a
+sparse format of your choice. Due to the structure of the matrix, you should not need to do any permuting of the rows.</p>
 <p>For a range of values of <span class="math notranslate nohighlight">\(n\)</span>, compute the LU decomposition using your function and measure the time this takes.
 Convert each matrix to a dense matrix and compute the LU decomposition using the code we wrote in Friday’s lecture, timing
 this too.
