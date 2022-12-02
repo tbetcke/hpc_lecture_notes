@@ -21,6 +21,7 @@ u &= g&\text{on the boundary of }\Omega.
 \end{align*}$$
 
 As our domain we will use the unit square, ie $\Omega=[0,1]^2$.
+In this assignment, we will use $k=5$ and $g=\sin(3x+4y)$.
 
 The finite element method is a method that can approximately solve problems like this. We first split the square $[0,1]^2$ into a mesh of $N$ squares by $N$ squares
 (or $N+1$ points by $N+1$ points - 
@@ -59,35 +60,68 @@ a_{i,j} &=\begin{cases}
 \end{cases}\\
 b_{j} &=\begin{cases}
 \displaystyle
-\frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9} g(h,0)+\frac{3+h^2k^2}{9} g(0, h)
+\frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
 &\text{if }\mathbf{x}_j=(h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(1,0)+\frac{3+h^2k^2}{9} g(1-h,0)+\frac{3+h^2k^2}{9} g(1, h)
+\frac{12+h^2k^2}{36} g(1,0)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
 &\text{if }\mathbf{x}_j=(1-h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(0,1)+\frac{3+h^2k^2}{9} g(h,1)+\frac{3+h^2k^2}{9} g(0, 1-h)
+\frac{12+h^2k^2}{36} g(0,1)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
 &\text{if }\mathbf{x}_j=(h,1-h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(1,1)+\frac{3+h^2k^2}{9} g(1-h,1)+\frac{3+h^2k^2}{9} g(1, 1-h)
+\frac{12+h^2k^2}{36} g(1,1)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
 &\text{if }\mathbf{x}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
 \frac{3+h^2k^2}{9} g(0,b_j)
-&\text{if }\mathbf{x}_j=(h,b_j)\\
+&\text{if }\mathbf{x}_j=(h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
 \displaystyle
 \frac{3+h^2k^2}{9} g(1,b_j)
-&\text{if }\mathbf{x}_j=(1-h,b_j)\\
+&\text{if }\mathbf{x}_j=(1-h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
 \displaystyle
 \frac{3+h^2k^2}{9} g(a_j,0)
-&\text{if }\mathbf{x}_j=(a_j,h)\\
+&\text{if }\mathbf{x}_j=(a_j,h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h\\
 \displaystyle
 \frac{3+h^2k^2}{9} g(a_j,1)
-&\text{if }\mathbf{x}_j=(a_j,1-h)\\[3mm]
+&\text{if }\mathbf{x}_j=(a_j,1-h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h
+\\[3mm]
 0&\text{otherwise}
 \end{cases}
 \end{align*}$$
 
-TODO: $k=5$, $g=\sin(3x+4y)$
+For example (using $k=5$ and $g=\sin(3x+4y)$) when $N=2$, 
 
-### Part 1: creating the matrix
-**Write a function that takes $N$ as an input and returns the matrix $\mathrm{A}$**. The matrix should be stored using an appropriate sparse format.
+$$
+\mathrm{A}=\begin{pmatrix}
+-0.11111111
+\end{matrix},
+$$
+
+$$
+\mathrm{b}=\begin{pmatrix}
+0.95727162
+\end{matrix},
+$$
+
+and when $N=3$,
+
+$$
+\mathrm{A}=\begin{pmatrix}
+ 1.43209877& -0.64197531& -0.64197531& -0.41049383\\
+-0.64197531&  1.43209877& -0.41049383& -0.64197531\\
+-0.64197531& -0.41049383&  1.43209877& -0.64197531\\
+-0.41049383& -0.64197531& -0.64197531&  1.43209877
+\end{matrix},
+$$
+
+$$
+\mathrm{b}=\begin{pmatrix}
+1.85116856\\0.35362119\\-0.11199319\\-0.72940276
+\end{matrix}.
+$$
+
+### Part 1: creating the matrix and vector
+**Write a function that takes $N$ as an input and returns the matrix $\mathrm{A}$ and the vector $\mathbf{b}$**. The matrix should be stored using an appropriate sparse format.
+
+You can find [example matrixes and vectors for $N=2$, $N=3$, and $N=4$ here](2022-a4-A_and_b.md). You may wish to use them to validate your function, but you do not need to include this validation as
+part of the assignment.
