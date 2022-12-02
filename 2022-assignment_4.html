@@ -567,7 +567,7 @@ u &amp;= g&amp;\text{on the boundary of }\Omega.
 (or <span class="math notranslate nohighlight">\(N+1\)</span> points by <span class="math notranslate nohighlight">\(N+1\)</span> points -
 note that there are <span class="math notranslate nohighlight">\(N\)</span> squares along each side, but <span class="math notranslate nohighlight">\(N+1\)</span> points along each side (watch out for off-by-one errors):</p>
 <p><img alt="A mesh of  squares by  squares" src="_images/2022a4-mesh.png" /></p>
-<p>As shown in the diagram, let <span class="math notranslate nohighlight">\(h=1/N\)</span>.</p>
+<p>As shown in the diagram, we let <span class="math notranslate nohighlight">\(h=1/N\)</span>.</p>
 <p>The (degree 1) finite element method looks for an approximate solution by placing an unknown value/variable at each point, and approximating the solution as some
 linear combination of the functions <span class="math notranslate nohighlight">\(1\)</span>, <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(xy\)</span> inside each square. Re-writing the problem as an integral equation (and doing a bit of algebra) allows
 us to turn the problem into the matrix vector problem</p>
@@ -585,38 +585,38 @@ a_{i,j} &amp;=\begin{cases}
 \displaystyle
 \frac{24-4*h^2*k^2}{9}&amp;\text{if }i=j\\
 \displaystyle
-\frac{-3-h**2*k**2}{9}
+\frac{-3-h$2*k$2}{9}
 &amp;\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are horizontally or vertically adjacent}\\
 \displaystyle
-\frac{-12-h**2*k**2}{36}
+\frac{-12-h$2*k$2}{36}
 &amp;\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are diagonally adjacent}\\
 0&amp;\text{otherwise}
 \end{cases}\\
 b_{j} &amp;=\begin{cases}
 \displaystyle
-\frac{12+h**2*k**2}{36} g(0,0)+\frac{3+h**2*k**2}{9} g(h,0)+\frac{3+h**2*k**2}{9} g(0, h)
+\frac{12+h$2*k$2}{36} g(0,0)+\frac{3+h$2*k$2}{9} g(h,0)+\frac{3+h$2*k$2}{9} g(0, h)
 &amp;\text{if }\mathbf{x}_j=(h,h)\\
 \displaystyle
-\frac{12+h**2*k**2}{36} g(1,0)+\frac{3+h**2*k**2}{9} g(1-h,0)+\frac{3+h**2*k**2}{9} g(1, h)
+\frac{12+h$2*k$2}{36} g(1,0)+\frac{3+h$2*k$2}{9} g(1-h,0)+\frac{3+h$2*k$2}{9} g(1, h)
 &amp;\text{if }\mathbf{x}_j=(1-h,h)\\
 \displaystyle
-\frac{12+h**2*k**2}{36} g(0,1)+\frac{3+h**2*k**2}{9} g(h,1)+\frac{3+h**2*k**2}{9} g(0, 1-h)
+\frac{12+h$2*k$2}{36} g(0,1)+\frac{3+h$2*k$2}{9} g(h,1)+\frac{3+h$2*k$2}{9} g(0, 1-h)
 &amp;\text{if }\mathbf{x}_j=(h,1-h)\\
 \displaystyle
-\frac{12+h**2*k**2}{36} g(1,1)+\frac{3+h**2*k**2}{9} g(1-h,1)+\frac{3+h**2*k**2}{9} g(1, 1-h)
+\frac{12+h$2*k$2}{36} g(1,1)+\frac{3+h$2*k$2}{9} g(1-h,1)+\frac{3+h$2*k$2}{9} g(1, 1-h)
 &amp;\text{if }\mathbf{x}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
-\frac{3+h**2*k**2}{9} g(0,b_j)
+\frac{3+h$2*k$2}{9} g(0,b_j)
 &amp;\text{if }\mathbf{x}_j=(h,b_j)\\
 \displaystyle
-\frac{3+h**2*k**2}{9} g(1,b_j)
+\frac{3+h$2*k$2}{9} g(1,b_j)
 &amp;\text{if }\mathbf{x}_j=(1-h,b_j)\\
 \displaystyle
-\frac{3+h**2*k**2}{9} g(a_j,0)
+\frac{3+h$2*k$2}{9} g(a_j,0)
 &amp;\text{if }\mathbf{x}_j=(a_j,h)\\
 \displaystyle
-\frac{3+h**2*k**2}{9} g(a_j,1)
+\frac{3+h$2*k$2}{9} g(a_j,1)
 &amp;\text{if }\mathbf{x}_j=(a_j,1-h)\\[3mm]
 0&amp;\text{otherwise}
 \end{cases}

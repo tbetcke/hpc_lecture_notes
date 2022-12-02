@@ -28,7 +28,7 @@ note that there are $N$ squares along each side, but $N+1$ points along each sid
 
 ![A mesh of $N$ squares by $N$ squares](img/2022a4-mesh.png)
 
-As shown in the diagram, let $h=1/N$.
+As shown in the diagram, we let $h=1/N$.
 
 The (degree 1) finite element method looks for an approximate solution by placing an unknown value/variable at each point, and approximating the solution as some
 linear combination of the functions $1$, $x$, $y$ and $xy$ inside each square. Re-writing the problem as an integral equation (and doing a bit of algebra) allows
@@ -50,38 +50,38 @@ a_{i,j} &=\begin{cases}
 \displaystyle
 \frac{24-4*h^2*k^2}{9}&\text{if }i=j\\
 \displaystyle
-\frac{-3-h**2*k**2}{9}
+\frac{-3-h$2*k$2}{9}
 &\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are horizontally or vertically adjacent}\\
 \displaystyle
-\frac{-12-h**2*k**2}{36}
+\frac{-12-h$2*k$2}{36}
 &\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are diagonally adjacent}\\
 0&\text{otherwise}
 \end{cases}\\
 b_{j} &=\begin{cases}
 \displaystyle
-\frac{12+h**2*k**2}{36} g(0,0)+\frac{3+h**2*k**2}{9} g(h,0)+\frac{3+h**2*k**2}{9} g(0, h)
+\frac{12+h$2*k$2}{36} g(0,0)+\frac{3+h$2*k$2}{9} g(h,0)+\frac{3+h$2*k$2}{9} g(0, h)
 &\text{if }\mathbf{x}_j=(h,h)\\
 \displaystyle
-\frac{12+h**2*k**2}{36} g(1,0)+\frac{3+h**2*k**2}{9} g(1-h,0)+\frac{3+h**2*k**2}{9} g(1, h)
+\frac{12+h$2*k$2}{36} g(1,0)+\frac{3+h$2*k$2}{9} g(1-h,0)+\frac{3+h$2*k$2}{9} g(1, h)
 &\text{if }\mathbf{x}_j=(1-h,h)\\
 \displaystyle
-\frac{12+h**2*k**2}{36} g(0,1)+\frac{3+h**2*k**2}{9} g(h,1)+\frac{3+h**2*k**2}{9} g(0, 1-h)
+\frac{12+h$2*k$2}{36} g(0,1)+\frac{3+h$2*k$2}{9} g(h,1)+\frac{3+h$2*k$2}{9} g(0, 1-h)
 &\text{if }\mathbf{x}_j=(h,1-h)\\
 \displaystyle
-\frac{12+h**2*k**2}{36} g(1,1)+\frac{3+h**2*k**2}{9} g(1-h,1)+\frac{3+h**2*k**2}{9} g(1, 1-h)
+\frac{12+h$2*k$2}{36} g(1,1)+\frac{3+h$2*k$2}{9} g(1-h,1)+\frac{3+h$2*k$2}{9} g(1, 1-h)
 &\text{if }\mathbf{x}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
-\frac{3+h**2*k**2}{9} g(0,b_j)
+\frac{3+h$2*k$2}{9} g(0,b_j)
 &\text{if }\mathbf{x}_j=(h,b_j)\\
 \displaystyle
-\frac{3+h**2*k**2}{9} g(1,b_j)
+\frac{3+h$2*k$2}{9} g(1,b_j)
 &\text{if }\mathbf{x}_j=(1-h,b_j)\\
 \displaystyle
-\frac{3+h**2*k**2}{9} g(a_j,0)
+\frac{3+h$2*k$2}{9} g(a_j,0)
 &\text{if }\mathbf{x}_j=(a_j,h)\\
 \displaystyle
-\frac{3+h**2*k**2}{9} g(a_j,1)
+\frac{3+h$2*k$2}{9} g(a_j,1)
 &\text{if }\mathbf{x}_j=(a_j,1-h)\\[3mm]
 0&\text{otherwise}
 \end{cases}
