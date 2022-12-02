@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Assignment 4 - Solving a finite element system &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Examples for assignment 4 &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,8 +50,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -420,7 +418,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/2022-assignment_4.md"
+        <a href="_sources/2022-a4-A_and_b.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -457,84 +455,23 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-assignment">
-   The assignment
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mathematical-background">
-     Mathematical background
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#part-1-creating-the-matrix-and-vector">
-     Part 1: creating the matrix and vector
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Assignment 4 - Solving a finite element system</h1>
+                <h1>Examples for assignment 4</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-assignment">
-   The assignment
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mathematical-background">
-     Mathematical background
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#part-1-creating-the-matrix-and-vector">
-     Part 1: creating the matrix and vector
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -542,124 +479,41 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="assignment-4-solving-a-finite-element-system">
-<h1>Assignment 4 - Solving a finite element system<a class="headerlink" href="#assignment-4-solving-a-finite-element-system" title="Permalink to this headline">#</a></h1>
-<p>This assignment makes up 30% of the overall marks for the course. The deadline for submitting this assignment is <strong>5pm on Thursday 1 December 2022</strong>.</p>
-<p>Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
-to any text questions included in the assessment. The easiest ways to create this file are:</p>
-<ul class="simple">
-<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
-<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
-</ul>
-<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
-<section id="the-assignment">
-<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this headline">#</a></h2>
-<section id="mathematical-background">
-<h3>Mathematical background<a class="headerlink" href="#mathematical-background" title="Permalink to this headline">#</a></h3>
-<p>In this assignment, we are going to solve a Helmholtz wave problem:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align*}
--\Delta u - k^2u &amp;= 0&amp;\text{in }\Omega,\\
-u &amp;= g&amp;\text{on the boundary of }\Omega.
-\end{align*}\end{split}\]</div>
-<p>As our domain we will use the unit square, ie <span class="math notranslate nohighlight">\(\Omega=[0,1]^2\)</span>.
-In this assignment, we will use <span class="math notranslate nohighlight">\(k=5\)</span> and <span class="math notranslate nohighlight">\(g=\sin(3x+4y)\)</span>.</p>
-<p>The finite element method is a method that can approximately solve problems like this. We first split the square <span class="math notranslate nohighlight">\([0,1]^2\)</span> into a mesh of <span class="math notranslate nohighlight">\(N\)</span> squares by <span class="math notranslate nohighlight">\(N\)</span> squares
-(or <span class="math notranslate nohighlight">\(N+1\)</span> points by <span class="math notranslate nohighlight">\(N+1\)</span> points -
-note that there are <span class="math notranslate nohighlight">\(N\)</span> squares along each side, but <span class="math notranslate nohighlight">\(N+1\)</span> points along each side (watch out for off-by-one errors):</p>
-<p><img alt="A mesh of  squares by  squares" src="_images/2022a4-mesh.png" /></p>
-<p>As shown in the diagram, we let <span class="math notranslate nohighlight">\(h=1/N\)</span>.</p>
-<p>The (degree 1) finite element method looks for an approximate solution by placing an unknown value/variable at each point, and approximating the solution as some
-linear combination of the functions <span class="math notranslate nohighlight">\(1\)</span>, <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(xy\)</span> inside each square. Re-writing the problem as an integral equation (and doing a bit of algebra) allows
-us to turn the problem into the matrix vector problem</p>
-<div class="math notranslate nohighlight">
-\[\mathrm{A}\mathbf{x}=\mathbf{b}.\]</div>
-<p>(We do not need to go into details of how this method is derived, but if you’re curious, the first chapter of
-<em>Numerical Solution of Partial Differential Equations by the Finite Element Method</em> by Claes Johnson
-gives a good introduction to this method.)</p>
-<p>Let <span class="math notranslate nohighlight">\(\mathbf{p}_0\)</span>, <span class="math notranslate nohighlight">\(\mathbf{p}_1\)</span>, …, <span class="math notranslate nohighlight">\(\mathbf{p}_{(N-1)^2-1}\)</span> be the points in our mesh that are not on the boundary (in some order). Let <span class="math notranslate nohighlight">\(x_0\)</span>, <span class="math notranslate nohighlight">\(x_1\)</span>, …, <span class="math notranslate nohighlight">\(x_{(N-1)^2-1}\)</span> be
-the values/variables at the points (these are the entries of the unknown vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>).</p>
-<p>The entries <span class="math notranslate nohighlight">\(a_{i,j}\)</span> and <span class="math notranslate nohighlight">\(b_j\)</span> of the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> are given by</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align*}
-a_{i,j} &amp;=\begin{cases}
-\displaystyle
-\frac{24-4h^2k^2}{9}&amp;\text{if }i=j\\
-\displaystyle
-\frac{-3-h^2k^2}{9}
-&amp;\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are horizontally or vertically adjacent}\\
-\displaystyle
-\frac{-12-h^2k^2}{36}
-&amp;\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are diagonally adjacent}\\
-0&amp;\text{otherwise}
-\end{cases}\\
-b_{j} &amp;=\begin{cases}
-\displaystyle
-\frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
-&amp;\text{if }\mathbf{x}_j=(h,h)\\
-\displaystyle
-\frac{12+h^2k^2}{36} g(1,0)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
-&amp;\text{if }\mathbf{x}_j=(1-h,h)\\
-\displaystyle
-\frac{12+h^2k^2}{36} g(0,1)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
-&amp;\text{if }\mathbf{x}_j=(h,1-h)\\
-\displaystyle
-\frac{12+h^2k^2}{36} g(1,1)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
-&amp;\text{if }\mathbf{x}_j=(1-h,1-h)\\
-\\[3mm]
-\displaystyle
-\frac{3+h^2k^2}{9} g(0,b_j)
-&amp;\text{if }\mathbf{x}_j=(h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
-\displaystyle
-\frac{3+h^2k^2}{9} g(1,b_j)
-&amp;\text{if }\mathbf{x}_j=(1-h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
-\displaystyle
-\frac{3+h^2k^2}{9} g(a_j,0)
-&amp;\text{if }\mathbf{x}_j=(a_j,h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h\\
-\displaystyle
-\frac{3+h^2k^2}{9} g(a_j,1)
-&amp;\text{if }\mathbf{x}_j=(a_j,1-h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h
-\\[3mm]
-0&amp;\text{otherwise}
-\end{cases}
-\end{align*}\end{split}\]</div>
-<p>For example (using <span class="math notranslate nohighlight">\(k=5\)</span> and <span class="math notranslate nohighlight">\(g=\sin(3x+4y)\)</span>) when <span class="math notranslate nohighlight">\(N=2\)</span>,</p>
-<div class="math notranslate nohighlight">
-\[
-\mathrm{A}=\begin{pmatrix}
--0.11111111
-\end{matrix},
-\]</div>
-<div class="math notranslate nohighlight">
-\[
-\mathrm{b}=\begin{pmatrix}
-0.95727162
-\end{matrix},
-\]</div>
-<p>and when <span class="math notranslate nohighlight">\(N=3\)</span>,</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\mathrm{A}=\begin{pmatrix}
- 1.43209877&amp; -0.64197531&amp; -0.64197531&amp; -0.41049383\\
--0.64197531&amp;  1.43209877&amp; -0.41049383&amp; -0.64197531\\
--0.64197531&amp; -0.41049383&amp;  1.43209877&amp; -0.64197531\\
--0.41049383&amp; -0.64197531&amp; -0.64197531&amp;  1.43209877
-\end{matrix},
-\end{split}\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\mathrm{b}=\begin{pmatrix}
-1.85116856\\0.35362119\\-0.11199319\\-0.72940276
-\end{matrix}.
-\end{split}\]</div>
-</section>
-<section id="part-1-creating-the-matrix-and-vector">
-<h3>Part 1: creating the matrix and vector<a class="headerlink" href="#part-1-creating-the-matrix-and-vector" title="Permalink to this headline">#</a></h3>
-<p><strong>Write a function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and the vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span></strong>. The matrix should be stored using an appropriate sparse format.</p>
-<p>You can find <a class="reference internal" href="2022-a4-A_and_b.html"><span class="doc std std-doc">example matrixes and vectors for <span class="math notranslate nohighlight">\(N=2\)</span>, <span class="math notranslate nohighlight">\(N=3\)</span>, and <span class="math notranslate nohighlight">\(N=4\)</span> here</span></a>. You may wish to use them to validate your function, but you do not need to include this validation as
-part of the assignment.</p>
-</section>
-</section>
+  <section id="examples-for-assignment-4">
+<h1>Examples for assignment 4<a class="headerlink" href="#examples-for-assignment-4" title="Permalink to this headline">#</a></h1>
+<p>The code snippet below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># A and b for N=2</span>
+<span class="n">A_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.11111111111111116</span><span class="p">],</span>
+<span class="p">])</span>
+<span class="n">b_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.9572716229418987</span><span class="p">])</span>
+
+<span class="c1"># A and b for N=3</span>
+<span class="n">A_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mf">1.4320987654320987</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4104938271604938</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">,</span> <span class="mf">1.4320987654320987</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4104938271604938</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4104938271604938</span><span class="p">,</span> <span class="mf">1.4320987654320987</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.4104938271604938</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6419753086419753</span><span class="p">,</span> <span class="mf">1.4320987654320987</span><span class="p">],</span>
+<span class="p">])</span>
+<span class="n">b_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.8511685620291751</span><span class="p">,</span> <span class="mf">0.35362119023690236</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.11199318747279745</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7294027563192129</span><span class="p">])</span>
+
+<span class="c1"># A and b for N=4</span>
+<span class="n">A_4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span><span class="mf">1.972222222222222</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3767361111111111</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5069444444444444</span><span class="p">,</span> <span class="mf">1.972222222222222</span><span class="p">],</span>
+<span class="p">])</span>
+<span class="n">b_4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5379378278979665</span><span class="p">,</span> <span class="mf">1.0790507496794182</span><span class="p">,</span> <span class="mf">0.2008883039956742</span><span class="p">,</span> <span class="mf">0.8752991653883848</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.744721775963459</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.489186055009437</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6150215279981908</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3640858211750056</span><span class="p">])</span>
+</pre></div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">
