@@ -94,13 +94,13 @@ For example (using $k=5$ and $g=\sin(3x+4y)$) when $N=2$,
 $$
 \mathrm{A}=\begin{pmatrix}
 -0.11111111
-\end{matrix},
+\end{pmatrix},
 $$
 
 $$
 \mathrm{b}=\begin{pmatrix}
 0.95727162
-\end{matrix},
+\end{pmatrix},
 $$
 
 and when $N=3$,
@@ -111,13 +111,13 @@ $$
 -0.64197531&  1.43209877& -0.41049383& -0.64197531\\
 -0.64197531& -0.41049383&  1.43209877& -0.64197531\\
 -0.41049383& -0.64197531& -0.64197531&  1.43209877
-\end{matrix},
+\end{pmatrix},
 $$
 
 $$
 \mathrm{b}=\begin{pmatrix}
 1.85116856\\0.35362119\\-0.11199319\\-0.72940276
-\end{matrix}.
+\end{pmatrix}.
 $$
 
 ### Part 1: creating the matrix and vector
