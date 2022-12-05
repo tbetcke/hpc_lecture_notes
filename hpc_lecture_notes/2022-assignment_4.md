@@ -1,6 +1,6 @@
 # Assignment 4 - Solving a finite element system
 
-This assignment makes up 30% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 1 December 2022**.
+This assignment makes up 30% of the overall marks for the course. The deadline for submitting this assignment is **5pm on Thursday 15 December 2022**.
 
 Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
 to any text questions included in the assessment. The easiest ways to create this file are:
