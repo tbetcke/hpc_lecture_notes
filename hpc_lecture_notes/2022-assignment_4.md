@@ -123,5 +123,29 @@ $$
 ### Part 1: creating the matrix and vector
 **Write a function that takes $N$ as an input and returns the matrix $\mathrm{A}$ and the vector $\mathbf{b}$**. The matrix should be stored using an appropriate sparse format.
 
-You can find [example matrixes and vectors for $N=2$, $N=3$, and $N=4$ here](2022-a4-A_and_b.md). You may wish to use them to validate your function, but you do not need to include this validation as
+You can find [example matrices and vectors for $N=2$, $N=3$, and $N=4$ here](2022-a4-A_and_b.md). You may wish to use them to validate your function, but you do not need to include this validation as
 part of the assignment.
+
+### Part 2: solving the system
+Solving the matrix-vector problem will lead to an approximate solution to the Helmholtz problem:
+we call this approximate solution $u_h$.
+
+Using any matrix-vector solver, **solve the matrix-vector problem for $N=4$, $N=8$, and $N=16$** and **plot the approximate solutions
+to the Helmholtz problem**. To plot
+the solutions, you can pass the $x$- and $y$-coordinates of the points and the value of $u_h$ at each
+point into matplotlib's 3D plotting function. For the points on the boundary, the value of $u_h$ is
+given by the function $g$; for interior points, the value will be one of the entries of the solution
+vector $\mathbf{x}$.
+
+An example of 3D plotting in matplotlib can be in the [sparse PDE example](sparse_linalg_pde.ipynb) from earlier in the course.
+
+### Part 3: comparing solvers
+
+### Part 3: comparing preconditioners
+
+### Part 4: increasing $N$
+The problem we have been solving in this assignment has the exact solution $u=\sin(3x+4y)$.
+
+$$
+\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|
+$$
