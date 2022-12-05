@@ -40,6 +40,7 @@ parts:
   - file: 2022-assignment_1
   - file: 2022-assignment_2
   - file: 2022-assignment_3
+  - file: 2022-assignment_4
 - caption: Tasks for Monday Practical Classes
   chapters:
   - file: 2022-class_1
