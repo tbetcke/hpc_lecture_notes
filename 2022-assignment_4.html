@@ -500,13 +500,8 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#part-3-comparing-solvers">
-     Part 3: comparing solvers
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#part-3-comparing-preconditioners">
-     Part 3: comparing preconditioners
+    <a class="reference internal nav-link" href="#part-3-comparing-solvers-and-preconditioners">
+     Part 3: comparing solvers and preconditioners
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -515,6 +510,11 @@ title="Print to PDF"
      <span class="math notranslate nohighlight">
       \(N\)
      </span>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-5-parallelisation">
+     Part 5: parallelisation
     </a>
    </li>
   </ul>
@@ -559,13 +559,8 @@ title="Print to PDF"
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#part-3-comparing-solvers">
-     Part 3: comparing solvers
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#part-3-comparing-preconditioners">
-     Part 3: comparing preconditioners
+    <a class="reference internal nav-link" href="#part-3-comparing-solvers-and-preconditioners">
+     Part 3: comparing solvers and preconditioners
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -574,6 +569,11 @@ title="Print to PDF"
      <span class="math notranslate nohighlight">
       \(N\)
      </span>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-5-parallelisation">
+     Part 5: parallelisation
     </a>
    </li>
   </ul>
@@ -609,7 +609,17 @@ to any text questions included in the assessment. The easiest ways to create thi
 u &amp;= g&amp;\text{on the boundary of }\Omega.
 \end{align*}\end{split}\]</div>
 <p>As our domain we will use the unit square, ie <span class="math notranslate nohighlight">\(\Omega=[0,1]^2\)</span>.
-In this assignment, we will use <span class="math notranslate nohighlight">\(k=5\)</span> and <span class="math notranslate nohighlight">\(g=\sin(3x+4y)\)</span>.</p>
+In this assignment, we will use <span class="math notranslate nohighlight">\(k=5\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+g)x,y)=
+\begin{cases}
+\sin(4y)&amp;\text{if }x=0,\\
+\sin(3x)&amp;\text{if }y=0,\\
+\sin(3+4y)&amp;\text{if }x=1,\\
+\sin(3x+4)&amp;\text{if }y=1.
+\end{cases}
+\end{split}\]</div>
 <p>The finite element method is a method that can approximately solve problems like this. We first split the square <span class="math notranslate nohighlight">\([0,1]^2\)</span> into a mesh of <span class="math notranslate nohighlight">\(N\)</span> squares by <span class="math notranslate nohighlight">\(N\)</span> squares
 (or <span class="math notranslate nohighlight">\(N+1\)</span> points by <span class="math notranslate nohighlight">\(N+1\)</span> points -
 note that there are <span class="math notranslate nohighlight">\(N\)</span> squares along each side, but <span class="math notranslate nohighlight">\(N+1\)</span> points along each side (watch out for off-by-one errors):</p>
@@ -717,19 +727,51 @@ given by the function <span class="math notranslate nohighlight">\(g\)</span>; f
 vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
 <p>An example of 3D plotting in matplotlib can be in the <a class="reference internal" href="sparse_linalg_pde.html"><span class="doc std std-doc">sparse PDE example</span></a> from earlier in the course.</p>
 </section>
-<section id="part-3-comparing-solvers">
-<h3>Part 3: comparing solvers<a class="headerlink" href="#part-3-comparing-solvers" title="Permalink to this headline">#</a></h3>
-</section>
-<section id="part-3-comparing-preconditioners">
-<h3>Part 3: comparing preconditioners<a class="headerlink" href="#part-3-comparing-preconditioners" title="Permalink to this headline">#</a></h3>
+<section id="part-3-comparing-solvers-and-preconditioners">
+<h3>Part 3: comparing solvers and preconditioners<a class="headerlink" href="#part-3-comparing-solvers-and-preconditioners" title="Permalink to this headline">#</a></h3>
+<p>In this section, your task is to evaluate the performance of various matrix-vector solvers.
+To do this, <strong>solve the matrix-vector problem with small to medium sized value of <span class="math notranslate nohighlight">\(N\)</span> using a range of different solvers of your choice,
+measuring factors you deem to be important for your evaluation.</strong> These factors should include
+the time taken by the solver, and may additionally include many other thing such as the number of
+iterations taken by an iterative solver, or the size of the residual after each iteration.
+<strong>Make a set of plots that show the measurements you have made and allow you to compare the solvers</strong>.</p>
+<p>You should compare at least five matrix-vector solvers: at least two of these should be iterative
+solvers, and at least one should be a direct solver. You should use some solvers from the Scipy
+library and some from PETSc. (You may optionally use additional solvers from other linear algebra
+libraries, but you do not need to do this to achieve high marks.)
+For two of the iterative solvers you have chosen to use,
+<strong>repeat the comparisons with three different choices of preconditioner</strong>.</p>
+<p>Based on your experiments, <strong>pick a solver</strong> (and a preconditioner if you deem it to be helpful)
+that you think is most appropriate to solve this matrix-vector problem. <strong>Explain, making use
+of the data from your experiments, why this is the best solver for this problem</strong>.</p>
 </section>
 <section id="part-4-increasing-n">
 <h3>Part 4: increasing <span class="math notranslate nohighlight">\(N\)</span><a class="headerlink" href="#part-4-increasing-n" title="Permalink to this headline">#</a></h3>
-<p>The problem we have been solving in this assignment has the exact solution <span class="math notranslate nohighlight">\(u=\sin(3x+4y)\)</span>.</p>
+<p>In this section, you are going to use the solver you picked in part 3 to compute the solution
+for larger values of <span class="math notranslate nohighlight">\(N\)</span>.</p>
+<p>The problem we have been solving in this assignment has the exact solution <span class="math notranslate nohighlight">\(u=\sin(3x+4y)\)</span>.
+A measure of the error of an approximate solution <span class="math notranslate nohighlight">\(u_h\)</span> can be computed using</p>
 <div class="math notranslate nohighlight">
 \[
-\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|
+\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
 \]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{m}_i\)</span> is the midpoint of the <span class="math notranslate nohighlight">\(i\)</span>th square in the finite element mesh: the value of
+<span class="math notranslate nohighlight">\(u_h\)</span> at this midpoint will be the mean value of the values at the four corners of the square.</p>
+<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span> from small to large, <strong>compute the solution to the matrix-vector
+problem</strong>. <strong>Measure the time taken to compute this solution</strong>, and <strong>compute the error of the solution</strong>.
+<strong>Make plots showing the time taken and error as <span class="math notranslate nohighlight">\(N\)</span> is increased</strong>.</p>
+<p>Using your plots, <strong>estimate the complexity of the solver you are using</strong> (ie is it <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>?
+Is it <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>?), and <strong>estimate the order of convergence of your solution</strong> (your error
+should decrease like <span class="math notranslate nohighlight">\(\mathcal{O}(N^{-\alpha}\)</span> for some <span class="math notranslate nohighlight">\(\alpha&gt;0\)</span>). Briefly (1-2 sentences)
+<strong>comment on how you have made these estimates of the complexity and order.</strong></p>
+</section>
+<section id="part-5-parallelisation">
+<h3>Part 5: parallelisation<a class="headerlink" href="#part-5-parallelisation" title="Permalink to this headline">#</a></h3>
+<p>In this section, we will consider how your solution method could be parallelised; you do not need,
+however, to implement a parallel version of your solution method.</p>
+<p><strong>Comment on how your solution method could be parallelised.</strong> Which parts (if any) would be trivial
+to parallelise? Which parts (if any) would be difficult to parallelise? By how much would you expect
+parallelisation to speed up your solution method?</p>
 </section>
 </section>
 </section>
