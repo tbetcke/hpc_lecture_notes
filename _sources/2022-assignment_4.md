@@ -131,7 +131,7 @@ $$
 $$
 
 ### Part 1: creating the matrix and vector
-**Write a function that takes $N$ as an input and returns the matrix $\mathrm{A}$ and the vector $\mathbf{b}$**. The matrix should be stored using an appropriate sparse format.
+**Write a function that takes $N$ as an input and returns the matrix $\mathrm{A}$ and the vector $\mathbf{b}$**. The matrix should be stored using an appropriate sparse format - you may use Scipy for this, and do not need to implement your own format.
 
 You can find [example matrices and vectors for $N=2$, $N=3$, and $N=4$ here](2022-a4-A_and_b.md). You may wish to use them to validate your function, but you do not need to include this validation as
 part of the assignment.
@@ -160,7 +160,7 @@ iterations taken by an iterative solver, or the size of the residual after each 
 You should compare at least five matrix-vector solvers: at least two of these should be iterative
 solvers, and at least one should be a direct solver. You should use some solvers from the Scipy
 library and some from PETSc. (You may optionally use additional solvers from other linear algebra
-libraries, but you do not need to do this to achieve high marks.)
+libraries, but you do not need to do this to achieve high marks. You should use solvers from these libraries and do not need to implement your own solvers.)
 For two of the iterative solvers you have chosen to use,
 **repeat the comparisons with three different choices of preconditioner**.
 

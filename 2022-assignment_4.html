@@ -718,7 +718,7 @@ b_{j} &amp;=\begin{cases}
 </section>
 <section id="part-1-creating-the-matrix-and-vector">
 <h3>Part 1: creating the matrix and vector<a class="headerlink" href="#part-1-creating-the-matrix-and-vector" title="Permalink to this headline">#</a></h3>
-<p><strong>Write a function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and the vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span></strong>. The matrix should be stored using an appropriate sparse format.</p>
+<p><strong>Write a function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and the vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span></strong>. The matrix should be stored using an appropriate sparse format - you may use Scipy for this, and do not need to implement your own format.</p>
 <p>You can find <a class="reference internal" href="2022-a4-A_and_b.html"><span class="doc std std-doc">example matrices and vectors for <span class="math notranslate nohighlight">\(N=2\)</span>, <span class="math notranslate nohighlight">\(N=3\)</span>, and <span class="math notranslate nohighlight">\(N=4\)</span> here</span></a>. You may wish to use them to validate your function, but you do not need to include this validation as
 part of the assignment.</p>
 </section>
@@ -745,7 +745,7 @@ iterations taken by an iterative solver, or the size of the residual after each 
 <p>You should compare at least five matrix-vector solvers: at least two of these should be iterative
 solvers, and at least one should be a direct solver. You should use some solvers from the Scipy
 library and some from PETSc. (You may optionally use additional solvers from other linear algebra
-libraries, but you do not need to do this to achieve high marks.)
+libraries, but you do not need to do this to achieve high marks. You should use solvers from these libraries and do not need to implement your own solvers.)
 For two of the iterative solvers you have chosen to use,
 <strong>repeat the comparisons with three different choices of preconditioner</strong>.</p>
 <p>Based on your experiments, <strong>pick a solver</strong> (and a preconditioner if it improves the solver)
