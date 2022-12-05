@@ -21,7 +21,17 @@ u &= g&\text{on the boundary of }\Omega.
 \end{align*}$$
 
 As our domain we will use the unit square, ie $\Omega=[0,1]^2$.
-In this assignment, we will use $k=5$ and $g=\sin(3x+4y)$.
+In this assignment, we will use $k=5$ and
+
+$$
+g)x,y)=
+\begin{cases}
+\sin(4y)&\text{if }x=0,\\
+\sin(3x)&\text{if }y=0,\\
+\sin(3+4y)&\text{if }x=1,\\
+\sin(3x+4)&\text{if }y=1.
+\end{cases}
+$$
 
 The finite element method is a method that can approximately solve problems like this. We first split the square $[0,1]^2$ into a mesh of $N$ squares by $N$ squares
 (or $N+1$ points by $N+1$ points - 
@@ -139,13 +149,52 @@ vector $\mathbf{x}$.
 
 An example of 3D plotting in matplotlib can be in the [sparse PDE example](sparse_linalg_pde.ipynb) from earlier in the course.
 
-### Part 3: comparing solvers
+### Part 3: comparing solvers and preconditioners
+In this section, your task is to evaluate the performance of various matrix-vector solvers.
+To do this, **solve the matrix-vector problem with small to medium sized value of $N$ using a range of different solvers of your choice,
+measuring factors you deem to be important for your evaluation.** These factors should include
+the time taken by the solver, and may additionally include many other thing such as the number of
+iterations taken by an iterative solver, or the size of the residual after each iteration.
+**Make a set of plots that show the measurements you have made and allow you to compare the solvers**.
 
-### Part 3: comparing preconditioners
+You should compare at least five matrix-vector solvers: at least two of these should be iterative
+solvers, and at least one should be a direct solver. You should use some solvers from the Scipy
+library and some from PETSc. (You may optionally use additional solvers from other linear algebra
+libraries, but you do not need to do this to achieve high marks.)
+For two of the iterative solvers you have chosen to use,
+**repeat the comparisons with three different choices of preconditioner**.
+
+Based on your experiments, **pick a solver** (and a preconditioner if you deem it to be helpful)
+that you think is most appropriate to solve this matrix-vector problem. **Explain, making use
+of the data from your experiments, why this is the best solver for this problem**.
 
 ### Part 4: increasing $N$
+In this section, you are going to use the solver you picked in part 3 to compute the solution
+for larger values of $N$.
+
 The problem we have been solving in this assignment has the exact solution $u=\sin(3x+4y)$.
+A measure of the error of an approximate solution $u_h$ can be computed using
 
 $$
-\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|
+\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
 $$
+
+where $\mathbf{m}_i$ is the midpoint of the $i$th square in the finite element mesh: the value of
+$u_h$ at this midpoint will be the mean value of the values at the four corners of the square.
+
+For a range of values of $N$ from small to large, **compute the solution to the matrix-vector
+problem**. **Measure the time taken to compute this solution**, and **compute the error of the solution**.
+**Make plots showing the time taken and error as $N$ is increased**.
+
+Using your plots, **estimate the complexity of the solver you are using** (ie is it $\mathcal{O}(N)$?
+Is it $\mathcal{O}(N^2)$?), and **estimate the order of convergence of your solution** (your error
+should decrease like $\mathcal{O}(N^{-\alpha}$ for some $\alpha>0$). Briefly (1-2 sentences)
+**comment on how you have made these estimates of the complexity and order.**
+
+### Part 5: parallelisation
+In this section, we will consider how your solution method could be parallelised; you do not need,
+however, to implement a parallel version of your solution method.
+
+**Comment on how your solution method could be parallelised.** Which parts (if any) would be trivial
+to parallelise? Which parts (if any) would be difficult to parallelise? By how much would you expect
+parallelisation to speed up your solution method?
