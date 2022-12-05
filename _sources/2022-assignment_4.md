@@ -130,6 +130,15 @@ $$
 \end{pmatrix}.
 $$
 
+In this second example, I have numbered the points like this:
+
+$$
+\begin{array}{cc}
+2&3\\
+0&1
+\end{array}
+$$
+
 ### Part 1: creating the matrix and vector
 **Write a function that takes $N$ as an input and returns the matrix $\mathrm{A}$ and the vector $\mathbf{b}$**. The matrix should be stored using an appropriate sparse format - you may use Scipy for this, and do not need to implement your own format.
 

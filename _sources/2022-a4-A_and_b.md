@@ -1,6 +1,31 @@
 ### Examples for assignment 4
 
-The code snippet below
+The code snippet below gives the matrices $\mathrm{A}$ and vectors $\mathbf{b}$
+used in [assignment 4](2022-assignment_4.md) for $N=2$, $N=3$ and $N=4$.
+
+For $N=2$, there is only one point in the interior, so we have a 1 by 1 matrix and a vector
+of length 1.
+
+For $N=3$, there are four points in the interior, so we have a 4 by 4 matrix and a vector of
+length 4. In this example, we number the points like this:
+
+$$
+\begin{array}{cc}
+2&3\\
+0&1
+\end{array}
+$$
+
+For $N=4$, there are nine points in the interior, so we have a 9 by 9 matrix and a vector of
+length 9. In this example, we number the points like this:
+
+$$
+\begin{array}{ccc}
+6&7&8\\
+3&4&5\\
+0&1&2
+\end{array}
+$$
 
 ```python
 import numpy as np
