@@ -54,7 +54,7 @@ gives a good introduction to this method.)
 Let $\mathbf{p}_0$, $\mathbf{p}_1$, ..., $\mathbf{p}_{(N-1)^2-1}$ be the points in our mesh that are not on the boundary (in some order). Let $x_0$, $x_1$, ..., $x_{(N-1)^2-1}$ be
 the values/variables at the points (these are the entries of the unknown vector $\mathbf{x}$).
 
-The entries $a_{i,j}$ and $b_j$ of the matrix $\mathrm{A}$ and vector $\mathbf{b}$ are given by
+$\mathrm{A}$ is an $(N-1)^2$ by $(N-1)^2$ matrix. $mathbf{b}$ is a vector with $(N-1)^2$ entries. $The entries $a_{i,j}$ and $b_j$ of the matrix $\mathrm{A}$ and vector $\mathbf{b}$ are given by
 
 $$\begin{align*}
 a_{i,j} &=\begin{cases}
