@@ -619,7 +619,7 @@ u &amp;= g&amp;\text{on the boundary of }\Omega.
 In this assignment, we will use <span class="math notranslate nohighlight">\(k=5\)</span> and</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
-g)x,y)=
+g(x,y)=
 \begin{cases}
 \sin(4y)&amp;\text{if }x=0,\\
 \sin(3x)&amp;\text{if }y=0,\\
@@ -629,7 +629,7 @@ g)x,y)=
 \end{split}\]</div>
 <p>The finite element method is a method that can approximately solve problems like this. We first split the square <span class="math notranslate nohighlight">\([0,1]^2\)</span> into a mesh of <span class="math notranslate nohighlight">\(N\)</span> squares by <span class="math notranslate nohighlight">\(N\)</span> squares
 (or <span class="math notranslate nohighlight">\(N+1\)</span> points by <span class="math notranslate nohighlight">\(N+1\)</span> points -
-note that there are <span class="math notranslate nohighlight">\(N\)</span> squares along each side, but <span class="math notranslate nohighlight">\(N+1\)</span> points along each side (watch out for off-by-one errors):</p>
+note that there are <span class="math notranslate nohighlight">\(N\)</span> squares along each side, but <span class="math notranslate nohighlight">\(N+1\)</span> points along each side (watch out for off-by-one errors)):</p>
 <p><img alt="A mesh of  squares by  squares" src="_images/2022a4-mesh.png" /></p>
 <p>As shown in the diagram, we let <span class="math notranslate nohighlight">\(h=1/N\)</span>.</p>
 <p>The (degree 1) finite element method looks for an approximate solution by placing an unknown value/variable at each point, and approximating the solution as some
@@ -655,7 +655,7 @@ a_{i,j} &amp;=\begin{cases}
 \frac{-12-h^2k^2}{36}
 &amp;\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are diagonally adjacent}\\
 0&amp;\text{otherwise}
-\end{cases}\\
+\end{cases}\\[1cm]
 b_{j} &amp;=\begin{cases}
 \displaystyle
 \frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
@@ -686,7 +686,7 @@ b_{j} &amp;=\begin{cases}
 0&amp;\text{otherwise}
 \end{cases}
 \end{align*}\end{split}\]</div>
-<p>For example (using <span class="math notranslate nohighlight">\(k=5\)</span> and <span class="math notranslate nohighlight">\(g=\sin(3x+4y)\)</span>) when <span class="math notranslate nohighlight">\(N=2\)</span>,</p>
+<p>For example (using <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(g\)</span> as given above) when <span class="math notranslate nohighlight">\(N=2\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
 \mathrm{A}=\begin{pmatrix}
@@ -732,7 +732,7 @@ the solutions, you can pass the <span class="math notranslate nohighlight">\(x\)
 point into matplotlib’s 3D plotting function. For the points on the boundary, the value of <span class="math notranslate nohighlight">\(u_h\)</span> is
 given by the function <span class="math notranslate nohighlight">\(g\)</span>; for interior points, the value will be one of the entries of the solution
 vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
-<p>An example of 3D plotting in matplotlib can be in the <a class="reference internal" href="sparse_linalg_pde.html"><span class="doc std std-doc">sparse PDE example</span></a> from earlier in the course.</p>
+<p>An example of 3D plotting in matplotlib can be found in the <a class="reference internal" href="sparse_linalg_pde.html"><span class="doc std std-doc">sparse PDE example</span></a> from earlier in the course.</p>
 </section>
 <section id="part-3-comparing-solvers-and-preconditioners">
 <h3>Part 3: comparing solvers and preconditioners<a class="headerlink" href="#part-3-comparing-solvers-and-preconditioners" title="Permalink to this headline">#</a></h3>
@@ -748,7 +748,7 @@ library and some from PETSc. (You may optionally use additional solvers from oth
 libraries, but you do not need to do this to achieve high marks.)
 For two of the iterative solvers you have chosen to use,
 <strong>repeat the comparisons with three different choices of preconditioner</strong>.</p>
-<p>Based on your experiments, <strong>pick a solver</strong> (and a preconditioner if you deem it to be helpful)
+<p>Based on your experiments, <strong>pick a solver</strong> (and a preconditioner if it improves the solver)
 that you think is most appropriate to solve this matrix-vector problem. <strong>Explain, making use
 of the data from your experiments, why this is the best solver for this problem</strong>.</p>
 </section>
@@ -756,20 +756,20 @@ of the data from your experiments, why this is the best solver for this problem<
 <h3>Part 4: increasing <span class="math notranslate nohighlight">\(N\)</span><a class="headerlink" href="#part-4-increasing-n" title="Permalink to this headline">#</a></h3>
 <p>In this section, you are going to use the solver you picked in part 3 to compute the solution
 for larger values of <span class="math notranslate nohighlight">\(N\)</span>.</p>
-<p>The problem we have been solving in this assignment has the exact solution <span class="math notranslate nohighlight">\(u=\sin(3x+4y)\)</span>.
+<p>The problem we have been solving in this assignment has the exact solution <span class="math notranslate nohighlight">\(u_\text{exact}=\sin(3x+4y)\)</span>.
 A measure of the error of an approximate solution <span class="math notranslate nohighlight">\(u_h\)</span> can be computed using</p>
 <div class="math notranslate nohighlight">
 \[
 \sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{m}_i\)</span> is the midpoint of the <span class="math notranslate nohighlight">\(i\)</span>th square in the finite element mesh: the value of
-<span class="math notranslate nohighlight">\(u_h\)</span> at this midpoint will be the mean value of the values at the four corners of the square.</p>
+<span class="math notranslate nohighlight">\(u_h\)</span> at this midpoint will be the mean of the values at the four corners of the square.</p>
 <p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span> from small to large, <strong>compute the solution to the matrix-vector
 problem</strong>. <strong>Measure the time taken to compute this solution</strong>, and <strong>compute the error of the solution</strong>.
 <strong>Make plots showing the time taken and error as <span class="math notranslate nohighlight">\(N\)</span> is increased</strong>.</p>
 <p>Using your plots, <strong>estimate the complexity of the solver you are using</strong> (ie is it <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>?
 Is it <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>?), and <strong>estimate the order of convergence of your solution</strong> (your error
-should decrease like <span class="math notranslate nohighlight">\(\mathcal{O}(N^{-\alpha}\)</span> for some <span class="math notranslate nohighlight">\(\alpha&gt;0\)</span>). Briefly (1-2 sentences)
+should decrease like <span class="math notranslate nohighlight">\(\mathcal{O}(N^{-\alpha})\)</span> for some <span class="math notranslate nohighlight">\(\alpha&gt;0\)</span>). Briefly (1-2 sentences)
 <strong>comment on how you have made these estimates of the complexity and order.</strong></p>
 </section>
 <section id="part-5-parallelisation">
