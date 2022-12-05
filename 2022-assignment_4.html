@@ -494,6 +494,29 @@ title="Print to PDF"
      Part 1: creating the matrix and vector
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-2-solving-the-system">
+     Part 2: solving the system
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-3-comparing-solvers">
+     Part 3: comparing solvers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-3-comparing-preconditioners">
+     Part 3: comparing preconditioners
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-4-increasing-n">
+     Part 4: increasing
+     <span class="math notranslate nohighlight">
+      \(N\)
+     </span>
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -528,6 +551,29 @@ title="Print to PDF"
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#part-1-creating-the-matrix-and-vector">
      Part 1: creating the matrix and vector
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-2-solving-the-system">
+     Part 2: solving the system
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-3-comparing-solvers">
+     Part 3: comparing solvers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-3-comparing-preconditioners">
+     Part 3: comparing preconditioners
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#part-4-increasing-n">
+     Part 4: increasing
+     <span class="math notranslate nohighlight">
+      \(N\)
+     </span>
     </a>
    </li>
   </ul>
@@ -656,8 +702,34 @@ b_{j} &amp;=\begin{cases}
 <section id="part-1-creating-the-matrix-and-vector">
 <h3>Part 1: creating the matrix and vector<a class="headerlink" href="#part-1-creating-the-matrix-and-vector" title="Permalink to this headline">#</a></h3>
 <p><strong>Write a function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and the vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span></strong>. The matrix should be stored using an appropriate sparse format.</p>
-<p>You can find <a class="reference internal" href="2022-a4-A_and_b.html"><span class="doc std std-doc">example matrixes and vectors for <span class="math notranslate nohighlight">\(N=2\)</span>, <span class="math notranslate nohighlight">\(N=3\)</span>, and <span class="math notranslate nohighlight">\(N=4\)</span> here</span></a>. You may wish to use them to validate your function, but you do not need to include this validation as
+<p>You can find <a class="reference internal" href="2022-a4-A_and_b.html"><span class="doc std std-doc">example matrices and vectors for <span class="math notranslate nohighlight">\(N=2\)</span>, <span class="math notranslate nohighlight">\(N=3\)</span>, and <span class="math notranslate nohighlight">\(N=4\)</span> here</span></a>. You may wish to use them to validate your function, but you do not need to include this validation as
 part of the assignment.</p>
+</section>
+<section id="part-2-solving-the-system">
+<h3>Part 2: solving the system<a class="headerlink" href="#part-2-solving-the-system" title="Permalink to this headline">#</a></h3>
+<p>Solving the matrix-vector problem will lead to an approximate solution to the Helmholtz problem:
+we call this approximate solution <span class="math notranslate nohighlight">\(u_h\)</span>.</p>
+<p>Using any matrix-vector solver, <strong>solve the matrix-vector problem for <span class="math notranslate nohighlight">\(N=4\)</span>, <span class="math notranslate nohighlight">\(N=8\)</span>, and <span class="math notranslate nohighlight">\(N=16\)</span></strong> and <strong>plot the approximate solutions
+to the Helmholtz problem</strong>. To plot
+the solutions, you can pass the <span class="math notranslate nohighlight">\(x\)</span>- and <span class="math notranslate nohighlight">\(y\)</span>-coordinates of the points and the value of <span class="math notranslate nohighlight">\(u_h\)</span> at each
+point into matplotlib’s 3D plotting function. For the points on the boundary, the value of <span class="math notranslate nohighlight">\(u_h\)</span> is
+given by the function <span class="math notranslate nohighlight">\(g\)</span>; for interior points, the value will be one of the entries of the solution
+vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<p>An example of 3D plotting in matplotlib can be in the <a class="reference internal" href="sparse_linalg_pde.html"><span class="doc std std-doc">sparse PDE example</span></a> from earlier in the course.</p>
+</section>
+<section id="part-3-comparing-solvers">
+<h3>Part 3: comparing solvers<a class="headerlink" href="#part-3-comparing-solvers" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="part-3-comparing-preconditioners">
+<h3>Part 3: comparing preconditioners<a class="headerlink" href="#part-3-comparing-preconditioners" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="part-4-increasing-n">
+<h3>Part 4: increasing <span class="math notranslate nohighlight">\(N\)</span><a class="headerlink" href="#part-4-increasing-n" title="Permalink to this headline">#</a></h3>
+<p>The problem we have been solving in this assignment has the exact solution <span class="math notranslate nohighlight">\(u=\sin(3x+4y)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|
+\]</div>
 </section>
 </section>
 </section>
