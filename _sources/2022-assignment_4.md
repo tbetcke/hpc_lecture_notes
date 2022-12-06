@@ -107,7 +107,9 @@ $$
 \end{pmatrix}.
 $$
 
-For $N=2$, the definition of $\mathbf{b}$ is different to above, as the point at $(1/2,1/2)$ is adjecent to all three sides.
+For $N=2$, the definition of $\mathbf{b}$ is different to above, as the point at $(1/2,1/2)$ is adjacent to all three sides and so the conditions above are all true at once.
+The alternate value of $\mathbf{b}$ used in this case is not important, as we will later
+take $N>2$.
 
 As as second example, when $N=3$,
 
