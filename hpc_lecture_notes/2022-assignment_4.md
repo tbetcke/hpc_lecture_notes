@@ -71,29 +71,29 @@ a_{i,j} &=\begin{cases}
 b_{j} &=\begin{cases}
 \displaystyle
 \frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
-&\text{if }\mathbf{x}_j=(h,h)\\
+&\text{if }\mathbf{p}_j=(h,h)\\
 \displaystyle
 \frac{12+h^2k^2}{36} g(1,0)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
-&\text{if }\mathbf{x}_j=(1-h,h)\\
+&\text{if }\mathbf{p}_j=(1-h,h)\\
 \displaystyle
 \frac{12+h^2k^2}{36} g(0,1)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
-&\text{if }\mathbf{x}_j=(h,1-h)\\
+&\text{if }\mathbf{p}_j=(h,1-h)\\
 \displaystyle
 \frac{12+h^2k^2}{36} g(1,1)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
-&\text{if }\mathbf{x}_j=(1-h,1-h)\\
+&\text{if }\mathbf{p}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
 \frac{3+h^2k^2}{9} g(0,b_j)
-&\text{if }\mathbf{x}_j=(h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
+&\text{if }\mathbf{p}_j=(h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
 \displaystyle
 \frac{3+h^2k^2}{9} g(1,b_j)
-&\text{if }\mathbf{x}_j=(1-h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
+&\text{if }\mathbf{p}_j=(1-h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
 \displaystyle
 \frac{3+h^2k^2}{9} g(a_j,0)
-&\text{if }\mathbf{x}_j=(a_j,h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h\\
+&\text{if }\mathbf{p}_j=(a_j,h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h\\
 \displaystyle
 \frac{3+h^2k^2}{9} g(a_j,1)
-&\text{if }\mathbf{x}_j=(a_j,1-h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h
+&\text{if }\mathbf{p}_j=(a_j,1-h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h
 \\[3mm]
 0&\text{otherwise}
 \end{cases}
