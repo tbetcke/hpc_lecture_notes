@@ -118,6 +118,9 @@ b_j &= \frac{12+h^2k^2}{36}
 \left(\text{sum of evaluations of $g$ at all points on the boundary that are horizontally or vertically adjacent to $\mathbf{p}_j$}\right)
 \end{align*}$$
 
+
+**Note: there is currently an error in these example below. I'm currently in the middle of fixing it.**
+
 For example (using $k$ and $g$ as given above) when $N=2$, 
 
 $$
