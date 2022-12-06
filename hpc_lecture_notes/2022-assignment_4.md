@@ -104,16 +104,12 @@ For example (using $k$ and $g$ as given above) when $N=2$,
 $$
 \mathrm{A}=\begin{pmatrix}
 -0.11111111
-\end{pmatrix},
+\end{pmatrix}.
 $$
 
-$$
-\mathrm{b}=\begin{pmatrix}
-0.95727162
-\end{pmatrix},
-$$
+For $N=2$, the definition of $\mathbf{b}$ is different to above, as the point at $(1/2,1/2)$ is adjecent to all three sides.
 
-and when $N=3$,
+As as second example, when $N=3$,
 
 $$
 \mathrm{A}=\begin{pmatrix}
