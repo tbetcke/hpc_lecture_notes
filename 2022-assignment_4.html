@@ -642,10 +642,10 @@ us to turn the problem into the matrix vector problem</p>
 gives a good introduction to this method.)</p>
 <p>Let <span class="math notranslate nohighlight">\(\mathbf{p}_0\)</span>, <span class="math notranslate nohighlight">\(\mathbf{p}_1\)</span>, …, <span class="math notranslate nohighlight">\(\mathbf{p}_{(N-1)^2-1}\)</span> be the points in our mesh that are not on the boundary (in some order). Let <span class="math notranslate nohighlight">\(x_0\)</span>, <span class="math notranslate nohighlight">\(x_1\)</span>, …, <span class="math notranslate nohighlight">\(x_{(N-1)^2-1}\)</span> be
 the values/variables at the points (these are the entries of the unknown vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>).</p>
-<p><span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is an <span class="math notranslate nohighlight">\((N-1)^2\)</span> by <span class="math notranslate nohighlight">\((N-1)^2\)</span> matrix. <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> is a vector with <span class="math notranslate nohighlight">\((N-1)^2\)</span> entries. The entries <span class="math notranslate nohighlight">\(a_{i,j}\)</span> and <span class="math notranslate nohighlight">\(b_j\)</span> of the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> are given by</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is an <span class="math notranslate nohighlight">\((N-1)^2\)</span> by <span class="math notranslate nohighlight">\((N-1)^2\)</span> matrix. <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> is a vector with <span class="math notranslate nohighlight">\((N-1)^2\)</span> entries. The entries <span class="math notranslate nohighlight">\(a_{i,j}\)</span> of the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> are given by</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{align*}
-a_{i,j} &amp;=\begin{cases}
+\[\begin{split}
+a_{i,j} =\begin{cases}
 \displaystyle
 \frac{24-4h^2k^2}{9}&amp;\text{if }i=j\\
 \displaystyle
@@ -655,38 +655,54 @@ a_{i,j} &amp;=\begin{cases}
 \frac{-12-h^2k^2}{36}
 &amp;\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are diagonally adjacent}\\
 0&amp;\text{otherwise}
-\end{cases}\\[1cm]
-b_{j} &amp;=\begin{cases}
+\end{cases}
+\end{split}\]</div>
+<p>The entries <span class="math notranslate nohighlight">\(b_j\)</span> of the vector <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+b_{j} =\begin{cases}
 \displaystyle
-\frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
+\frac{12+h^2k^2}{36}\left(g(0,0)+g(2h,0)+g(0,2h)\right)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
 &amp;\text{if }\mathbf{p}_j=(h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(1,0)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
+\frac{12+h^2k^2}{36}\left(g(1,0)+g(1,2h)+g(1-2h,0)\right)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
 &amp;\text{if }\mathbf{p}_j=(1-h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(0,1)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
+\frac{12+h^2k^2}{36}\left(g(0,1)+g(2h,0)+g(0,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
 &amp;\text{if }\mathbf{p}_j=(h,1-h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(1,1)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
+\frac{12+h^2k^2}{36}\left(g(1,1)+g(1-2h,1)+g(1,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
 &amp;\text{if }\mathbf{p}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(0,c_j+h)+g(0,c_j-h)\right)+
 \frac{3+h^2k^2}{9} g(0,c_j)
 &amp;\text{if }\mathbf{p}_j=(h,c_j)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(1,c_j+h)+g(1,c_j-h)\right)+
 \frac{3+h^2k^2}{9} g(1,c_j)
 &amp;\text{if }\mathbf{p}_j=(1-h,c_j)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(c_j+h,0)+g(c_j-h,0)\right)+
 \frac{3+h^2k^2}{9} g(c_j,0)
 &amp;\text{if }\mathbf{p}_j=(c_j,h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(c_j+h,1)+g(0,c_j-h,1)\right)+
 \frac{3+h^2k^2}{9} g(c_j,1)
 &amp;\text{if }\mathbf{p}_j=(c_j,1-h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h
 \\[3mm]
 0&amp;\text{otherwise}
 \end{cases}
+\end{split}\]</div>
+<p>You could alternatively write this as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+b_j &amp;= \frac{12+h^2k^2}{36}
+\left(\text{sum of evaluations of $g$ at all points on the boundary that are diagonally adjacent to $\mathbf{p}_j$}\right)
+\\&amp;\hspace{5mm}+
+\frac{3+h^2k^2}{9}
+\left(\text{sum of evaluations of $g$ at all points on the boundary that are horizontally or vertically adjacent to $\mathbf{p}_j$}\right)
 \end{align*}\end{split}\]</div>
-<p><strong>Note: there is currently an error in these example below. I’m currently in the middle of fixing it.</strong></p>
 <p>For example (using <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(g\)</span> as given above) when <span class="math notranslate nohighlight">\(N=2\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[

@@ -54,10 +54,10 @@ gives a good introduction to this method.)
 Let $\mathbf{p}_0$, $\mathbf{p}_1$, ..., $\mathbf{p}_{(N-1)^2-1}$ be the points in our mesh that are not on the boundary (in some order). Let $x_0$, $x_1$, ..., $x_{(N-1)^2-1}$ be
 the values/variables at the points (these are the entries of the unknown vector $\mathbf{x}$).
 
-$\mathrm{A}$ is an $(N-1)^2$ by $(N-1)^2$ matrix. $\mathbf{b}$ is a vector with $(N-1)^2$ entries. The entries $a_{i,j}$ and $b_j$ of the matrix $\mathrm{A}$ and vector $\mathbf{b}$ are given by
+$\mathrm{A}$ is an $(N-1)^2$ by $(N-1)^2$ matrix. $\mathbf{b}$ is a vector with $(N-1)^2$ entries. The entries $a_{i,j}$ of the matrix $\mathrm{A}$ are given by
 
-$$\begin{align*}
-a_{i,j} &=\begin{cases}
+$$
+a_{i,j} =\begin{cases}
 \displaystyle
 \frac{24-4h^2k^2}{9}&\text{if }i=j\\
 \displaystyle
@@ -67,40 +67,56 @@ a_{i,j} &=\begin{cases}
 \frac{-12-h^2k^2}{36}
 &\text{if }\mathbf{p}_i\text{ and }\mathbf{p}_j\text{ are diagonally adjacent}\\
 0&\text{otherwise}
-\end{cases}\\[1cm]
-b_{j} &=\begin{cases}
+\end{cases}
+$$
+
+The entries $b_j$ of the vector $\mathbf{b}$ are given by
+
+$$
+b_{j} =\begin{cases}
 \displaystyle
-\frac{12+h^2k^2}{36} g(0,0)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
+\frac{12+h^2k^2}{36}\left(g(0,0)+g(2h,0)+g(0,2h)\right)+\frac{3+h^2k^2}{9}\left(g(h,0)+g(0, h)\right)
 &\text{if }\mathbf{p}_j=(h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(1,0)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
+\frac{12+h^2k^2}{36}\left(g(1,0)+g(1,2h)+g(1-2h,0)\right)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
 &\text{if }\mathbf{p}_j=(1-h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(0,1)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
+\frac{12+h^2k^2}{36}\left(g(0,1)+g(2h,0)+g(0,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
 &\text{if }\mathbf{p}_j=(h,1-h)\\
 \displaystyle
-\frac{12+h^2k^2}{36} g(1,1)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
+\frac{12+h^2k^2}{36}\left(g(1,1)+g(1-2h,1)+g(1,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
 &\text{if }\mathbf{p}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(0,c_j+h)+g(0,c_j-h)\right)+
 \frac{3+h^2k^2}{9} g(0,c_j)
 &\text{if }\mathbf{p}_j=(h,c_j)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(1,c_j+h)+g(1,c_j-h)\right)+
 \frac{3+h^2k^2}{9} g(1,c_j)
 &\text{if }\mathbf{p}_j=(1-h,c_j)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(c_j+h,0)+g(c_j-h,0)\right)+
 \frac{3+h^2k^2}{9} g(c_j,0)
 &\text{if }\mathbf{p}_j=(c_j,h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
+\frac{12+h^2k^2}{36}\left(g(c_j+h,1)+g(0,c_j-h,1)\right)+
 \frac{3+h^2k^2}{9} g(c_j,1)
 &\text{if }\mathbf{p}_j=(c_j,1-h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h
 \\[3mm]
 0&\text{otherwise}
 \end{cases}
+$$
+
+You could alternatively write this as
+
+$$\begin{align*}
+b_j &= \frac{12+h^2k^2}{36}
+\left(\text{sum of evaluations of $g$ at all points on the boundary that are diagonally adjacent to $\mathbf{p}_j$}\right)
+\\&\hspace{5mm}+
+\frac{3+h^2k^2}{9}
+\left(\text{sum of evaluations of $g$ at all points on the boundary that are horizontally or vertically adjacent to $\mathbf{p}_j$}\right)
 \end{align*}$$
-
-
-**Note: there is currently an error in these example below. I'm currently in the middle of fixing it.**
 
 For example (using $k$ and $g$ as given above) when $N=2$, 
 
