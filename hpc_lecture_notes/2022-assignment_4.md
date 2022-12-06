@@ -83,17 +83,17 @@ b_{j} &=\begin{cases}
 &\text{if }\mathbf{p}_j=(1-h,1-h)\\
 \\[3mm]
 \displaystyle
-\frac{3+h^2k^2}{9} g(0,b_j)
-&\text{if }\mathbf{p}_j=(h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
+\frac{3+h^2k^2}{9} g(0,c_j)
+&\text{if }\mathbf{p}_j=(h,c_j)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
-\frac{3+h^2k^2}{9} g(1,b_j)
-&\text{if }\mathbf{p}_j=(1-h,b_j)\text{, with }b_j\not=h\text{ and }b_j\not=1-h\\
+\frac{3+h^2k^2}{9} g(1,c_j)
+&\text{if }\mathbf{p}_j=(1-h,c_j)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
-\frac{3+h^2k^2}{9} g(a_j,0)
-&\text{if }\mathbf{p}_j=(a_j,h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h\\
+\frac{3+h^2k^2}{9} g(c_j,0)
+&\text{if }\mathbf{p}_j=(c_j,h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
-\frac{3+h^2k^2}{9} g(a_j,1)
-&\text{if }\mathbf{p}_j=(a_j,1-h)\text{, with }a_j\not=h\text{ and }a_j\not=1-h
+\frac{3+h^2k^2}{9} g(c_j,1)
+&\text{if }\mathbf{p}_j=(c_j,1-h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h
 \\[3mm]
 0&\text{otherwise}
 \end{cases}
