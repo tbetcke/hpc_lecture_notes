@@ -99,6 +99,9 @@ b_{j} &=\begin{cases}
 \end{cases}
 \end{align*}$$
 
+
+**Note: there is currently an error in these example below. I'm currently in the middle of fixing it.**
+
 For example (using $k$ and $g$ as given above) when $N=2$, 
 
 $$
