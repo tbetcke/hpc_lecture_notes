@@ -81,7 +81,7 @@ b_{j} =\begin{cases}
 \frac{12+h^2k^2}{36}\left(g(1,0)+g(1,2h)+g(1-2h,0)\right)+\frac{3+h^2k^2}{9}\left(g(1-h,0)+g(1, h)\right)
 &\text{if }\mathbf{p}_j=(1-h,h)\\
 \displaystyle
-\frac{12+h^2k^2}{36}\left(g(0,1)+g(2h,0)+g(0,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
+\frac{12+h^2k^2}{36}\left(g(0,1)+g(2h,1)+g(0,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(h,1)+g(0, 1-h)\right)
 &\text{if }\mathbf{p}_j=(h,1-h)\\
 \displaystyle
 \frac{12+h^2k^2}{36}\left(g(1,1)+g(1-2h,1)+g(1,1-2h)\right)+\frac{3+h^2k^2}{9}\left(g(1-h,1)+g(1, 1-h)\right)
