@@ -143,11 +143,11 @@ $$
 
 $$
 \mathrm{b}=\begin{pmatrix}
-1.85116856\\0.35362119\\-0.11199319\\-0.72940276
+1.72513230\\0.15334285\\-0.34843455\\-1.05586511
 \end{pmatrix}.
 $$
 
-In this second example, I have numbered the points like this:
+In this second example, I have numbered the points not on the boundary like this:
 
 $$
 \begin{array}{cc}
