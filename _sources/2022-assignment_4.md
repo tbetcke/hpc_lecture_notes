@@ -203,7 +203,7 @@ The problem we have been solving in this assignment has the exact solution $u_\t
 A measure of the error of an approximate solution $u_h$ can be computed using
 
 $$
-\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
+\sum_{i=0}^{N^2-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
 $$
 
 where $\mathbf{m}_i$ is the midpoint of the $i$th square in the finite element mesh: the value of
