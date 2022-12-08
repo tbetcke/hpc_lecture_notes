@@ -184,9 +184,10 @@ iterations taken by an iterative solver, or the size of the residual after each 
 **Make a set of plots that show the measurements you have made and allow you to compare the solvers**.
 
 You should compare at least five matrix-vector solvers: at least two of these should be iterative
-solvers, and at least one should be a direct solver. You should use some solvers from the Scipy
-library and some from PETSc. (You may optionally use additional solvers from other linear algebra
-libraries, but you do not need to do this to achieve high marks. You should use solvers from these libraries and do not need to implement your own solvers.)
+solvers, and at least one should be a direct solver. You can use solvers from the Scipy
+library. (You may optionally use additional solvers from other linear algebra
+libraries such as PETSc, but you do not need to do this to achieve high marks.
+You should use solvers from these libraries and do not need to implement your own solvers.)
 For two of the iterative solvers you have chosen to use,
 **repeat the comparisons with three different choices of preconditioner**.
 
