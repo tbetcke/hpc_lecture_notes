@@ -207,7 +207,8 @@ $$
 $$
 
 where $\mathbf{m}_i$ is the midpoint of the $i$th square in the finite element mesh: the value of
-$u_h$ at this midpoint will be the mean of the values at the four corners of the square.
+$u_h$ at this midpoint will be the mean of the values at the four corners of the square. For points on
+the boundary, we set $u_h=g$ and so combine evaluations of $g$ and values in the solution vector to compute some of the values in this sum.
 
 For a range of values of $N$ from small to large, **compute the solution to the matrix-vector
 problem**. **Measure the time taken to compute this solution**, and **compute the error of the solution**.
@@ -225,3 +226,5 @@ however, to implement a parallel version of your solution method.
 **Comment on how your solution method could be parallelised.** Which parts (if any) would be trivial
 to parallelise? Which parts (if any) would be difficult to parallelise? By how much would you expect
 parallelisation to speed up your solution method?
+
+If in part 4 you used a solver that we have not studied in lectures, you can discuss different solvers in parts 4 and 5.
