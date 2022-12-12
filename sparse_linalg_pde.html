@@ -641,7 +641,7 @@ def discretise_poisson(N):
 </div>
 </div>
 </div>
-<p>Now we can solve the system and visualise the function u.</p>
+<p>Now we can solve the system and visualise the function <span class="math notranslate nohighlight">\(u\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
@@ -659,7 +659,7 @@ sol = spsolve(A, f)
 u = sol.reshape((N, N))
 
 fig = plt.figure(figsize=(8, 8))
-ax = fig.gca(projection=&#39;3d&#39;)
+ax = fig.add_subplot(projection=&#39;3d&#39;)
 ticks= np.linspace(0, 1, N)
 X, Y = np.meshgrid(ticks, ticks)
 surf = ax.plot_surface(X, Y, u, antialiased=False, cmap=cm.coolwarm)
