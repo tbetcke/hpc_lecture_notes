@@ -100,7 +100,7 @@ b_{j} =\begin{cases}
 \frac{3+h^2k^2}{9} g(c_j,0)
 &\text{if }\mathbf{p}_j=(c_j,h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
-\frac{12+h^2k^2}{36}\left(g(c_j+h,1)+g(0,c_j-h,1)\right)+
+\frac{12+h^2k^2}{36}\left(g(c_j+h,1)+g(c_j-h,1)\right)+
 \frac{3+h^2k^2}{9} g(c_j,1)
 &\text{if }\mathbf{p}_j=(c_j,1-h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h
 \\[3mm]
