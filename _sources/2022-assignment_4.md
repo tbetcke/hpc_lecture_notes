@@ -179,7 +179,7 @@ An example of 3D plotting in matplotlib can be found in the [sparse PDE example]
 In this section, your task is to evaluate the performance of various matrix-vector solvers.
 To do this, **solve the matrix-vector problem with small to medium sized value of $N$ using a range of different solvers of your choice,
 measuring factors you deem to be important for your evaluation.** These factors should include
-the time taken by the solver, and may additionally include many other thing such as the number of
+the time taken by the solver, and may additionally include many other things such as the number of
 iterations taken by an iterative solver, or the size of the residual after each iteration.
 **Make a set of plots that show the measurements you have made and allow you to compare the solvers**.
 
