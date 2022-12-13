@@ -100,7 +100,7 @@ b_{j} =\begin{cases}
 \frac{3+h^2k^2}{9} g(c_j,0)
 &\text{if }\mathbf{p}_j=(c_j,h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h\\
 \displaystyle
-\frac{12+h^2k^2}{36}\left(g(c_j+h,1)+g(0,c_j-h,1)\right)+
+\frac{12+h^2k^2}{36}\left(g(c_j+h,1)+g(c_j-h,1)\right)+
 \frac{3+h^2k^2}{9} g(c_j,1)
 &\text{if }\mathbf{p}_j=(c_j,1-h)\text{, with }c_j\not=h\text{ and }c_j\not=1-h
 \\[3mm]
@@ -179,14 +179,15 @@ An example of 3D plotting in matplotlib can be found in the [sparse PDE example]
 In this section, your task is to evaluate the performance of various matrix-vector solvers.
 To do this, **solve the matrix-vector problem with small to medium sized value of $N$ using a range of different solvers of your choice,
 measuring factors you deem to be important for your evaluation.** These factors should include
-the time taken by the solver, and may additionally include many other thing such as the number of
+the time taken by the solver, and may additionally include many other things such as the number of
 iterations taken by an iterative solver, or the size of the residual after each iteration.
 **Make a set of plots that show the measurements you have made and allow you to compare the solvers**.
 
 You should compare at least five matrix-vector solvers: at least two of these should be iterative
-solvers, and at least one should be a direct solver. You should use some solvers from the Scipy
-library and some from PETSc. (You may optionally use additional solvers from other linear algebra
-libraries, but you do not need to do this to achieve high marks. You should use solvers from these libraries and do not need to implement your own solvers.)
+solvers, and at least one should be a direct solver. You can use solvers from the Scipy
+library. (You may optionally use additional solvers from other linear algebra
+libraries such as PETSc, but you do not need to do this to achieve high marks.
+You should use solvers from these libraries and do not need to implement your own solvers.)
 For two of the iterative solvers you have chosen to use,
 **repeat the comparisons with three different choices of preconditioner**.
 
@@ -202,11 +203,12 @@ The problem we have been solving in this assignment has the exact solution $u_\t
 A measure of the error of an approximate solution $u_h$ can be computed using
 
 $$
-\sum_{i=0}^{N-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
+\sum_{i=0}^{N^2-1} h^2\left|u_\text{exact}(\mathbf{m}_i)-u_h(\mathbf{m}_i)\right|,
 $$
 
 where $\mathbf{m}_i$ is the midpoint of the $i$th square in the finite element mesh: the value of
-$u_h$ at this midpoint will be the mean of the values at the four corners of the square.
+$u_h$ at this midpoint will be the mean of the values at the four corners of the square. For points on
+the boundary, we set $u_h=g$ and so combine evaluations of $g$ and values in the solution vector to compute some of the values in this sum.
 
 For a range of values of $N$ from small to large, **compute the solution to the matrix-vector
 problem**. **Measure the time taken to compute this solution**, and **compute the error of the solution**.
@@ -224,3 +226,5 @@ however, to implement a parallel version of your solution method.
 **Comment on how your solution method could be parallelised.** Which parts (if any) would be trivial
 to parallelise? Which parts (if any) would be difficult to parallelise? By how much would you expect
 parallelisation to speed up your solution method?
+
+If in part 4 you used a solver that we have not studied in lectures, you can discuss different solvers in parts 4 and 5.
