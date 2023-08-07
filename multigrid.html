@@ -1,48 +1,59 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Multigrid Methods &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -52,62 +63,94 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'multigrid';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Simple time-stepping" href="simple_time_stepping.html" />
     <link rel="prev" title="Using petsc4py for sparse linear systems" href="petsc_for_sparse_systems.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/cpu_logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="_static/cpu_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/cpu_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -116,519 +159,240 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  High-Performance Computing with Python
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">High-Performance Computing with Python</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="what_is_hpc.html">
-   What is High-Performance Computing?
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="hpc_languages.html">
-   Languages for High-Performance Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_hpc_tools.html">
-   Python HPC Tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numpy_and_data_layouts.html">
-   Memory layout and Numpy arrays
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="parallel_principles.html">
-   Parallel Computing Principles in Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="working_with_numba.html">
-   Working with Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="simd.html">
-   SIMD Autovectorization in Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numexpr.html">
-   A Numexpr example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gpu_introduction.html">
-   An Introduction to GPU Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="cuda_introduction.html">
-   A tour of CUDA
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numba_cuda.html">
-   Numba Cuda in Practice
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="rbf_evaluation.html">
-   GPU accelerated evaluation of particle sums
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_hpc.html">What is High-Performance Computing?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc_languages.html">Languages for High-Performance Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_hpc_tools.html">Python HPC Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_data_layouts.html">Memory layout and Numpy arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel_principles.html">Parallel Computing Principles in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_numba.html">Working with Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simd.html">SIMD Autovectorization in Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numexpr.html">A Numexpr example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_introduction.html">An Introduction to GPU Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda_introduction.html">A tour of CUDA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba_cuda.html">Numba Cuda in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf_evaluation.html">GPU accelerated evaluation of particle sums</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Sparse Linear Algebra
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sparse Linear Algebra</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_linalg_pde.html">
-   The need for sparse linear algebra - A PDE example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_data_structures.html">
-   Sparse Matrix data structures
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_solvers_introduction.html">
-   An introduction to sparse linear system solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers1.html">
-   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers2.html">
-   Iterative Solvers 2 - From FOM to GMRES
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers3.html">
-   Iterative Solvers 3 - The Conjugate Gradient Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers4.html">
-   Iterative Solvers 4 - Preconditioning
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_direct_solvers.html">
-   Sparse Direct Solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="petsc_for_sparse_systems.html">
-   Using petsc4py for sparse linear systems
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Multigrid Methods
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_linalg_pde.html">The need for sparse linear algebra - A PDE example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_data_structures.html">Sparse Matrix data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_solvers_introduction.html">An introduction to sparse linear system solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers1.html">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers2.html">Iterative Solvers 2 - From FOM to GMRES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers3.html">Iterative Solvers 3 - The Conjugate Gradient Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers4.html">Iterative Solvers 4 - Preconditioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_direct_solvers.html">Sparse Direct Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petsc_for_sparse_systems.html">Using petsc4py for sparse linear systems</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Multigrid Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Time-Dependent Problems
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Time-Dependent Problems</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="simple_time_stepping.html">
-   Simple time-stepping
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="wave_equation.html">
-   Discretising the wave equation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="simple_time_stepping.html">Simple time-stepping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wave_equation.html">Discretising the wave equation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Conclusions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Conclusions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="further_topics.html">
-   Further topics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Assignments
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_1.html">
-   Assignment 1 - Matrix-matrix multiplication
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_2.html">
-   Assignment 2 - Solving two 1D problems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_3.html">
-   Assignment 3 - Sparse matrices
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_4.html">
-   Assignment 4 - Solving a finite element system
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_1.html">Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_2.html">Assignment 2 - Solving two 1D problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_3.html">Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_4.html">Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tasks for Monday Practical Classes
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">LSA</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_1.html">
-   Class 1 (Monday 10 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_2.html">
-   Class 2 (Monday 17 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_3.html">
-   Class 3 (Monday 24 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_4.html">
-   Class 4 (Monday 31 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_5.html">
-   Class 5 (Monday 14 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_6.html">
-   Class 6 (Monday 21 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_7.html">
-   Class 7 (Monday 5 December)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_1.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_3.html">LSA Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_4.html">LSA Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Additional notes from 2022
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tasks for Monday Practical Classes</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">
-   Matrices and simultaneous equations
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_classes.html">
-   Python classes
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_1.html">Class 1 (Monday 10 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_2.html">Class 2 (Monday 17 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_3.html">Class 3 (Monday 24 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_4.html">Class 4 (Monday 31 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_5.html">Class 5 (Monday 14 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_6.html">Class 6 (Monday 21 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_7.html">Class 7 (Monday 5 December)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">Matrices and simultaneous equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022_classes.html">Python classes</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/multigrid.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/multigrid.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/multigrid.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-model-problem">
-   The model problem
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#eigenvalues-and-eigenvectors-of-the-model-problem">
-   Eigenvalues and eigenvectors of the model problem
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#richardson-iteration">
-   Richardson Iteration
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#applying-the-richardson-iteration-to-the-model-problem">
-   Applying the Richardson iteration to the model problem
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#error-reduction-on-the-coarse-mesh">
-   Error reduction on the coarse mesh
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#moving-between-the-fine-mesh-and-the-coarse-mesh">
-   Moving between the fine mesh and the coarse mesh
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-full-multigrid-cycle">
-   The full multigrid cycle
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#algebraic-multigrid">
-   Algebraic multigrid
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Multigrid Methods</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-model-problem">
-   The model problem
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#eigenvalues-and-eigenvectors-of-the-model-problem">
-   Eigenvalues and eigenvectors of the model problem
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#richardson-iteration">
-   Richardson Iteration
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#applying-the-richardson-iteration-to-the-model-problem">
-   Applying the Richardson iteration to the model problem
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#error-reduction-on-the-coarse-mesh">
-   Error reduction on the coarse mesh
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#moving-between-the-fine-mesh-and-the-coarse-mesh">
-   Moving between the fine mesh and the coarse mesh
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-full-multigrid-cycle">
-   The full multigrid cycle
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#algebraic-multigrid">
-   Algebraic multigrid
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Multigrid Methods</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-model-problem">The model problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eigenvalues-and-eigenvectors-of-the-model-problem">Eigenvalues and eigenvectors of the model problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#richardson-iteration">Richardson Iteration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-the-richardson-iteration-to-the-model-problem">Applying the Richardson iteration to the model problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-reduction-on-the-coarse-mesh">Error reduction on the coarse mesh</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-between-the-fine-mesh-and-the-coarse-mesh">Moving between the fine mesh and the coarse mesh</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-full-multigrid-cycle">The full multigrid cycle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algebraic-multigrid">Algebraic multigrid</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="multigrid-methods">
-<h1>Multigrid Methods<a class="headerlink" href="#multigrid-methods" title="Permalink to this headline">#</a></h1>
+<h1>Multigrid Methods<a class="headerlink" href="#multigrid-methods" title="Permalink to this heading">#</a></h1>
 <p>Multigrid methods are tremendously successful solvers for matrices arising from non-oscillatory PDE problems. The idea is that we consider a problem on different refinement levels and use solutions on coarser levels to improve upon solutions on finer levels. In this notebook we will closely follow the notes on multigrid methods in the book <a class="reference external" href="https://www-users.cs.umn.edu/~saad/IterMethBook_2ndEd.pdf">Iterative Methods for Sparse Linear Systems</a> by Yousef Saad.</p>
 <section id="the-model-problem">
-<h2>The model problem<a class="headerlink" href="#the-model-problem" title="Permalink to this headline">#</a></h2>
+<h2>The model problem<a class="headerlink" href="#the-model-problem" title="Permalink to this heading">#</a></h2>
 <p>We consider the following model problem</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -660,41 +424,41 @@ A = \begin{bmatrix}2    &amp;   -1     &amp;      &amp;      &amp;    \\
 \end{split}\]</div>
 </section>
 <section id="eigenvalues-and-eigenvectors-of-the-model-problem">
-<h2>Eigenvalues and eigenvectors of the model problem<a class="headerlink" href="#eigenvalues-and-eigenvectors-of-the-model-problem" title="Permalink to this headline">#</a></h2>
+<h2>Eigenvalues and eigenvectors of the model problem<a class="headerlink" href="#eigenvalues-and-eigenvectors-of-the-model-problem" title="Permalink to this heading">#</a></h2>
 <p>In order to later understand how multigrid works we need to investigate the behaviour of the eigenvalues and eigenvectors of <span class="math notranslate nohighlight">\(A\)</span>. Let us define <span class="math notranslate nohighlight">\(A\)</span> and compute them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
-from matplotlib import pyplot as plt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-import numpy as np
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-n = 20
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
 
-d1 = 2. * np.ones(n)
-d2 = -1. * np.ones(n - 1)
+<span class="n">d1</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
-A = np.diag(d1) + np.diag(d2, k=1) + np.diag(d2, k=-1)
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
-lam, V = np.linalg.eigh(A)
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(221)
-ax.plot(V[:, 0], &#39;k-x&#39;)
-ax.set_title(&#39;k=1&#39;)
-ax = fig.add_subplot(222)
-ax.plot(V[:, 1], &#39;k-x&#39;)
-ax.set_title(&#39;k=2&#39;)
-ax = fig.add_subplot(223)
-ax.plot(V[:, 10], &#39;k-x&#39;)
-ax.set_title(&#39;k=10&#39;)
-ax = fig.add_subplot(224)
-ax.plot(V[:, 15], &#39;k-x&#39;)
-ax.set_title(&#39;k=15&#39;);
+<span class="n">lam</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=1&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=2&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=10&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">],</span> <span class="s1">&#39;k-x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;k=15&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/multigrid_6_0.png" src="_images/multigrid_6_0.png" />
+<img alt="_images/d599b01ca8d9ea323d6c8c9fa3117cb488f287e2356a27efde073b2a63bb8a14.png" src="_images/d599b01ca8d9ea323d6c8c9fa3117cb488f287e2356a27efde073b2a63bb8a14.png" />
 </div>
 </div>
 <p>One can find an explicit representation of the eigenvalues and eigenvectors for this matrix. It holds that <span class="math notranslate nohighlight">\(Av_k = \lambda_k v_k\)</span> with</p>
@@ -704,7 +468,7 @@ ax.set_title(&#39;k=15&#39;);
 \]</div>
 </section>
 <section id="richardson-iteration">
-<h2>Richardson Iteration<a class="headerlink" href="#richardson-iteration" title="Permalink to this headline">#</a></h2>
+<h2>Richardson Iteration<a class="headerlink" href="#richardson-iteration" title="Permalink to this heading">#</a></h2>
 <p>We now introduce a very simple iteration method for the above matrix and try to exactly understand what works and what doesn’t with this method. This will give us the right ideas that will lead us to the multigrid iteration.</p>
 <p>The Richardson iteration is a very simple iterative method. We start with</p>
 <div class="math notranslate nohighlight">
@@ -754,39 +518,39 @@ e_j = \sum_i\left(1 - \frac{\lambda_i}{\gamma}\right)^j\alpha_iv_i,
 <p>where the <span class="math notranslate nohighlight">\(v_i\)</span> are the eigenvectors of our matrix <span class="math notranslate nohighlight">\(A\)</span> and the <span class="math notranslate nohighlight">\(\alpha_i\)</span> are the expansion coefficients of <span class="math notranslate nohighlight">\(e_0\)</span> in this basis.</p>
 </section>
 <section id="applying-the-richardson-iteration-to-the-model-problem">
-<h2>Applying the Richardson iteration to the model problem<a class="headerlink" href="#applying-the-richardson-iteration-to-the-model-problem" title="Permalink to this headline">#</a></h2>
+<h2>Applying the Richardson iteration to the model problem<a class="headerlink" href="#applying-the-richardson-iteration-to-the-model-problem" title="Permalink to this heading">#</a></h2>
 <p>Now remember that the eigenvalues of <span class="math notranslate nohighlight">\(A\)</span> are given by <span class="math notranslate nohighlight">\(\lambda_j = 4\sin^2\frac{\theta_j}{2}\)</span>. An upper bound is therefore immediately obtained as <span class="math notranslate nohighlight">\(\lambda_n &lt; 4\)</span>. We hence choose <span class="math notranslate nohighlight">\(\omega = \frac{1}{4}\)</span>. The following code implements the Richardson iteration with this parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def richardson(A, b, nsteps):
-    &quot;&quot;&quot;Performs n steps of Richardson iteration. Returns residual.&quot;&quot;&quot;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">richardson</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs n steps of Richardson iteration. Returns residual.&quot;&quot;&quot;</span>
     
-    x = 0
-    res = b
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">b</span>
     
-    residuals = []
+    <span class="n">residuals</span> <span class="o">=</span> <span class="p">[]</span>
     
-    for index in range(nsteps):
-        x = x + .25 * res
-        res = b - A @ x
-        residuals.append(np.linalg.norm(res))
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsteps</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">res</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
+        <span class="n">residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
         
-    return residuals
+    <span class="k">return</span> <span class="n">residuals</span>
 
-b = np.ones(n, dtype=np.float64)
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     
-residuals = richardson(A, b, 500)
+<span class="n">residuals</span> <span class="o">=</span> <span class="n">richardson</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
 
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(111)
-ax.semilogy(residuals)
-ax.set_xlabel(&#39;j&#39;)
-ax.set_ylabel(&#39;residual&#39;);
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;residual&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/multigrid_12_0.png" src="_images/multigrid_12_0.png" />
+<img alt="_images/4e0e68babd646b9261822e726042dc01176330c2d4942104c26ec2c0745b47a0.png" src="_images/4e0e68babd646b9261822e726042dc01176330c2d4942104c26ec2c0745b47a0.png" />
 </div>
 </div>
 <p>The iteration converges but very slowly. What is the reason? Each error component is reduced by the factor <span class="math notranslate nohighlight">\(\left(1 - \frac{\lambda_k}{\gamma}\right)\)</span>. This means that the error reduction is worst for the smallest eigenvalue. We obtain for <span class="math notranslate nohighlight">\(\lambda_1\)</span></p>
@@ -802,37 +566,36 @@ ax.set_ylabel(&#39;residual&#39;);
 <p>Hence, the high-frequency errors (those associated with higher oscillatory eigenvectors) are reduced rapidly. The reduction factors behave as follows with respect to the index <span class="math notranslate nohighlight">\(k\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-n = 50
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
 
-krange = np.arange(1, n + 1)
-factors = 1 - np.sin(krange * np.pi / (2 * (n + 1)))**2
+<span class="n">krange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">factors</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">krange</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
 
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(111)
-ax.plot(krange, factors)
-ax.set_xlabel(&#39;k&#39;)
-ax.set_ylabel(&#39;reduction factor&#39;);
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">krange</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;reduction factor&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/multigrid_14_0.png" src="_images/multigrid_14_0.png" />
+<img alt="_images/bfdfc6bc945a1739a6f0004a283c9131d6ec3bf5d5b4fd3f3c5747f5a2084e6d.png" src="_images/bfdfc6bc945a1739a6f0004a283c9131d6ec3bf5d5b4fd3f3c5747f5a2084e6d.png" />
 </div>
 </div>
 <p>The above plot shows the reduction factors. The ones associated with the smaller <span class="math notranslate nohighlight">\(k\)</span> belong to low frequency eigenmodes. The once associated with higher <span class="math notranslate nohighlight">\(k\)</span> belong to high frequency eigenmodes. The plot below shows a low oscillatory mode and a high oscillatory mode. We talk about low frequency up until <span class="math notranslate nohighlight">\(k\leq n/2\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>xrange = np.linspace(0, 1, 5000)
-low_mode = np.sin(5 * np.pi * xrange)
-high_mode = np.sin(40 * np.pi * xrange)
-fig = plt.figure(figsize=(20, 8))
-ax1 = fig.add_subplot(121)
-ax1.plot(xrange, low_mode)
-ax1.set_title(&#39;lowly frequency mode (k=5)&#39;)
-ax2 =  fig.add_subplot(122)
-ax2.plot(xrange, high_mode)
-ax2.set_title(&#39;high frequency mode (k=40)&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="n">low_mode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">xrange</span><span class="p">)</span>
+<span class="n">high_mode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">40</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">xrange</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xrange</span><span class="p">,</span> <span class="n">low_mode</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;lowly frequency mode (k=5)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span>  <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xrange</span><span class="p">,</span> <span class="n">high_mode</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;high frequency mode (k=40)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -840,12 +603,12 @@ ax2.set_title(&#39;high frequency mode (k=40)&#39;)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;highly oscillatory mode (k=40)&#39;)
 </pre></div>
 </div>
-<img alt="_images/multigrid_16_1.png" src="_images/multigrid_16_1.png" />
+<img alt="_images/ab76bf03a4e5be4f0a179ab0014443f097613b136ef14bd7bc6f92657fbb0937.png" src="_images/ab76bf03a4e5be4f0a179ab0014443f097613b136ef14bd7bc6f92657fbb0937.png" />
 </div>
 </div>
 </section>
 <section id="error-reduction-on-the-coarse-mesh">
-<h2>Error reduction on the coarse mesh<a class="headerlink" href="#error-reduction-on-the-coarse-mesh" title="Permalink to this headline">#</a></h2>
+<h2>Error reduction on the coarse mesh<a class="headerlink" href="#error-reduction-on-the-coarse-mesh" title="Permalink to this heading">#</a></h2>
 <p>The multigrid idea is as follows. High-frequency components in the error are rapidly reduced through the Richardson iteration. In order to reduce low-frequency errors we move to a coarser mesh. On a coarser mesh some of the modes that are low-frequency on the original mesh now become high-frequency and are therefore effectively reduced on the coarser mesh. We then need to update our solution on the fine mesh again. We can do almost arbitrary cycles between coarser and finer meshes, recursing several stages down the hierarchy to very coarse meshes and back.</p>
 <p>Let’s work out this idea. For simplicity we assume that <span class="math notranslate nohighlight">\(n\)</span> is odd. by <span class="math notranslate nohighlight">\(\Omega_{2h}\)</span> we denote the grid obtained by going from <span class="math notranslate nohighlight">\(h\)</span> to <span class="math notranslate nohighlight">\(2h\)</span>. We have</p>
 <div class="math notranslate nohighlight">
@@ -861,7 +624,7 @@ v_k(x_{2i}^h) = \sin(k\pi x_{2i}^h) = \sin(k\pi x_i^{2h}) = v_k^{2h}(x_i^{2h})
 <p>On the fine level the reduction factor is <span class="math notranslate nohighlight">\(1 - \sin^2\frac{k\pi}{2(n+1)}\approx \frac{1}{2}\)</span> on the fine mode for <span class="math notranslate nohighlight">\(k\approx \frac{n}{2}\)</span>. However, on the coarser mode the corresponding reduction factor reduces to <span class="math notranslate nohighlight">\(1 - \sin^2\frac{n/2 \pi}{2(n/2 + 1)}\approx 0\)</span>, leading to a rapid reduction of this error component.</p>
 </section>
 <section id="moving-between-the-fine-mesh-and-the-coarse-mesh">
-<h2>Moving between the fine mesh and the coarse mesh<a class="headerlink" href="#moving-between-the-fine-mesh-and-the-coarse-mesh" title="Permalink to this headline">#</a></h2>
+<h2>Moving between the fine mesh and the coarse mesh<a class="headerlink" href="#moving-between-the-fine-mesh-and-the-coarse-mesh" title="Permalink to this heading">#</a></h2>
 <p>To move between the fine mesh and the coarse mesh we define a prolongation and a restriction operator. The prolongation operator <span class="math notranslate nohighlight">\(I_{2h}^h\)</span> takes us from <span class="math notranslate nohighlight">\(\Omega_{2h}\)</span> (the coarse mesh) to <span class="math notranslate nohighlight">\(\Omega_h\)</span> (the fine mesh). Let <span class="math notranslate nohighlight">\(v^{h} = I_{2h}^hv^{2h}\)</span> be the map between the vector <span class="math notranslate nohighlight">\(v^{2h}\)</span> on the coarse mesh and <span class="math notranslate nohighlight">\(v^{h}\)</span> on the fine mesh. We define the entries of <span class="math notranslate nohighlight">\(v^{h}\)</span> by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -897,7 +660,7 @@ I_{2h}^h = 2(I_h^{2h})^T.
 <p>Hence, the restriction factor is up to the factor <span class="math notranslate nohighlight">\(2\)</span> just the transpose of the prolongation operator.</p>
 </section>
 <section id="the-full-multigrid-cycle">
-<h2>The full multigrid cycle<a class="headerlink" href="#the-full-multigrid-cycle" title="Permalink to this headline">#</a></h2>
+<h2>The full multigrid cycle<a class="headerlink" href="#the-full-multigrid-cycle" title="Permalink to this heading">#</a></h2>
 <p>We now want to solve</p>
 <div class="math notranslate nohighlight">
 \[
@@ -922,7 +685,7 @@ u_{\nu}^h = \text{smooth}(A_h, u_0^{h}, f_h)
 <p>We can apply a sequence of multigrid cycles directly as an iterative solver for the system on the finest level. We just repeat the above steps until convergence. Alternatively, we can apply a single (or multiple) multigrid steps as an effective preconditioner for a Krylov subspace solver.</p>
 </section>
 <section id="algebraic-multigrid">
-<h2>Algebraic multigrid<a class="headerlink" href="#algebraic-multigrid" title="Permalink to this headline">#</a></h2>
+<h2>Algebraic multigrid<a class="headerlink" href="#algebraic-multigrid" title="Permalink to this heading">#</a></h2>
 <p>The method derived above is called a geometric multigrid method. It requires precise knowledge on the hierarchy of meshes to define the restriction and prolongation operators. These become more complicated in more than one dimension, but can be designed. Especially for regular meshes geometric multigrid methods can be easily implemented. However, for more general problems where we do not easily have a hierarchy of meshes (consider unstructured meshes) the above ideas do not translate easily. Here, one can use so-called <strong>algebraic multigrid methods (AMG)</strong>. These define restriction and prolongation operators directly on the matrix by analysing the matrix elements heuristically to simulate what a geometric multigrid solver might do if mesh information were available.</p>
 <p>AMG has itself established as a highly efficient preconditioning tool for non-oscillatory PDE problems (e.g. Poisson type problems). They are available in PETSc and many other solvers and are the preconditioner of choice for many practical applications.</p>
 </section>
@@ -940,7 +703,7 @@ u_{\nu}^h = \text{smooth}(A_h, u_0^{h}, f_h)
             mode: "conda-env-dev-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-dev-py",
+            name: "conda-env-dev-py",
             path: "./."
         },
         predefinedOutput: true
@@ -948,50 +711,112 @@ u_{\nu}^h = \text{smooth}(A_h, u_0^{h}, f_h)
     </script>
     <script>kernelName = 'conda-env-dev-py'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="petsc_for_sparse_systems.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Using petsc4py for sparse linear systems</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="petsc_for_sparse_systems.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Using petsc4py for sparse linear systems</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="simple_time_stepping.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="simple_time_stepping.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Simple time-stepping</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Timo Betcke & Matthew Scroggs<br/>
-  
-      &copy; Copyright 2020-22.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
-
-
       </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-model-problem">The model problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eigenvalues-and-eigenvectors-of-the-model-problem">Eigenvalues and eigenvectors of the model problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#richardson-iteration">Richardson Iteration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-the-richardson-iteration-to-the-model-problem">Applying the Richardson iteration to the model problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-reduction-on-the-coarse-mesh">Error reduction on the coarse mesh</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-between-the-fine-mesh-and-the-coarse-mesh">Moving between the fine mesh and the coarse mesh</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-full-multigrid-cycle">The full multigrid cycle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algebraic-multigrid">Algebraic multigrid</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Timo Betcke & Matthew Scroggs
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2020-22.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

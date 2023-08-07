@@ -1,48 +1,59 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Discretising the wave equation &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -52,62 +63,94 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'wave_equation';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Further topics" href="further_topics.html" />
     <link rel="prev" title="Simple time-stepping" href="simple_time_stepping.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/cpu_logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="_static/cpu_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/cpu_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -116,500 +159,237 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  High-Performance Computing with Python
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">High-Performance Computing with Python</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="what_is_hpc.html">
-   What is High-Performance Computing?
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="hpc_languages.html">
-   Languages for High-Performance Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_hpc_tools.html">
-   Python HPC Tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numpy_and_data_layouts.html">
-   Memory layout and Numpy arrays
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="parallel_principles.html">
-   Parallel Computing Principles in Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="working_with_numba.html">
-   Working with Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="simd.html">
-   SIMD Autovectorization in Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numexpr.html">
-   A Numexpr example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gpu_introduction.html">
-   An Introduction to GPU Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="cuda_introduction.html">
-   A tour of CUDA
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numba_cuda.html">
-   Numba Cuda in Practice
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="rbf_evaluation.html">
-   GPU accelerated evaluation of particle sums
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_hpc.html">What is High-Performance Computing?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc_languages.html">Languages for High-Performance Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_hpc_tools.html">Python HPC Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_data_layouts.html">Memory layout and Numpy arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel_principles.html">Parallel Computing Principles in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_numba.html">Working with Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simd.html">SIMD Autovectorization in Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numexpr.html">A Numexpr example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_introduction.html">An Introduction to GPU Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda_introduction.html">A tour of CUDA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba_cuda.html">Numba Cuda in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf_evaluation.html">GPU accelerated evaluation of particle sums</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Sparse Linear Algebra
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sparse Linear Algebra</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_linalg_pde.html">
-   The need for sparse linear algebra - A PDE example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_data_structures.html">
-   Sparse Matrix data structures
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_solvers_introduction.html">
-   An introduction to sparse linear system solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers1.html">
-   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers2.html">
-   Iterative Solvers 2 - From FOM to GMRES
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers3.html">
-   Iterative Solvers 3 - The Conjugate Gradient Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers4.html">
-   Iterative Solvers 4 - Preconditioning
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_direct_solvers.html">
-   Sparse Direct Solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="petsc_for_sparse_systems.html">
-   Using petsc4py for sparse linear systems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="multigrid.html">
-   Multigrid Methods
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_linalg_pde.html">The need for sparse linear algebra - A PDE example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_data_structures.html">Sparse Matrix data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_solvers_introduction.html">An introduction to sparse linear system solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers1.html">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers2.html">Iterative Solvers 2 - From FOM to GMRES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers3.html">Iterative Solvers 3 - The Conjugate Gradient Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers4.html">Iterative Solvers 4 - Preconditioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_direct_solvers.html">Sparse Direct Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petsc_for_sparse_systems.html">Using petsc4py for sparse linear systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multigrid.html">Multigrid Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Time-Dependent Problems
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Time-Dependent Problems</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="simple_time_stepping.html">
-   Simple time-stepping
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Discretising the wave equation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="simple_time_stepping.html">Simple time-stepping</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Discretising the wave equation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Conclusions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Conclusions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="further_topics.html">
-   Further topics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Assignments
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_1.html">
-   Assignment 1 - Matrix-matrix multiplication
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_2.html">
-   Assignment 2 - Solving two 1D problems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_3.html">
-   Assignment 3 - Sparse matrices
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_4.html">
-   Assignment 4 - Solving a finite element system
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_1.html">Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_2.html">Assignment 2 - Solving two 1D problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_3.html">Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_4.html">Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tasks for Monday Practical Classes
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">LSA</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_1.html">
-   Class 1 (Monday 10 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_2.html">
-   Class 2 (Monday 17 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_3.html">
-   Class 3 (Monday 24 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_4.html">
-   Class 4 (Monday 31 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_5.html">
-   Class 5 (Monday 14 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_6.html">
-   Class 6 (Monday 21 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_7.html">
-   Class 7 (Monday 5 December)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_1.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_3.html">LSA Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_4.html">LSA Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Additional notes from 2022
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tasks for Monday Practical Classes</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">
-   Matrices and simultaneous equations
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_classes.html">
-   Python classes
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_1.html">Class 1 (Monday 10 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_2.html">Class 2 (Monday 17 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_3.html">Class 3 (Monday 24 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_4.html">Class 4 (Monday 31 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_5.html">Class 5 (Monday 14 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_6.html">Class 6 (Monday 21 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_7.html">Class 7 (Monday 5 December)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">Matrices and simultaneous equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022_classes.html">Python classes</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/wave_equation.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/wave_equation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/wave_equation.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-graphical-description-of-the-leapfrog-method">
-   A graphical description of the Leapfrog Method
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#the-first-iteration-step">
-     The first iteration step.
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-following-iterations">
-   The following iterations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-dependence-cone-of-the-wave-equation">
-   The dependence cone of the wave equation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#numerical-implementation-of-the-leapfrog-scheme">
-   Numerical implementation of the Leapfrog Scheme.
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-final-remark">
-   A final remark
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Discretising the wave equation</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-graphical-description-of-the-leapfrog-method">
-   A graphical description of the Leapfrog Method
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#the-first-iteration-step">
-     The first iteration step.
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-following-iterations">
-   The following iterations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-dependence-cone-of-the-wave-equation">
-   The dependence cone of the wave equation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#numerical-implementation-of-the-leapfrog-scheme">
-   Numerical implementation of the Leapfrog Scheme.
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-final-remark">
-   A final remark
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Discretising the wave equation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-graphical-description-of-the-leapfrog-method">A graphical description of the Leapfrog Method</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-first-iteration-step">The first iteration step.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-following-iterations">The following iterations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dependence-cone-of-the-wave-equation">The dependence cone of the wave equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-implementation-of-the-leapfrog-scheme">Numerical implementation of the Leapfrog Scheme.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-final-remark">A final remark</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="discretising-the-wave-equation">
-<h1>Discretising the wave equation<a class="headerlink" href="#discretising-the-wave-equation" title="Permalink to this headline">#</a></h1>
+<h1>Discretising the wave equation<a class="headerlink" href="#discretising-the-wave-equation" title="Permalink to this heading">#</a></h1>
 <p>We now consider the second order wave equation</p>
 <div class="math notranslate nohighlight">
 \[
@@ -628,97 +408,97 @@ u_i^{n+1} = -u_i^{n-1} + 2u_i^n + C^2\left(u_{i+1}^n - 2u_i^n + u_{i-1}^n\right)
 \]</div>
 <p>with <span class="math notranslate nohighlight">\(C = c\frac{\Delta t}{\Delta x}\)</span> being called the Courant number. This method is called the leapfrog method. In the following we will develop a graphical understanding how this method is working.</p>
 <section id="a-graphical-description-of-the-leapfrog-method">
-<h2>A graphical description of the Leapfrog Method<a class="headerlink" href="#a-graphical-description-of-the-leapfrog-method" title="Permalink to this headline">#</a></h2>
+<h2>A graphical description of the Leapfrog Method<a class="headerlink" href="#a-graphical-description-of-the-leapfrog-method" title="Permalink to this heading">#</a></h2>
 <p>We first define some helper functions to simply the plotting of the leap-frog scheme.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
-import numpy as np
-from matplotlib import pyplot as plt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-def circle(ax, x, y, color=&#39;b&#39;):
-    &quot;&quot;&quot;Helper to draw a circle.&quot;&quot;&quot;
-    circle = plt.Circle((x, y), .15, color=color, fill=False, clip_on=False)
-    ax.add_artist(circle)
+<span class="k">def</span> <span class="nf">circle</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper to draw a circle.&quot;&quot;&quot;</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="mf">.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
     
-def draw_leap_frog(red_circs=[], blue_circs=[], ax=None):
-    &quot;&quot;&quot;Helper to draw the leap-frog dependencies.&quot;&quot;&quot;
+<span class="k">def</span> <span class="nf">draw_leap_frog</span><span class="p">(</span><span class="n">red_circs</span><span class="o">=</span><span class="p">[],</span> <span class="n">blue_circs</span><span class="o">=</span><span class="p">[],</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper to draw the leap-frog dependencies.&quot;&quot;&quot;</span>
 
-    if ax is None:
-        fig = plt.figure(figsize=(8, 8))
-        ax = fig.add_subplot(111)
-    ax.set_ylim(0, 10)
-    ax.set_xlim(0, 10)
-    ax.set_xlabel(&#39;i&#39;)
-    ax.set_ylabel(&#39;n&#39;)
-    ax.grid()
-    ax.xaxis.set_ticks(np.arange(11))
-    ax.yaxis.set_ticks(np.arange(11));
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">11</span><span class="p">));</span>
     
-    for circ in red_circs:
-        circle(ax, *circ, &#39;r&#39;)
+    <span class="k">for</span> <span class="n">circ</span> <span class="ow">in</span> <span class="n">red_circs</span><span class="p">:</span>
+        <span class="n">circle</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">circ</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
         
-    for circ in blue_circs:
-        circle(ax, *circ, &#39;b&#39;)
+    <span class="k">for</span> <span class="n">circ</span> <span class="ow">in</span> <span class="n">blue_circs</span><span class="p">:</span>
+        <span class="n">circle</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">circ</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
     
-    return ax
+    <span class="k">return</span> <span class="n">ax</span>
         
-def draw_dependency_graph(x, y, ax=None):
-    &quot;&quot;&quot;Draw leap-frog dependency graph&quot;&quot;&quot;
-    red_circ = [(x, y)]
-    bounds = [x - 1, x + 1]
-    blue_circs = []
-    for ycoord in range(y - 1, -1, -1):
-        for xcoord in range(bounds[0], bounds[1] + 1):
-            blue_circs.append((xcoord, ycoord))
-        bounds[0] -= 1
-        bounds[1] += 1
-    draw_leap_frog(red_circ, blue_circs, ax)
+<span class="k">def</span> <span class="nf">draw_dependency_graph</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw leap-frog dependency graph&quot;&quot;&quot;</span>
+    <span class="n">red_circ</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">blue_circs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ycoord</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">xcoord</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">blue_circs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">xcoord</span><span class="p">,</span> <span class="n">ycoord</span><span class="p">))</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">draw_leap_frog</span><span class="p">(</span><span class="n">red_circ</span><span class="p">,</span> <span class="n">blue_circs</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <section id="the-first-iteration-step">
-<h3>The first iteration step.<a class="headerlink" href="#the-first-iteration-step" title="Permalink to this headline">#</a></h3>
+<h3>The first iteration step.<a class="headerlink" href="#the-first-iteration-step" title="Permalink to this heading">#</a></h3>
 <p>In the first step we have the problem that we cannot yet fully evaluate the leap-frog formula. In order to compute <span class="math notranslate nohighlight">\(u_i^{1}\)</span> we would need the value at <span class="math notranslate nohighlight">\(u_i^{-1}\)</span>, which doesn’t exist. Here, the initial condition at the derivative comes in. The first derivative at the start should be <span class="math notranslate nohighlight">\(0\)</span>. If we use a simple central difference formula around to implement the first derivative we derive that <span class="math notranslate nohighlight">\(u_i^{-1} = u_i^{1}\)</span>, giving us the required value.</p>
 <p>Below the current value <span class="math notranslate nohighlight">\(u_i^{1}\)</span> is shown with a red circle and the values it depends on, are shown with a blue circle.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>draw_dependency_graph(5, 1);
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/wave_equation_5_0.png" src="_images/wave_equation_5_0.png" />
+<img alt="_images/f00178f18381d078555b3b9f33be316151d05abe511c646cff8f1a046b74b8ac.png" src="_images/f00178f18381d078555b3b9f33be316151d05abe511c646cff8f1a046b74b8ac.png" />
 </div>
 </div>
 </section>
 </section>
 <section id="the-following-iterations">
-<h2>The following iterations<a class="headerlink" href="#the-following-iterations" title="Permalink to this headline">#</a></h2>
+<h2>The following iterations<a class="headerlink" href="#the-following-iterations" title="Permalink to this heading">#</a></h2>
 <p>We now proceed with the iteration. The current value is always shown with a red circle and the chain of values that contributed to the value are shown with blue circles. The following shows the dependent values for a point at time-steps 2 to 5.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig = plt.figure(figsize=(10, 10))
-ax1 = fig.add_subplot(221)
-ax2 = fig.add_subplot(222)
-ax3 = fig.add_subplot(223)
-ax4 = fig.add_subplot(224)
-draw_dependency_graph(5, 2, ax1)
-draw_dependency_graph(5, 3, ax2)
-draw_dependency_graph(5, 4, ax3)
-draw_dependency_graph(5, 5, ax4)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
+<span class="n">ax4</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ax1</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span>
+<span class="n">draw_dependency_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ax4</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/wave_equation_8_0.png" src="_images/wave_equation_8_0.png" />
+<img alt="_images/75e22c4da69b39160d63ac5a68a8778d0bab8acde7f6f56df2efffda1d4e2de5.png" src="_images/75e22c4da69b39160d63ac5a68a8778d0bab8acde7f6f56df2efffda1d4e2de5.png" />
 </div>
 </div>
 <p>We see that a dependency cone is forming. In the following we discuss this in more detail.</p>
 </section>
 <section id="the-dependence-cone-of-the-wave-equation">
-<h2>The dependence cone of the wave equation<a class="headerlink" href="#the-dependence-cone-of-the-wave-equation" title="Permalink to this headline">#</a></h2>
+<h2>The dependence cone of the wave equation<a class="headerlink" href="#the-dependence-cone-of-the-wave-equation" title="Permalink to this heading">#</a></h2>
 <p>Any twice differentiable function <span class="math notranslate nohighlight">\(F\)</span> gives us two solutions of the wave equation, namely <span class="math notranslate nohighlight">\(u_1(x, t) = F(x - ct)\)</span> and <span class="math notranslate nohighlight">\(u_2(x, t) = F(x + ct)\)</span>. The lines <span class="math notranslate nohighlight">\(x-ct = \text{const}\)</span> and <span class="math notranslate nohighlight">\(x+ct = \text{const}\)</span> are characteristics. They describe how information is transported from the origin with <span class="math notranslate nohighlight">\(t=0\)</span> to other time-steps.</p>
 <p>If we want to satisfy the initial conditions <span class="math notranslate nohighlight">\(u(x, 0) = U_0(x)\)</span> and <span class="math notranslate nohighlight">\(U_t(x, 0) = 0\)</span> we can choose the solution</p>
 <div class="math notranslate nohighlight">
@@ -746,66 +526,66 @@ u_i^{n+1} = 2(1 - C^2)u_i^n + \dots.
 <p>Hence, the influence of <span class="math notranslate nohighlight">\(u_i^{n}\)</span> becomes quadratically smaller as <span class="math notranslate nohighlight">\(C\rightarrow 1\)</span>.</p>
 </section>
 <section id="numerical-implementation-of-the-leapfrog-scheme">
-<h2>Numerical implementation of the Leapfrog Scheme.<a class="headerlink" href="#numerical-implementation-of-the-leapfrog-scheme" title="Permalink to this headline">#</a></h2>
+<h2>Numerical implementation of the Leapfrog Scheme.<a class="headerlink" href="#numerical-implementation-of-the-leapfrog-scheme" title="Permalink to this heading">#</a></h2>
 <p>We want to implement a finite difference method for the wave equation <span class="math notranslate nohighlight">\(u_{tt} = c^2u_{xx}\)</span> for <span class="math notranslate nohighlight">\(c=1\)</span> and <span class="math notranslate nohighlight">\((x, 0) \in [0, 1]\times [0, 2]\)</span>. The initial condition is <span class="math notranslate nohighlight">\(u(x, 0) = e^{-5(x-.5)^2}\)</span> and the boundary conditions are <span class="math notranslate nohighlight">\(\frac{\partial}{\partial n} u = 0\)</span> otherwise (Here, <span class="math notranslate nohighlight">\(n\)</span> is the normal derivative along the normal direction of the boundary). We are going to use the leapfrog scheme. At the boundary <span class="math notranslate nohighlight">\(x=0\)</span> we use a centered difference to obtain the condition that the required value at <span class="math notranslate nohighlight">\(u_{-1}^n\)</span> is just <span class="math notranslate nohighlight">\(u_1^n\)</span> (with the corresponding condition at the other boundary).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def solve_wave_equation(N, time_steps, c=1, T=1):
-    &quot;&quot;&quot;
-    Solves a 1d wave equation.
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve_wave_equation</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solves a 1d wave equation.</span>
 
-    This function solves the 1d wave equation
-    with zero boundary conditions. The x-domain is the
-    interval [0, 1] and the final time is T.
-    &quot;&quot;&quot;
+<span class="sd">    This function solves the 1d wave equation</span>
+<span class="sd">    with zero boundary conditions. The x-domain is the</span>
+<span class="sd">    interval [0, 1] and the final time is T.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    xt_grid = np.zeros((N, time_steps + 1), dtype=&#39;float64&#39;)
-    xx = np.linspace(0, 1, N)
+    <span class="n">xt_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">time_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 
-    # Set initial condition
-    xt_grid[:, 0] = np.exp(-5 * (xx-.5)**2)
+    <span class="c1"># Set initial condition</span>
+    <span class="n">xt_grid</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xx</span><span class="o">-</span><span class="mf">.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-    dt = T / (1.0 * time_steps)
-    dx = 1. / (N - 1)
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">time_steps</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
-    # Compute courant number
-    C = c * dt / dx
-    print(&quot;Courant Number: {0}&quot;.format(C))
+    <span class="c1"># Compute courant number</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Courant Number: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
 
-    # Set first step
+    <span class="c1"># Set first step</span>
 
-    for index in range(0, N):
-        il = 1 if index == 0 else index - 1
-        ir = N - 2 if index == N - 1 else index + 1
-        xt_grid[index, 1] = xt_grid[index, 0] - \
-            .5 * C**2 * (xt_grid[ir, 0] - 2 * xt_grid[index, 0]
-                + xt_grid[il, 0])
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">il</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">index</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">ir</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xt_grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> \
+            <span class="mf">.5</span> <span class="o">*</span> <span class="n">C</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">xt_grid</span><span class="p">[</span><span class="n">ir</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="o">+</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">il</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
-    # Compute the other steps
+    <span class="c1"># Compute the other steps</span>
 
-    for t_index in range(1, time_steps ):
-        for x_index in range(0, N):
-            il = 1 if x_index == 0 else x_index - 1
-            ir = N - 2 if x_index == N - 1 else x_index + 1
-            xt_grid[x_index, t_index + 1] = \
-                (- xt_grid[x_index, t_index - 1] + 2 * xt_grid[x_index, t_index] +
-                 C**2 * (xt_grid[ir, t_index] -
-                 2 * xt_grid[x_index, t_index] +
-                 xt_grid[il, t_index]))
+    <span class="k">for</span> <span class="n">t_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_steps</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">x_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+            <span class="n">il</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x_index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">x_index</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">ir</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">x_index</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x_index</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="o">-</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]</span> <span class="o">+</span>
+                 <span class="n">C</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">xt_grid</span><span class="p">[</span><span class="n">ir</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]</span> <span class="o">-</span>
+                 <span class="mi">2</span> <span class="o">*</span> <span class="n">xt_grid</span><span class="p">[</span><span class="n">x_index</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]</span> <span class="o">+</span>
+                 <span class="n">xt_grid</span><span class="p">[</span><span class="n">il</span><span class="p">,</span> <span class="n">t_index</span><span class="p">]))</span>
 
-    return xt_grid
+    <span class="k">return</span> <span class="n">xt_grid</span>
 
-from time import time
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
-T = 2
-st = time()
-res = solve_wave_equation(200, 500, c=1./0.8, T=T)
-et = time()
-print(&quot;Elapsed time (s): {0}&quot;.format(et - st))
+<span class="n">T</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solve_wave_equation</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">et</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elapsed time (s): </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">et</span> <span class="o">-</span> <span class="n">st</span><span class="p">))</span>
 
-plt.imshow(res, extent=[0, T, 0, 1])
-plt.colorbar()
-plt.show()
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -814,21 +594,21 @@ plt.show()
 Elapsed time (s): 0.20034098625183105
 </pre></div>
 </div>
-<img alt="_images/wave_equation_14_1.png" src="_images/wave_equation_14_1.png" />
+<img alt="_images/e264c1c83fcd5d75538af5a66502ce21f79b38d40ddc3aeeaf426ce7911df1a1.png" src="_images/e264c1c83fcd5d75538af5a66502ce21f79b38d40ddc3aeeaf426ce7911df1a1.png" />
 </div>
 </div>
 <p>In the above example the Courant number is almost <span class="math notranslate nohighlight">\(1\)</span>. Yet, the scheme is perfectly stable. Let us consider what happens if <span class="math notranslate nohighlight">\(C &gt; 1\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>T = 2
-st = time()
-res = solve_wave_equation(200, 500, c=1.3, T=T)
-et = time()
-print(&quot;Elapsed time (s): {0}&quot;.format(et - st))
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solve_wave_equation</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">et</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Elapsed time (s): </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">et</span> <span class="o">-</span> <span class="n">st</span><span class="p">))</span>
 
-plt.imshow(res, extent=[0, T, 0, 1])
-plt.colorbar()
-plt.show()
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -837,13 +617,13 @@ plt.show()
 Elapsed time (s): 0.18599629402160645
 </pre></div>
 </div>
-<img alt="_images/wave_equation_16_1.png" src="_images/wave_equation_16_1.png" />
+<img alt="_images/e0d62f80a6a49fe657903adaf968078ab233d44858fcd26b5bdcd400cab76e44.png" src="_images/e0d62f80a6a49fe657903adaf968078ab233d44858fcd26b5bdcd400cab76e44.png" />
 </div>
 </div>
 <p>Now we have chosen <span class="math notranslate nohighlight">\(c\)</span> such that the Courant number is just above <span class="math notranslate nohighlight">\(1\)</span> and the solution completely explodes. This is a beautiful example for how stability is derived from proper physical considerations in the implementation of a numerical scheme.</p>
 </section>
 <section id="a-final-remark">
-<h2>A final remark<a class="headerlink" href="#a-final-remark" title="Permalink to this headline">#</a></h2>
+<h2>A final remark<a class="headerlink" href="#a-final-remark" title="Permalink to this heading">#</a></h2>
 <p>We have presented here a method for directly discretising the second order wave equation. One can also reformulate the wave equation as a first-order equation and then apply all the methods well known for first-order problems. Which method is applied in practice depends on the application and what information is needed. If in addition to <span class="math notranslate nohighlight">\(u\)</span> also the time-derivative <span class="math notranslate nohighlight">\(u_t\)</span> is required at each step, then a first-order method is often more useful. For a simple direct discretisation of the wave equation leapfrog is a very simple and effective scheme.</p>
 </section>
 </section>
@@ -860,7 +640,7 @@ Elapsed time (s): 0.18599629402160645
             mode: "conda-env-hpc-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-hpc-py",
+            name: "conda-env-hpc-py",
             path: "./."
         },
         predefinedOutput: true
@@ -868,50 +648,112 @@ Elapsed time (s): 0.18599629402160645
     </script>
     <script>kernelName = 'conda-env-hpc-py'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="simple_time_stepping.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Simple time-stepping</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="simple_time_stepping.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Simple time-stepping</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="further_topics.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="further_topics.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Further topics</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Timo Betcke & Matthew Scroggs<br/>
-  
-      &copy; Copyright 2020-22.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
-
-
       </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-graphical-description-of-the-leapfrog-method">A graphical description of the Leapfrog Method</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-first-iteration-step">The first iteration step.</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-following-iterations">The following iterations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dependence-cone-of-the-wave-equation">The dependence cone of the wave equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-implementation-of-the-leapfrog-scheme">Numerical implementation of the Leapfrog Scheme.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-final-remark">A final remark</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Timo Betcke & Matthew Scroggs
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2020-22.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

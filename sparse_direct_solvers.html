@@ -1,48 +1,59 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Sparse Direct Solvers &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -52,62 +63,94 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sparse_direct_solvers';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Using petsc4py for sparse linear systems" href="petsc_for_sparse_systems.html" />
     <link rel="prev" title="Iterative Solvers 4 - Preconditioning" href="it_solvers4.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/cpu_logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="_static/cpu_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/cpu_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -116,508 +159,238 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  High-Performance Computing with Python
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">High-Performance Computing with Python</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="what_is_hpc.html">
-   What is High-Performance Computing?
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="hpc_languages.html">
-   Languages for High-Performance Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_hpc_tools.html">
-   Python HPC Tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numpy_and_data_layouts.html">
-   Memory layout and Numpy arrays
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="parallel_principles.html">
-   Parallel Computing Principles in Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="working_with_numba.html">
-   Working with Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="simd.html">
-   SIMD Autovectorization in Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numexpr.html">
-   A Numexpr example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gpu_introduction.html">
-   An Introduction to GPU Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="cuda_introduction.html">
-   A tour of CUDA
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numba_cuda.html">
-   Numba Cuda in Practice
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="rbf_evaluation.html">
-   GPU accelerated evaluation of particle sums
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_hpc.html">What is High-Performance Computing?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc_languages.html">Languages for High-Performance Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_hpc_tools.html">Python HPC Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_data_layouts.html">Memory layout and Numpy arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel_principles.html">Parallel Computing Principles in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_numba.html">Working with Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simd.html">SIMD Autovectorization in Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numexpr.html">A Numexpr example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_introduction.html">An Introduction to GPU Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda_introduction.html">A tour of CUDA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba_cuda.html">Numba Cuda in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf_evaluation.html">GPU accelerated evaluation of particle sums</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Sparse Linear Algebra
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sparse Linear Algebra</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_linalg_pde.html">
-   The need for sparse linear algebra - A PDE example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_data_structures.html">
-   Sparse Matrix data structures
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_solvers_introduction.html">
-   An introduction to sparse linear system solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers1.html">
-   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers2.html">
-   Iterative Solvers 2 - From FOM to GMRES
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers3.html">
-   Iterative Solvers 3 - The Conjugate Gradient Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers4.html">
-   Iterative Solvers 4 - Preconditioning
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Sparse Direct Solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="petsc_for_sparse_systems.html">
-   Using petsc4py for sparse linear systems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="multigrid.html">
-   Multigrid Methods
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_linalg_pde.html">The need for sparse linear algebra - A PDE example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_data_structures.html">Sparse Matrix data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_solvers_introduction.html">An introduction to sparse linear system solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers1.html">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers2.html">Iterative Solvers 2 - From FOM to GMRES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers3.html">Iterative Solvers 3 - The Conjugate Gradient Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers4.html">Iterative Solvers 4 - Preconditioning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Sparse Direct Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petsc_for_sparse_systems.html">Using petsc4py for sparse linear systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multigrid.html">Multigrid Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Time-Dependent Problems
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Time-Dependent Problems</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="simple_time_stepping.html">
-   Simple time-stepping
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="wave_equation.html">
-   Discretising the wave equation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="simple_time_stepping.html">Simple time-stepping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wave_equation.html">Discretising the wave equation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Conclusions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Conclusions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="further_topics.html">
-   Further topics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Assignments
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_1.html">
-   Assignment 1 - Matrix-matrix multiplication
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_2.html">
-   Assignment 2 - Solving two 1D problems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_3.html">
-   Assignment 3 - Sparse matrices
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_4.html">
-   Assignment 4 - Solving a finite element system
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_1.html">Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_2.html">Assignment 2 - Solving two 1D problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_3.html">Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_4.html">Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tasks for Monday Practical Classes
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">LSA</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_1.html">
-   Class 1 (Monday 10 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_2.html">
-   Class 2 (Monday 17 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_3.html">
-   Class 3 (Monday 24 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_4.html">
-   Class 4 (Monday 31 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_5.html">
-   Class 5 (Monday 14 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_6.html">
-   Class 6 (Monday 21 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_7.html">
-   Class 7 (Monday 5 December)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_1.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_3.html">LSA Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_4.html">LSA Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Additional notes from 2022
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tasks for Monday Practical Classes</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">
-   Matrices and simultaneous equations
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_classes.html">
-   Python classes
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_1.html">Class 1 (Monday 10 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_2.html">Class 2 (Monday 17 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_3.html">Class 3 (Monday 24 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_4.html">Class 4 (Monday 31 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_5.html">Class 5 (Monday 14 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_6.html">Class 6 (Monday 21 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_7.html">Class 7 (Monday 5 December)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">Matrices and simultaneous equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022_classes.html">Python classes</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/sparse_direct_solvers.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/sparse_direct_solvers.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/sparse_direct_solvers.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#solving-dense-linear-systems-of-equations">
-   Solving dense linear systems of equations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#lu-decomposition-for-systems-of-equations-with-small-bandwidth">
-   LU Decomposition for systems of equations with small bandwidth
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#matrices-with-arrow-structure">
-   Matrices with arrow structure
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reordering-methods-for-sparse-gaussian-elimination">
-   Reordering methods for sparse Gaussian Elimination
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#limits-of-sparse-direct-solvers">
-   Limits of sparse direct solvers
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#incomplete-lu-decomposition">
-   Incomplete LU Decomposition
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Sparse Direct Solvers</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#solving-dense-linear-systems-of-equations">
-   Solving dense linear systems of equations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#lu-decomposition-for-systems-of-equations-with-small-bandwidth">
-   LU Decomposition for systems of equations with small bandwidth
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#matrices-with-arrow-structure">
-   Matrices with arrow structure
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reordering-methods-for-sparse-gaussian-elimination">
-   Reordering methods for sparse Gaussian Elimination
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#limits-of-sparse-direct-solvers">
-   Limits of sparse direct solvers
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#incomplete-lu-decomposition">
-   Incomplete LU Decomposition
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Sparse Direct Solvers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-dense-linear-systems-of-equations">Solving dense linear systems of equations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lu-decomposition-for-systems-of-equations-with-small-bandwidth">LU Decomposition for systems of equations with small bandwidth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrices-with-arrow-structure">Matrices with arrow structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reordering-methods-for-sparse-gaussian-elimination">Reordering methods for sparse Gaussian Elimination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limits-of-sparse-direct-solvers">Limits of sparse direct solvers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#incomplete-lu-decomposition">Incomplete LU Decomposition</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="sparse-direct-solvers">
-<h1>Sparse Direct Solvers<a class="headerlink" href="#sparse-direct-solvers" title="Permalink to this headline">#</a></h1>
+<h1>Sparse Direct Solvers<a class="headerlink" href="#sparse-direct-solvers" title="Permalink to this heading">#</a></h1>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
 <p>So far we have considered iterative solvers for the solution of large linear systems of equations. These are efficient as long as the underlying linear operator is well conditioned or if there is an efficient preconditioner available.</p>
 <p>We now want to return to direct solvers and consider how we can use them for the solution of large sparse linear systems of equations. We assume that we want to solve</p>
 <div class="math notranslate nohighlight">
@@ -628,7 +401,7 @@ Ax=b
 <p>Let us review some basic facts on the direct solution of dense linear systems of equations.</p>
 </section>
 <section id="solving-dense-linear-systems-of-equations">
-<h2>Solving dense linear systems of equations<a class="headerlink" href="#solving-dense-linear-systems-of-equations" title="Permalink to this headline">#</a></h2>
+<h2>Solving dense linear systems of equations<a class="headerlink" href="#solving-dense-linear-systems-of-equations" title="Permalink to this heading">#</a></h2>
 <p>The most frequently used method for solving dense linear systems of equations is the LU decomposition. The basic idea is to find a transform</p>
 <div class="math notranslate nohighlight">
 \[
@@ -638,43 +411,43 @@ PA = LU,
 <p>This decomposition can be obtained through Gaussian Elimination. Below you find a very simple Python implementation of this method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-def lu(A):
-    &quot;&quot;&quot;
-    Implementation of a pivoted LU decomposition.
+<span class="k">def</span> <span class="nf">lu</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a pivoted LU decomposition.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns matrices P, L, U, such that</span>
+<span class="sd">    PA = LU.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     
-    Returns matrices P, L, U, such that
-    PA = LU.
-    &quot;&quot;&quot;
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     
-    import numpy as np
-    
-    # Return an error if matrix is not square
-    if not A.shape[0]==A.shape[1]:
-        raise ValueError(&quot;Input matrix must be square&quot;)
+    <span class="c1"># Return an error if matrix is not square</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input matrix must be square&quot;</span><span class="p">)</span>
         
-    n = A.shape[0] # The number of rows/columns of A
-    p = np.arange(n) # The permutation vector
+    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># The number of rows/columns of A</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># The permutation vector</span>
     
-    L = np.zeros((n,n),dtype=&#39;float64&#39;) # Reserve space for L
-    U = np.zeros((n,n),dtype=&#39;float64&#39;) # Reserve space for U
-    U[:] = A # Copy A into U as we do not want to modify A
-    np.fill_diagonal(L,1) # fill the diagonal of L with 1
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1"># Reserve space for L</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1"># Reserve space for U</span>
+    <span class="n">U</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">A</span> <span class="c1"># Copy A into U as we do not want to modify A</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># fill the diagonal of L with 1</span>
     
-    for i in range(n-1):
-        # The outer iteration
-        # Permute the rows to ensure the element with largest magnitude is on top
-        max_index = i+np.argmax(np.abs(U[i:,i]))
-        U[[i,max_index],:] = U[[max_index,i],:]
-        L[[i,max_index],:i] = L[[max_index,i],:i]
-        p[[i,max_index]] = p[[max_index,i]]
-        for j in range(i+1,n):
-            L[j,i] = U[j,i]/U[i,i]
-            U[j,i:] = U[j,i:]-L[j,i]*U[i,i:]
-            U[j,i] = 0
-    P = np.eye(n)[p,:] 
-    return (P,L,U)
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># The outer iteration</span>
+        <span class="c1"># Permute the rows to ensure the element with largest magnitude is on top</span>
+        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">:,</span><span class="n">i</span><span class="p">]))</span>
+        <span class="n">U</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">max_index</span><span class="p">],:]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[[</span><span class="n">max_index</span><span class="p">,</span><span class="n">i</span><span class="p">],:]</span>
+        <span class="n">L</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">max_index</span><span class="p">],:</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">[[</span><span class="n">max_index</span><span class="p">,</span><span class="n">i</span><span class="p">],:</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">p</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">max_index</span><span class="p">]]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[[</span><span class="n">max_index</span><span class="p">,</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">:]</span> <span class="o">=</span> <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">:]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">:]</span>
+            <span class="n">U</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="n">p</span><span class="p">,:]</span> 
+    <span class="k">return</span> <span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">U</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -682,12 +455,12 @@ def lu(A):
 <p>Let us try this out.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rand = np.random.RandomState(0)
-n = 50
-A = rand.randn(n, n)
-P, L, U, = lu(A)
-rel_residual = np.linalg.norm (P @ A - L @ U) / np.linalg.norm(A)
-print(f&quot;The relative residual is {rel_residual}.&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="o">=</span> <span class="n">lu</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">rel_residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span> <span class="p">(</span><span class="n">P</span> <span class="o">@</span> <span class="n">A</span> <span class="o">-</span> <span class="n">L</span> <span class="o">@</span> <span class="n">U</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The relative residual is </span><span class="si">{</span><span class="n">rel_residual</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -702,12 +475,12 @@ print(f&quot;The relative residual is {rel_residual}.&quot;)
 <p>An example code is given below. Instead of implementing the triangular solve we use the corresponding method from Scipy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.linalg import solve_triangular
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve_triangular</span>
 
-b = rand.randn(n)
-x = solve_triangular(
-    U, solve_triangular(L, P @ b, lower=True))
-print(f&quot;Residual with partial pivot LU: {np.linalg.norm(b - A @ x) / np.linalg.norm(b)}.&quot;)
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">solve_triangular</span><span class="p">(</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">solve_triangular</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">P</span> <span class="o">@</span> <span class="n">b</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual with partial pivot LU: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -721,31 +494,31 @@ print(f&quot;Residual with partial pivot LU: {np.linalg.norm(b - A @ x) / np.lin
 <p>The complexity of dense LU decomposition is <span class="math notranslate nohighlight">\(\frac{2}{3}n^3 + \mathcal{O}(n^2)\)</span>. The forward and backward substitution have quadratic complexity. Hence, this method is without modification not suitable for large systems of equations.</p>
 </section>
 <section id="lu-decomposition-for-systems-of-equations-with-small-bandwidth">
-<h2>LU Decomposition for systems of equations with small bandwidth<a class="headerlink" href="#lu-decomposition-for-systems-of-equations-with-small-bandwidth" title="Permalink to this headline">#</a></h2>
+<h2>LU Decomposition for systems of equations with small bandwidth<a class="headerlink" href="#lu-decomposition-for-systems-of-equations-with-small-bandwidth" title="Permalink to this heading">#</a></h2>
 <p>Let us consider the example of the following tridiagonal matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-from scipy.sparse import diags
-n = 20
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
 
-data = [4. * np.ones(n),
-        -2. * np.ones(n - 1),
-        -1. * np.ones(n - 1)]
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="o">-</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
 
-offsets = [0, 1, -1]
+<span class="n">offsets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-A = diags(data, offsets=offsets, shape=(n, n), format=&#39;csr&#39;).todense()
+<span class="n">A</span> <span class="o">=</span> <span class="n">diags</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="n">offsets</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
-from matplotlib import pyplot as plt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-plt.spy(A)
+<span class="n">plt</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -753,33 +526,33 @@ plt.spy(A)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd41d9f2640&gt;
 </pre></div>
 </div>
-<img alt="_images/sparse_direct_solvers_15_1.png" src="_images/sparse_direct_solvers_15_1.png" />
+<img alt="_images/c2aa9fc081aeb703839fa9a26d22c6088613f381a7bfb014ab72cde18ce5507e.png" src="_images/c2aa9fc081aeb703839fa9a26d22c6088613f381a7bfb014ab72cde18ce5507e.png" />
 </div>
 </div>
 <p>We compute the LU factors and visualize them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
-from matplotlib import pyplot as plt
-from scipy.linalg import lu
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">lu</span>
 
-P, L, U = lu(A)
+<span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">lu</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 
-fig = plt.figure(figsize = (21, 8))
-ax1 = fig.add_subplot(131)
-im1 = ax1.spy(P)
-ax1.set_title(&#39;P&#39;)
-ax2 = fig.add_subplot(132)
-ax2.spy(L)
-ax2.set_title(&#39;L&#39;)
-ax3 = fig.add_subplot(133)
-ax3.spy(U)
-ax3.set_title(&#39;U&#39;);
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/sparse_direct_solvers_17_0.png" src="_images/sparse_direct_solvers_17_0.png" />
+<img alt="_images/0bf328c1da6bb4985b93b20a5516fc155a173030474e795383252d17849586ac.png" src="_images/0bf328c1da6bb4985b93b20a5516fc155a173030474e795383252d17849586ac.png" />
 </div>
 </div>
 <p>The permutation matrix P is just the identity. The diagonal was chosen on purpose to achieve this and avoid reordering. We can see that while the original matrix was tridiagonal, the L matrix now is lower bidiagonal and the upper U matrix is upper bidiagonal. This is no coincidence. One can see quite easily from the way that Gaussian elimination proceeds that the bandwidth of a matrix remains constant. Let us make this statement precise.</p>
@@ -788,25 +561,25 @@ ax3.set_title(&#39;U&#39;);
 <p>If we have a sequence of banded matrices <span class="math notranslate nohighlight">\(A_n\)</span> with constant bandwidth (e.g. from the discretisation of a PDE with increasing numbers of discretisation points), the LU decomposition has linear complexity <span class="math notranslate nohighlight">\(O(n)\)</span>, where the factors in the <span class="math notranslate nohighlight">\(O\)</span>-notation depend on the bandwidth. Hence, LU decomposition is a highly efficient solver for problems with small bandwidth if the zero structure is taken into account, that is operations are avoided on entries that are known to be zero.</p>
 </section>
 <section id="matrices-with-arrow-structure">
-<h2>Matrices with arrow structure<a class="headerlink" href="#matrices-with-arrow-structure" title="Permalink to this headline">#</a></h2>
+<h2>Matrices with arrow structure<a class="headerlink" href="#matrices-with-arrow-structure" title="Permalink to this heading">#</a></h2>
 <p>Another example of matrices, for which the LU decomposition is highly efficient, are matrices with certain arrow structures. Consider the following example.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 20
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
 
-A = np.diag(np.ones(n, dtype=np.float64))
-A[-1, :] = .5
-A[:, -1] = .5
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">.5</span>
+<span class="n">A</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">.5</span>
 
-fig = plt.figure(figsize=(20, 8))
-ax1 = fig.add_subplot(121)
-ax1.spy(A)
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 
-reversal = np.flip(np.arange(n))
-Apermuted = A[reversal, :][:, reversal]
+<span class="n">reversal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="n">Apermuted</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">reversal</span><span class="p">,</span> <span class="p">:][:,</span> <span class="n">reversal</span><span class="p">]</span>
 
-ax2 = fig.add_subplot(122)
-ax2.spy(Apermuted)
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">Apermuted</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -814,62 +587,62 @@ ax2.spy(Apermuted)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd41ddeb2e0&gt;
 </pre></div>
 </div>
-<img alt="_images/sparse_direct_solvers_21_1.png" src="_images/sparse_direct_solvers_21_1.png" />
+<img alt="_images/0cfb43073be557f14258691da434b8602e1d3d83ba589475c2aa89da12d0fd97.png" src="_images/0cfb43073be557f14258691da434b8602e1d3d83ba589475c2aa89da12d0fd97.png" />
 </div>
 </div>
 <p>It is immediately clear that the left matrix has an efficient LU decomposition. We only need to reduce the last row via Gaussian elimination and we do not introduce any fill-in. On the other hand, the right-hand side matrix is a simple permutation of the left-matrix, obtained by relabelling the unknowns (e.g. <span class="math notranslate nohighlight">\(0\rightarrow 9\)</span>, <span class="math notranslate nohighlight">\(1\rightarrow 8\)</span>, etc.). Although the matrix is different now, the underlying linear system does not change in principle. The unknowns have just been relabelled and equation order changed. However, if we apply the LU decomposition to the right matrix, both <span class="math notranslate nohighlight">\(L\)</span> and <span class="math notranslate nohighlight">\(U\)</span> will fill up completely.</p>
 </section>
 <section id="reordering-methods-for-sparse-gaussian-elimination">
-<h2>Reordering methods for sparse Gaussian Elimination<a class="headerlink" href="#reordering-methods-for-sparse-gaussian-elimination" title="Permalink to this headline">#</a></h2>
+<h2>Reordering methods for sparse Gaussian Elimination<a class="headerlink" href="#reordering-methods-for-sparse-gaussian-elimination" title="Permalink to this heading">#</a></h2>
 <p>In practice, the difficulty with sparse direct solvers is to achieve a reordering that minimizes fill-in (that is creation of new nonzero elements) from the LU decomposition applied to the sparse matrix. Over time a number of heuristic reordering methods have been developed that aim to reduce the fill-in during the Gaussian Elimination phase, such as Cuthil-McKeee, Reverse Cuthill-McKee or Minimal Degree Reorderings. Most sparse solvers include reordering steps by default. So it is rarely necessary to think about it. But sometimes it may be necessary to squeeze out slightly better performance by changing the reordering method.</p>
 </section>
 <section id="limits-of-sparse-direct-solvers">
-<h2>Limits of sparse direct solvers<a class="headerlink" href="#limits-of-sparse-direct-solvers" title="Permalink to this headline">#</a></h2>
+<h2>Limits of sparse direct solvers<a class="headerlink" href="#limits-of-sparse-direct-solvers" title="Permalink to this heading">#</a></h2>
 <p>The performance of sparse direct solvers strongly depends on the adjacency graph (the adjacency graph is a representation of the connnectivity in the sparse matrix). Generally, for one dimensional and many two dimensional PDE discretisations sparse direct solvers can be used very efficiently. Usually, the heuristic reordering methods do a good job of minimizing fill-in with good results for the overall time and memory complexity. Three-dimensional PDE discretisations can be more problematic. In three dimensions we have significantly more intricate connectivity between unknowns and sparse direct solvers quickly become infeasible even with good reordering.</p>
 </section>
 <section id="incomplete-lu-decomposition">
-<h2>Incomplete LU Decomposition<a class="headerlink" href="#incomplete-lu-decomposition" title="Permalink to this headline">#</a></h2>
+<h2>Incomplete LU Decomposition<a class="headerlink" href="#incomplete-lu-decomposition" title="Permalink to this heading">#</a></h2>
 <p>It is possible to combine ideas from the LU decomposition and iterative solvers. If a complete LU decomposition is too expensive we may still be able to perform an incomplete LU decomposition. The idea is to heuristically reduce the generated fill-in through the course of the LU decomposition by using a dropping criterion. The difficulty with the incomplete LU decomposition is that it may lead to a singular approximate decomposition. In the following example we use the ILU applied to the matrix <span class="math notranslate nohighlight">\(A\)</span> from the <code class="docutils literal notranslate"><span class="pre">discretise_poisson</span></code> example to demonstrate how it can be used as a preconditioner.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-from scipy.sparse import coo_matrix
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
 
-def discretise_poisson(N):
-    &quot;&quot;&quot;Generate the matrix and rhs associated with the discrete Poisson operator.&quot;&quot;&quot;
+<span class="k">def</span> <span class="nf">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the matrix and rhs associated with the discrete Poisson operator.&quot;&quot;&quot;</span>
     
-    nelements = 5 * N**2 - 16 * N + 16
+    <span class="n">nelements</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">16</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">16</span>
     
-    row_ind = np.empty(nelements, dtype=np.float64)
-    col_ind = np.empty(nelements, dtype=np.float64)
-    data = np.empty(nelements, dtype=np.float64)
+    <span class="n">row_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">col_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">nelements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     
-    f = np.empty(N * N, dtype=np.float64)
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     
-    count = 0
-    for j in range(N):
-        for i in range(N):
-            if i == 0 or i == N - 1 or j == 0 or j == N - 1:
-                row_ind[count] = col_ind[count] = j * N + i
-                data[count] =  1
-                f[j * N + i] = 0
-                count += 1
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">row_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span>  <span class="mi">1</span>
+                <span class="n">f</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
                 
-            else:
-                row_ind[count : count + 5] = j * N + i
-                col_ind[count] = j * N + i
-                col_ind[count + 1] = j * N + i + 1
-                col_ind[count + 2] = j * N + i - 1
-                col_ind[count + 3] = (j + 1) * N + i
-                col_ind[count + 4] = (j - 1) * N + i
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">row_ind</span><span class="p">[</span><span class="n">count</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">col_ind</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span>
                                 
-                data[count] = 4 * (N - 1)**2
-                data[count + 1 : count + 5] = - (N - 1)**2
-                f[j * N + i] = 1
+                <span class="n">data</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">f</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">N</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 
-                count += 5
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">5</span>
                                                 
-    return coo_matrix((data, (row_ind, col_ind)), shape=(N**2, N**2)).tocsr(), f
+    <span class="k">return</span> <span class="n">coo_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">row_ind</span><span class="p">,</span> <span class="n">col_ind</span><span class="p">)),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(),</span> <span class="n">f</span>
 </pre></div>
 </div>
 </div>
@@ -877,41 +650,41 @@ def discretise_poisson(N):
 <p>The following code solves the Poisson problem with <span class="math notranslate nohighlight">\(N=100\)</span> using GMRES, once with preconditioning and once without preconditioning.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.sparse.linalg import spilu, LinearOperator, gmres
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">spilu</span><span class="p">,</span> <span class="n">LinearOperator</span><span class="p">,</span> <span class="n">gmres</span>
 
-N = 100
-A, f = discretise_poisson(N)
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">A</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">discretise_poisson</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 
-M = LinearOperator(matvec=spilu(A, fill_factor=20, drop_rule=&#39;dynamic&#39;).solve,
-                   shape=(N**2, N**2), 
-                   dtype=np.float64)
+<span class="n">M</span> <span class="o">=</span> <span class="n">LinearOperator</span><span class="p">(</span><span class="n">matvec</span><span class="o">=</span><span class="n">spilu</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">fill_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">drop_rule</span><span class="o">=</span><span class="s1">&#39;dynamic&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">solve</span><span class="p">,</span>
+                   <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> 
+                   <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
-residuals1 = []
-callback1 = lambda res: residuals1.append(res) 
-x, _ = gmres(A, f, callback=callback1, callback_type=&#39;pr_norm&#39;)
+<span class="n">residuals1</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">callback1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="n">residuals1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> 
+<span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback1</span><span class="p">,</span> <span class="n">callback_type</span><span class="o">=</span><span class="s1">&#39;pr_norm&#39;</span><span class="p">)</span>
 
 
-residuals2 = []
-callback2 = lambda res: residuals2.append(res) 
-x, _ = gmres(A, f, M=M, callback=callback2, callback_type=&#39;pr_norm&#39;)
+<span class="n">residuals2</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">callback2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="n">residuals2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> 
+<span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback2</span><span class="p">,</span> <span class="n">callback_type</span><span class="o">=</span><span class="s1">&#39;pr_norm&#39;</span><span class="p">)</span>
 
-fig = plt.figure(figsize=(20, 8))
-ax1 = fig.add_subplot(121)
-ax1.semilogy(residuals1)
-ax1.set_title(&#39;No preconditioning&#39;)
-ax1.set_xlabel(&#39;iteration count&#39;)
-ax1.set_ylabel(&#39;relative residual&#39;)
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;No preconditioning&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;iteration count&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;relative residual&#39;</span><span class="p">)</span>
 
-ax2 = fig.add_subplot(122)
-ax2.semilogy(residuals2)
-ax2.set_title(&#39;ILU Preconditioning&#39;)
-ax2.set_xlabel(&#39;iteration count&#39;)
-ax2.set_ylabel(&#39;relative residual&#39;);
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ILU Preconditioning&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;iteration count&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;relative residual&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/sparse_direct_solvers_31_0.png" src="_images/sparse_direct_solvers_31_0.png" />
+<img alt="_images/4af7e6f426f2ceab7bcc34ec469fc4df877c3ecc4fe33e028be7ff253faae2bc.png" src="_images/4af7e6f426f2ceab7bcc34ec469fc4df877c3ecc4fe33e028be7ff253faae2bc.png" />
 </div>
 </div>
 <p>ILU Preconditioning has lead to a dramatic improvement. We now convergence in just 10 iterations. However, generating the ILU Preconditioner can be tricky as it easily leads to a singular incomplete factorisation.
@@ -931,7 +704,7 @@ For certain classes of problems good ILU strategies are known and have been anal
             mode: "conda-env-dev-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-dev-py",
+            name: "conda-env-dev-py",
             path: "./."
         },
         predefinedOutput: true
@@ -939,50 +712,111 @@ For certain classes of problems good ILU strategies are known and have been anal
     </script>
     <script>kernelName = 'conda-env-dev-py'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="it_solvers4.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Iterative Solvers 4 - Preconditioning</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="it_solvers4.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Iterative Solvers 4 - Preconditioning</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="petsc_for_sparse_systems.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="petsc_for_sparse_systems.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Using petsc4py for sparse linear systems</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Timo Betcke & Matthew Scroggs<br/>
-  
-      &copy; Copyright 2020-22.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
-
-
       </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-dense-linear-systems-of-equations">Solving dense linear systems of equations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lu-decomposition-for-systems-of-equations-with-small-bandwidth">LU Decomposition for systems of equations with small bandwidth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrices-with-arrow-structure">Matrices with arrow structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reordering-methods-for-sparse-gaussian-elimination">Reordering methods for sparse Gaussian Elimination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limits-of-sparse-direct-solvers">Limits of sparse direct solvers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#incomplete-lu-decomposition">Incomplete LU Decomposition</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Timo Betcke & Matthew Scroggs
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2020-22.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

@@ -1,48 +1,59 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Iterative Solvers 2 - From FOM to GMRES &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -52,62 +63,94 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'it_solvers2';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Iterative Solvers 3 - The Conjugate Gradient Method" href="it_solvers3.html" />
     <link rel="prev" title="Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method" href="it_solvers1.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/cpu_logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Techniques of High-Performance Computing - Lecture Notes</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="_static/cpu_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/cpu_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -116,470 +159,236 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  High-Performance Computing with Python
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">High-Performance Computing with Python</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="what_is_hpc.html">
-   What is High-Performance Computing?
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="hpc_languages.html">
-   Languages for High-Performance Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="python_hpc_tools.html">
-   Python HPC Tools
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numpy_and_data_layouts.html">
-   Memory layout and Numpy arrays
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="parallel_principles.html">
-   Parallel Computing Principles in Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="working_with_numba.html">
-   Working with Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="simd.html">
-   SIMD Autovectorization in Numba
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numexpr.html">
-   A Numexpr example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gpu_introduction.html">
-   An Introduction to GPU Computing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="cuda_introduction.html">
-   A tour of CUDA
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="numba_cuda.html">
-   Numba Cuda in Practice
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="rbf_evaluation.html">
-   GPU accelerated evaluation of particle sums
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_hpc.html">What is High-Performance Computing?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc_languages.html">Languages for High-Performance Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_hpc_tools.html">Python HPC Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numpy_and_data_layouts.html">Memory layout and Numpy arrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel_principles.html">Parallel Computing Principles in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="working_with_numba.html">Working with Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simd.html">SIMD Autovectorization in Numba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numexpr.html">A Numexpr example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_introduction.html">An Introduction to GPU Computing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda_introduction.html">A tour of CUDA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba_cuda.html">Numba Cuda in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf_evaluation.html">GPU accelerated evaluation of particle sums</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Sparse Linear Algebra
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Sparse Linear Algebra</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_linalg_pde.html">
-   The need for sparse linear algebra - A PDE example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_data_structures.html">
-   Sparse Matrix data structures
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_solvers_introduction.html">
-   An introduction to sparse linear system solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers1.html">
-   Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Iterative Solvers 2 - From FOM to GMRES
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers3.html">
-   Iterative Solvers 3 - The Conjugate Gradient Method
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="it_solvers4.html">
-   Iterative Solvers 4 - Preconditioning
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="sparse_direct_solvers.html">
-   Sparse Direct Solvers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="petsc_for_sparse_systems.html">
-   Using petsc4py for sparse linear systems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="multigrid.html">
-   Multigrid Methods
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_linalg_pde.html">The need for sparse linear algebra - A PDE example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_data_structures.html">Sparse Matrix data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_solvers_introduction.html">An introduction to sparse linear system solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers1.html">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Iterative Solvers 2 - From FOM to GMRES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers3.html">Iterative Solvers 3 - The Conjugate Gradient Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="it_solvers4.html">Iterative Solvers 4 - Preconditioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_direct_solvers.html">Sparse Direct Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="petsc_for_sparse_systems.html">Using petsc4py for sparse linear systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multigrid.html">Multigrid Methods</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Time-Dependent Problems
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Time-Dependent Problems</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="simple_time_stepping.html">
-   Simple time-stepping
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="wave_equation.html">
-   Discretising the wave equation
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="simple_time_stepping.html">Simple time-stepping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wave_equation.html">Discretising the wave equation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Conclusions
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Conclusions</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="further_topics.html">
-   Further topics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Assignments
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_1.html">
-   Assignment 1 - Matrix-matrix multiplication
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_2.html">
-   Assignment 2 - Solving two 1D problems
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_3.html">
-   Assignment 3 - Sparse matrices
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-assignment_4.html">
-   Assignment 4 - Solving a finite element system
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_1.html">Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_2.html">Assignment 2 - Solving two 1D problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_3.html">Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-assignment_4.html">Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tasks for Monday Practical Classes
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">LSA</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_1.html">
-   Class 1 (Monday 10 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_2.html">
-   Class 2 (Monday 17 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_3.html">
-   Class 3 (Monday 24 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_4.html">
-   Class 4 (Monday 31 October)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_5.html">
-   Class 5 (Monday 14 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_6.html">
-   Class 6 (Monday 21 November)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022-class_7.html">
-   Class 7 (Monday 5 December)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_1.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_3.html">LSA Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-lsa_4.html">LSA Assignment 4 - Solving a finite element system</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Additional notes from 2022
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tasks for Monday Practical Classes</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">
-   Matrices and simultaneous equations
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2022_classes.html">
-   Python classes
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_1.html">Class 1 (Monday 10 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_2.html">Class 2 (Monday 17 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_3.html">Class 3 (Monday 24 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_4.html">Class 4 (Monday 31 October)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_5.html">Class 5 (Monday 14 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_6.html">Class 6 (Monday 21 November)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022-class_7.html">Class 7 (Monday 5 December)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">Matrices and simultaneous equations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2022_classes.html">Python classes</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/it_solvers2.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/it_solvers2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/it_solvers2.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-basic-idea-of-gmres">
-   The basic idea of GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#some-experiments-with-gmres">
-   Some experiments with GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-remark-on-restarts">
-   A remark on restarts
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Iterative Solvers 2 - From FOM to GMRES</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#the-basic-idea-of-gmres">
-   The basic idea of GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#some-experiments-with-gmres">
-   Some experiments with GMRES
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#a-remark-on-restarts">
-   A remark on restarts
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Iterative Solvers 2 - From FOM to GMRES</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-basic-idea-of-gmres">The basic idea of GMRES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-experiments-with-gmres">Some experiments with GMRES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-remark-on-restarts">A remark on restarts</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="iterative-solvers-2-from-fom-to-gmres">
-<h1>Iterative Solvers 2 - From FOM to GMRES<a class="headerlink" href="#iterative-solvers-2-from-fom-to-gmres" title="Permalink to this headline">#</a></h1>
+<h1>Iterative Solvers 2 - From FOM to GMRES<a class="headerlink" href="#iterative-solvers-2-from-fom-to-gmres" title="Permalink to this heading">#</a></h1>
 <p>FOM is rarely used in practical applications. A problem is that it does not guarantee that the global residuals reduce from step to step. Remember that it only guarantees that the residual is orthogonal to the current search subspace.</p>
 <p>A solution for this problem is provided by GMRES (Generalized Minimal Residuals)</p>
 <section id="the-basic-idea-of-gmres">
-<h2>The basic idea of GMRES<a class="headerlink" href="#the-basic-idea-of-gmres" title="Permalink to this headline">#</a></h2>
+<h2>The basic idea of GMRES<a class="headerlink" href="#the-basic-idea-of-gmres" title="Permalink to this heading">#</a></h2>
 <p>GMRES, like FOM, is built oin the Arnoldi iteration. Let <span class="math notranslate nohighlight">\(V_m\)</span> be the current Krylov basis. Remember that we want to find a correction <span class="math notranslate nohighlight">\(V_my_y\)</span> to our initial approximation <span class="math notranslate nohighlight">\(x_0\)</span> such that</p>
 <div class="math notranslate nohighlight">
 \[
@@ -603,16 +412,16 @@ y_m = \text{arg min}_{y\in\mathbb{R}^m}\left\|AV_my_m - r_0\right\|_2.
 <p>As in the FOM we need to put in some care into proper orthogonalisation of the vectors. For the following experiments we will use the Scipy GMRES implementation, which is well tested and provides a number of useful options.</p>
 </section>
 <section id="some-experiments-with-gmres">
-<h2>Some experiments with GMRES<a class="headerlink" href="#some-experiments-with-gmres" title="Permalink to this headline">#</a></h2>
+<h2>Some experiments with GMRES<a class="headerlink" href="#some-experiments-with-gmres" title="Permalink to this heading">#</a></h2>
 <p>We start with a very simple setup of a matrix with random normally distributed entries.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-rand = np.random.RandomState(0)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-n = 500
+<span class="n">n</span> <span class="o">=</span> <span class="mi">500</span>
 
-A = rand.randn(n, n) / np.sqrt(n)
+<span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -620,15 +429,15 @@ A = rand.randn(n, n) / np.sqrt(n)
 <p>Let us plot the eigenvalues of this matrix.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%matplotlib inline
-from matplotlib import pyplot as plt
-from scipy.linalg import eigvals
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eigvals</span>
 
-eigenvalues = eigvals(A)
+<span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(111)
-ax.plot(np.real(eigenvalues), np.imag(eigenvalues), &#39;rx&#39;, markersize=1)
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -636,33 +445,33 @@ ax.plot(np.real(eigenvalues), np.imag(eigenvalues), &#39;rx&#39;, markersize=1)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f9952011a90&gt;]
 </pre></div>
 </div>
-<img alt="_images/it_solvers2_8_1.png" src="_images/it_solvers2_8_1.png" />
+<img alt="_images/45f7b90a194b8d356e2fd819f0c399f12964453f28b35ac0419a3ef71fb9cc1d.png" src="_images/45f7b90a194b8d356e2fd819f0c399f12964453f28b35ac0419a3ef71fb9cc1d.png" />
 </div>
 </div>
 <p>This matrix has nicely clustered eigenvalues which lie roughly in the unit disk.</p>
 <p>We will now consider the matrix <code class="docutils literal notranslate"><span class="pre">Ashift</span></code> which is defined as <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">+</span> <span class="pre">shift</span> <span class="pre">*</span> <span class="pre">np.eye(n)</span></code>, and we will plot the convergence curve of GMRES for different values of the <code class="docutils literal notranslate"><span class="pre">shift</span></code> parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.sparse.linalg import gmres
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">gmres</span>
 
-shifts = [0, 1, 2, 5, 10]
-colors = [&#39;r&#39;, &#39;k&#39;, &#39;y&#39;, &#39;g&#39;, &#39;m&#39;]
+<span class="n">shifts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">]</span>
 
-b = rand.randn(n)
+<span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-fig = plt.figure(figsize=(8, 8))
-ax = fig.add_subplot(111)
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 
-for index, shift in enumerate(shifts):
-    Ashift = A + shift * np.eye(n)
-    residuals = []
-    callback = lambda res: residuals.append(res)
-    x, _ = gmres(Ashift, b, restart=n, callback=callback, callback_type=&#39;pr_norm&#39;)
-    if len(residuals) &gt; 50:
-        residuals = residuals[:50] # Only plot the first 50 residuals
-    ax.semilogy(residuals, colors[index] + &#39;-x&#39;, markersize=2)
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shifts</span><span class="p">):</span>
+    <span class="n">Ashift</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">shift</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">res</span><span class="p">:</span> <span class="n">residuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gmres</span><span class="p">(</span><span class="n">Ashift</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">callback_type</span><span class="o">=</span><span class="s1">&#39;pr_norm&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+        <span class="n">residuals</span> <span class="o">=</span> <span class="n">residuals</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span> <span class="c1"># Only plot the first 50 residuals</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">colors</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     
-fig.legend(loc=&#39;lower center&#39;, fancybox=True, shadow=True, ncol=len(shifts), labels=[str(shift) for shift in shifts])
+<span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span> <span class="n">fancybox</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">shifts</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span> <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="n">shifts</span><span class="p">])</span>
 
     
 </pre></div>
@@ -672,13 +481,13 @@ fig.legend(loc=&#39;lower center&#39;, fancybox=True, shadow=True, ncol=len(shif
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f9951c0be50&gt;
 </pre></div>
 </div>
-<img alt="_images/it_solvers2_10_1.png" src="_images/it_solvers2_10_1.png" />
+<img alt="_images/bceeea028249bb0b6e4c8674acf32189194c188037702ba349b475528808be72.png" src="_images/bceeea028249bb0b6e4c8674acf32189194c188037702ba349b475528808be72.png" />
 </div>
 </div>
 <p>We see that the further to the origin the cluster of eigenvalues, the slower the convergence. Convergence theorems for GMRES are only known in certain cases. A heuristical guide is that GMRES converges well if the eigenvalues are clustered together and the cluster is well separated from the origin.</p>
 </section>
 <section id="a-remark-on-restarts">
-<h2>A remark on restarts<a class="headerlink" href="#a-remark-on-restarts" title="Permalink to this headline">#</a></h2>
+<h2>A remark on restarts<a class="headerlink" href="#a-remark-on-restarts" title="Permalink to this heading">#</a></h2>
 <p>In the above code there is a <code class="docutils literal notranslate"><span class="pre">restart</span></code> parameter. One issue with GMRES is that for high number of iterations it needs a lot of memory and each step is increasingly becoming more expensive since we always have to orthogonalise against all previous vectors, so need to keep them in memory. Restarting is a strategy, where we restart the GMRES iteration with the current iterate. This is frequently used in practice and can keep the required memory low at the cost of increasing the number of required iterations.</p>
 </section>
 </section>
@@ -695,7 +504,7 @@ fig.legend(loc=&#39;lower center&#39;, fancybox=True, shadow=True, ncol=len(shif
             mode: "conda-env-dev-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-dev-py",
+            name: "conda-env-dev-py",
             path: "./."
         },
         predefinedOutput: true
@@ -703,50 +512,107 @@ fig.legend(loc=&#39;lower center&#39;, fancybox=True, shadow=True, ncol=len(shif
     </script>
     <script>kernelName = 'conda-env-dev-py'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="it_solvers1.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="it_solvers1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="it_solvers3.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="it_solvers3.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Iterative Solvers 3 - The Conjugate Gradient Method</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Timo Betcke & Matthew Scroggs<br/>
-  
-      &copy; Copyright 2020-22.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
-
-
       </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-basic-idea-of-gmres">The basic idea of GMRES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-experiments-with-gmres">Some experiments with GMRES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-remark-on-restarts">A remark on restarts</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Timo Betcke & Matthew Scroggs
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2020-22.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
