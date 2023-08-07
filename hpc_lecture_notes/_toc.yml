@@ -41,6 +41,11 @@ parts:
   - file: 2022-assignment_2
   - file: 2022-assignment_3
   - file: 2022-assignment_4
+- caption: LSA
+  chapters:
+  - file: 2022-lsa_1
+  - file: 2022-lsa_3
+  - file: 2022-lsa_4
 - caption: Tasks for Monday Practical Classes
   chapters:
   - file: 2022-class_1
