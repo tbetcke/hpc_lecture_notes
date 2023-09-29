@@ -35,26 +35,26 @@ parts:
   chapters:
   - file: further_topics
 
-- caption: Assignments
-  chapters:
-  - file: 2022-assignment_1
-  - file: 2022-assignment_2
-  - file: 2022-assignment_3
-  - file: 2022-assignment_4
-- caption: LSA
-  chapters:
-  - file: 2022-lsa_1
-  - file: 2022-lsa_3
-  - file: 2022-lsa_4
-- caption: Tasks for Monday Practical Classes
-  chapters:
-  - file: 2022-class_1
-  - file: 2022-class_2
-  - file: 2022-class_3
-  - file: 2022-class_4
-  - file: 2022-class_5
-  - file: 2022-class_6
-  - file: 2022-class_7
+#- caption: Assignments
+#  chapters:
+#  - file: 2022-assignment_1
+#  - file: 2022-assignment_2
+#  - file: 2022-assignment_3
+#  - file: 2022-assignment_4
+#- caption: LSA
+#  chapters:
+#  - file: 2022-lsa_1
+#  - file: 2022-lsa_3
+#  - file: 2022-lsa_4
+#- caption: Tasks for Monday Practical Classes
+#  chapters:
+#  - file: 2022-class_1
+#  - file: 2022-class_2
+#  - file: 2022-class_3
+#  - file: 2022-class_4
+#  - file: 2022-class_5
+#  - file: 2022-class_6
+#  - file: 2022-class_7
 
 - caption: Additional notes from 2022
   chapters:
