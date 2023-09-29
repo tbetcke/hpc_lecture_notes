@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,8 +38,9 @@
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -79,6 +80,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -196,29 +206,6 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="2022-assignment_1.html">Assignment 1 - Matrix-matrix multiplication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-assignment_2.html">Assignment 2 - Solving two 1D problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-assignment_3.html">Assignment 3 - Sparse matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-assignment_4.html">Assignment 4 - Solving a finite element system</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">LSA</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="2022-lsa_1.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-lsa_3.html">LSA Assignment 3 - Sparse matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-lsa_4.html">LSA Assignment 4 - Solving a finite element system</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tasks for Monday Practical Classes</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="2022-class_1.html">Class 1 (Monday 10 October)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-class_2.html">Class 2 (Monday 17 October)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-class_3.html">Class 3 (Monday 24 October)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-class_4.html">Class 4 (Monday 31 October)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-class_5.html">Class 5 (Monday 14 November)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-class_6.html">Class 6 (Monday 21 November)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2022-class_7.html">Class 7 (Monday 5 December)</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2022_matrices_and_simultaneous_equations.html">Matrices and simultaneous equations</a></li>
@@ -331,10 +318,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -342,7 +329,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -419,43 +406,39 @@ standard but just consider the two most important types: <strong>single precisio
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
-<th class="head"><p>Peak Performance (GFlops/s)</p></th>
+<th class="head"><p>Peak Performance (GFlop/s)</p></th>
 <th class="head"><p>Notes</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Intel i9-9980HK (8 Cores)</p></td>
-<td><p>307</p></td>
-<td><p>The CPU in my laptop</p></td>
+<tr class="row-even"><td><p>Intel Xeon Platinum 8280M (28 Cores)</p></td>
+<td><p>1,612.8</p></td>
+<td><p>A fast workstation CPU</p></td>
 </tr>
-<tr class="row-odd"><td><p>Intel Xeon Platinum 8280M (28 Cores)</p></td>
-<td><p>1612.8</p></td>
-<td><p>One of the fastest CPUs on the market</p></td>
-</tr>
-<tr class="row-even"><td><p>Raspberry PI 4 Model B</p></td>
+<tr class="row-odd"><td><p>Raspberry PI 4 Model B</p></td>
 <td><p>24</p></td>
 <td><p>A very cheap and fun to code for ARM CPU</p></td>
 </tr>
-<tr class="row-odd"><td><p>Nvidia RTX 3080</p></td>
-<td><p>29768</p></td>
+<tr class="row-even"><td><p>Nvidia RTX 4090</p></td>
+<td><p>73,000</p></td>
 <td><p>Single precision peak for Nvidia’s new GPU generation</p></td>
 </tr>
-<tr class="row-even"><td><p>PS5 GPU</p></td>
-<td><p>10280</p></td>
+<tr class="row-odd"><td><p>PS5 GPU</p></td>
+<td><p>10,280</p></td>
 <td><p>Single precision peak of the new GPU for the PS5</p></td>
 </tr>
-<tr class="row-odd"><td><p>XBOX Series X GPU</p></td>
-<td><p>12500</p></td>
+<tr class="row-even"><td><p>XBOX Series X GPU</p></td>
+<td><p>12,500</p></td>
 <td><p>Single precision peak of the new GPU for the XBOX Series X</p></td>
 </tr>
 </tbody>
 </table>
-<p>The measure here is in GFlops/s, which is <span class="math notranslate nohighlight">\(10^9\)</span> floating point operations per second. This table has some very different systems. The first entry is my own Laptop CPU, which is what you would expect in a high-end desktop or workstation laptop. The next one is one of the fastest Server CPUs that Intel currently offers with 28 CPU cores. On the other end of the spectrum we have the Raspberry Pi with just 24 GFlops/s peak performance. It is a representative of a typical low-powered cheap ARM CPU. The ARM CPU in an IPhone 11 is many times faster and comparable with Intel desktop systems.</p>
-<p>The table also contains numbers for the processing power of GPUs, graphics processing units. They are not only good for displaying great graphics but also highly parallel compute devices. We will later learn more about the differences of CPUs and GPUs. The new Nvidia RTX 3080 manages up to 30TFlops/s for single precision operations. While CPUs are good at single and double precision operations, GPUs are usually optimised for single precision operations since for graphics the reduced precision does not matter. However, one can also buy specialised compute devices from Nvidia that are optimised for double precision as well. Finally, we have the PS5 and XBOX Series X with around 10 and 12 TFlops/s in GPU performance, both of which are running AMD’s new RDNA 2 architecture, which has not yet officially been released.</p>
+<p>The measure here is in GFlop/s, which is <span class="math notranslate nohighlight">\(10^9\)</span> floating point operations per second. This table has some very different systems. The first one is a fast Intel Server CPU. On the other end of the spectrum we have the Raspberry Pi with just 24 GFlops/s peak performance. It is a representative of a typical low-powered cheap ARM CPU. These have very little in common with the very fast ARM based chips on recent Apple Computers.</p>
+<p>The table also contains numbers for the processing power of GPUs, graphics processing units. They are not only good for displaying great graphics but also highly parallel compute devices. We will later learn more about the differences of CPUs and GPUs. The Nvidia RTX 4090 manages up to 70TFlops/s for single precision operations. While CPUs are good at single and double precision operations, GPUs are usually optimised for single precision operations since for graphics the reduced precision does not matter. However, one can also buy specialised compute devices from Nvidia that are optimised for double precision as well. Finally, we have the PS5 and XBOX Series X with around 10 and 12 TFlops/s in GPU performance, both of which are running AMD’s RDNA 2 architecture.</p>
 </section>
 <section id="the-top-500">
 <h2>The Top 500<a class="headerlink" href="#the-top-500" title="Permalink to this heading">#</a></h2>
-<p>For really large machines there is a regularly updated list of the world’s fastest supercomputers. The <a class="reference external" href="https://top500.org/">Top 500</a> shows which machines are the fastest in the world. The current number one is Fugaku, with a peak performance of 514 PFlops/s (1 PFlop/s is 1000 TFlops/s). Interestingly, this computer uses ARM CPUs, the same architecture that also powers almost all mobile phones in the world. It is interesting to consider the <a class="reference external" href="https://top500.org/statistics/perfdevel/">performance over time</a>.</p>
+<p>For really large machines there is a regularly updated list of the world’s fastest supercomputers. The <a class="reference external" href="https://top500.org/">Top 500</a> shows which machines are the fastest in the world. The current number one is Frontier, with a peak performance of 1.7 EFlop/s (1 EFlop/s is 10^6 TFlop/s). It is interesting to consider the <a class="reference external" href="https://top500.org/statistics/perfdevel/">performance over time</a>.</p>
 <p><img alt="Performance over time" src="_images/top500development.png" /></p>
 </section>
 <section id="a-biased-definition-of-high-performance-computing">
@@ -493,11 +476,10 @@ standard but just consider the two most important types: <strong>single precisio
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="intro.html"
@@ -517,10 +499,7 @@ standard but just consider the two most important types: <strong>single precisio
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -586,8 +565,8 @@ By Timo Betcke & Matthew Scroggs
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
 
   <footer class="bd-footer">
   </footer>

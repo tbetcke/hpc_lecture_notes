@@ -37,22 +37,21 @@ An important number is $\epsilon_{rel} = 2^{1-p}$. This is the smallest number i
 
 One of the most important measures for the performance of a computing device in High-Performance Computing is the number of floating point operations per second are possible. Below are a couple of performance numbers for different types of CPUs/GPUs.
 
-| Name  | Peak Performance (GFlops/s) | Notes |
+| Name  | Peak Performance (GFlop/s) | Notes |
 | ----  | --------------------------- | ----- | 
-| Intel i9-9980HK (8 Cores) | 307 | The CPU in my laptop |
-| Intel Xeon Platinum 8280M (28 Cores) | 1612.8 | One of the fastest CPUs on the market |
+| Intel Xeon Platinum 8280M (28 Cores) | 1,612.8 | A fast workstation CPU |
 | Raspberry PI 4 Model B | 24 | A very cheap and fun to code for ARM CPU |
-| Nvidia RTX 3080 | 29768 | Single precision peak for Nvidia's new GPU generation |
-| PS5 GPU | 10280 | Single precision peak of the new GPU for the PS5 |
-| XBOX Series X GPU | 12500 | Single precision peak of the new GPU for the XBOX Series X
+| Nvidia RTX 4090 | 73,000 | Single precision peak for Nvidia's new GPU generation |
+| PS5 GPU | 10,280 | Single precision peak of the new GPU for the PS5 |
+| XBOX Series X GPU | 12,500 | Single precision peak of the new GPU for the XBOX Series X
 
-The measure here is in GFlops/s, which is $10^9$ floating point operations per second. This table has some very different systems. The first entry is my own Laptop CPU, which is what you would expect in a high-end desktop or workstation laptop. The next one is one of the fastest Server CPUs that Intel currently offers with 28 CPU cores. On the other end of the spectrum we have the Raspberry Pi with just 24 GFlops/s peak performance. It is a representative of a typical low-powered cheap ARM CPU. The ARM CPU in an IPhone 11 is many times faster and comparable with Intel desktop systems.
+The measure here is in GFlop/s, which is $10^9$ floating point operations per second. This table has some very different systems. The first one is a fast Intel Server CPU. On the other end of the spectrum we have the Raspberry Pi with just 24 GFlops/s peak performance. It is a representative of a typical low-powered cheap ARM CPU. These have very little in common with the very fast ARM based chips on recent Apple Computers.
 
-The table also contains numbers for the processing power of GPUs, graphics processing units. They are not only good for displaying great graphics but also highly parallel compute devices. We will later learn more about the differences of CPUs and GPUs. The new Nvidia RTX 3080 manages up to 30TFlops/s for single precision operations. While CPUs are good at single and double precision operations, GPUs are usually optimised for single precision operations since for graphics the reduced precision does not matter. However, one can also buy specialised compute devices from Nvidia that are optimised for double precision as well. Finally, we have the PS5 and XBOX Series X with around 10 and 12 TFlops/s in GPU performance, both of which are running AMD's new RDNA 2 architecture, which has not yet officially been released.
+The table also contains numbers for the processing power of GPUs, graphics processing units. They are not only good for displaying great graphics but also highly parallel compute devices. We will later learn more about the differences of CPUs and GPUs. The Nvidia RTX 4090 manages up to 70TFlops/s for single precision operations. While CPUs are good at single and double precision operations, GPUs are usually optimised for single precision operations since for graphics the reduced precision does not matter. However, one can also buy specialised compute devices from Nvidia that are optimised for double precision as well. Finally, we have the PS5 and XBOX Series X with around 10 and 12 TFlops/s in GPU performance, both of which are running AMD's RDNA 2 architecture.
 
 ## The Top 500
 
-For really large machines there is a regularly updated list of the world's fastest supercomputers. The [Top 500](https://top500.org/) shows which machines are the fastest in the world. The current number one is Fugaku, with a peak performance of 514 PFlops/s (1 PFlop/s is 1000 TFlops/s). Interestingly, this computer uses ARM CPUs, the same architecture that also powers almost all mobile phones in the world. It is interesting to consider the [performance over time](https://top500.org/statistics/perfdevel/).
+For really large machines there is a regularly updated list of the world's fastest supercomputers. The [Top 500](https://top500.org/) shows which machines are the fastest in the world. The current number one is Frontier, with a peak performance of 1.7 EFlop/s (1 EFlop/s is 10^6 TFlop/s). It is interesting to consider the [performance over time](https://top500.org/statistics/perfdevel/).
 
 ![Performance over time](./img/top500development.png)
 
