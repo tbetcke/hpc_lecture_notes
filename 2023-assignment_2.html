@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>An introduction to sparse linear system solvers &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 2 - Solving two 1D problems &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
   
   
   
@@ -64,12 +64,12 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'sparse_solvers_introduction';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2023-assignment_2';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method" href="it_solvers1.html" />
-    <link rel="prev" title="Sparse Matrix data structures" href="sparse_data_structures.html" />
+    <link rel="next" title="Matrices and simultaneous equations" href="2022_matrices_and_simultaneous_equations.html" />
+    <link rel="prev" title="Assignment 1 - Matrix-matrix multiplication" href="2023-assignment_1.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -185,10 +185,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="rbf_evaluation.html">GPU accelerated evaluation of particle sums</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Sparse Linear Algebra</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="sparse_linalg_pde.html">The need for sparse linear algebra - A PDE example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sparse_data_structures.html">Sparse Matrix data structures</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">An introduction to sparse linear system solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse_solvers_introduction.html">An introduction to sparse linear system solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="it_solvers1.html">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="it_solvers2.html">Iterative Solvers 2 - From FOM to GMRES</a></li>
 <li class="toctree-l1"><a class="reference internal" href="it_solvers3.html">Iterative Solvers 3 - The Conjugate Gradient Method</a></li>
@@ -207,9 +207,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Assignments</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_1.html">Assignment 1 - Matrix-matrix multiplication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2023-assignment_2.html">Assignment 2 - Solving two 1D problems</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Assignment 2 - Solving two 1D problems</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
 <ul class="nav bd-sidenav">
@@ -269,7 +269,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/sparse_solvers_introduction.ipynb" target="_blank"
+      <li><a href="_sources/2023-assignment_2.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -279,7 +279,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.ipynb</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -351,7 +351,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>An introduction to sparse linear system solvers</h1>
+    <h1>Assignment 2 - Solving two 1D problems</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -361,9 +361,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-for-sparse-solvers">Software for sparse solvers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-direct-solver-packages">Sparse direct solver packages</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-iterative-solvers">Sparse iterative solvers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-solving-a-wave-problem-with-sparse-matrices">Part 1: Solving a wave problem with sparse matrices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-solving-the-heat-equation-with-gpu-acceleration">Part 2: Solving the heat equation with GPU acceleration</a></li>
 </ul>
 </li>
 </ul>
@@ -377,44 +377,177 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="an-introduction-to-sparse-linear-system-solvers">
-<h1>An introduction to sparse linear system solvers<a class="headerlink" href="#an-introduction-to-sparse-linear-system-solvers" title="Permalink to this heading">#</a></h1>
-<p>We have seen that we can efficiently represent large sparse matrices with suitable data structures. Moreover, we can efficiently evaluate matrix vector products if the sparse matrix is given as CSR format.</p>
-<p>What is missing is a way to efficiently solve linear system with this data structure. We could attempt to use standard LU Decomposition (Gaussian Elimination). But the computational complexity is <span class="math notranslate nohighlight">\(O(n^3)\)</span>, making this method infeasible for very large sparse system. The issue is that standard LU decomposition does not take into account that most elements of a matrix are zero. There are different ways to overcome this issue.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="assignment-2-solving-two-1d-problems">
+<h1>Assignment 2 - Solving two 1D problems<a class="headerlink" href="#assignment-2-solving-two-1d-problems" title="Permalink to this heading">#</a></h1>
+<p>This assignment makes up 20% of the overall marks for the course. The deadline for submitting this assignment is <strong>5pm on Thursday 2 November 2023</strong>.</p>
+<p>Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
+to any text questions included in the assessment. The easiest ways to create this file are:</p>
 <ul class="simple">
-<li><p><strong>Sparse direct solvers</strong>. Sparse direct solvers are essentially variants of LU decomposition, but tuned for taken into account that most of the matrix consist of zero elements. Sparse direct solvers are highly efficient for PDE problems in two dimensions and still very good for many three dimensional problems. However, there performance deteriorates on matrices arising from complex three dimensional meshes.</p></li>
-<li><p><strong>Iterative Methods</strong>. The most widely used iterative solvers are based on so-called Krylov subspace iterations. The idea is that the matrix is only known through its actions on vectors, that is we are allowed to use matrix-vector products only. A sequence of matrix-vector products is then used to build up a low-dimensional model of the matrix that can be solved efficiently and well approximates the solution of the original large linear system. Iterative methods are widely used in applications and can give almost optimal complexity in the number of unknowns. However, the problem is that the performance of iterative methods depends very much on certain properties of the matrix that reflect the underlying physical problem and so-called preconditioning techniques often need to be used to accelerate iterative solvers. These preconditioners can themselves be complex to develop for specific applications and are a topic of much research.</p></li>
-<li><p><strong>Multigrid Methods</strong>. Multigrid methods follow a different idea. Here, starting from our discretisation we move to coarser ans coarser discretisation levels to refine the solution. Eventually, we are on a very coarse level on which the solution is trivial to accomplish. From there we refine again. Multigrid can be used as solver on its own or as preconditioner for iterative methods.</p></li>
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
 </ul>
-<section id="software-for-sparse-solvers">
-<h2>Software for sparse solvers<a class="headerlink" href="#software-for-sparse-solvers" title="Permalink to this heading">#</a></h2>
-<p>In the following we want to give a very incomplete overview of some frequently used software packages for the solution of sparse linear systems of equations.</p>
-<section id="sparse-direct-solver-packages">
-<h3>Sparse direct solver packages<a class="headerlink" href="#sparse-direct-solver-packages" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><a class="reference external" href="https://people.engr.tamu.edu/davis/suitesparse.html">UMFPACK (Part of Suitesparse)</a> is a widely used sparse direct solver. It is built into Matlab and also available in Python through scikit-umfpack. It is very efficient and constantly being developed.</p></li>
-<li><p><a class="reference external" href="https://www.pardiso-project.org/">Pardiso</a> is available either directly under a closed source license or as part of the Intel MKL, with the caveat that the Intel MKL version is old and significantly slower than the directly available version.</p></li>
-<li><p><a class="reference external" href="https://portal.nersc.gov/project/sparse/superlu/">SuperLU</a> is the standard sparse solver that is also built into Scipy. Scipy only offers the serial version of the library, which is sufficient for smaller to medium problems.</p></li>
-<li><p><a class="reference external" href="http://mumps.enseeiht.fr/">Mumps</a> is a massively parallel sparse direct solver. It is often used on parallel clusters.</p></li>
-<li><p><a class="reference external" href="https://trilinos.github.io/amesos2.html">Amesos2</a> is part of <a class="reference external" href="https://trilinos.github.io/">Trilinos</a>, a large collection of libraries for the parallel solution of partial differential equations. Amesos2 provides its own sparse direct solver, as well as interfaces to many other sparse direct solvers.</p></li>
-<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> is a templated C++ linear algebra library for dense and sparse operations. It provides its own sparse direct solver and also interfaces to many external solvers</p></li>
-</ul>
+<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this heading">#</a></h2>
+<section id="part-1-solving-a-wave-problem-with-sparse-matrices">
+<h3>Part 1: Solving a wave problem with sparse matrices<a class="headerlink" href="#part-1-solving-a-wave-problem-with-sparse-matrices" title="Permalink to this heading">#</a></h3>
+<p>In this part of the assignment, we want to compute the solution to the following (time-harmonic) wave problem:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\frac{\mathrm{d}^2 u}{\mathrm{d}x^2} + k^2u &amp;= 0&amp;&amp;\text{in }(0, 1),\\
+u &amp;= 0&amp;&amp;\text{if }x=0,\\
+u &amp;= 1&amp;&amp;\text{if }x=1,\\
+\end{align*}
+\end{split}\]</div>
+<p>with wavenumber <span class="math notranslate nohighlight">\(k=29\mathrm{\pi}/2\)</span>.</p>
+<p>In this part, we will approximately solving this problem using the method of finite differences.
+We do this by taking an evenly spaced values
+<span class="math notranslate nohighlight">\(x_0=0, x_1, x_2, ..., x_N=1\)</span>
+and approximating the value of <span class="math notranslate nohighlight">\(u\)</span> for each value: we will call these approximations <span class="math notranslate nohighlight">\(u_i\)</span>.
+To compute these approximations, we use the approximation</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\mathrm{d}^2u_{i}}{\mathrm{d}x^2} \approx \frac{
+u_{i-1}-2u_i+u_{i+1}
+}{h^2},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(h = 1/N\)</span>.</p>
+<p>With a bit of algebra, we see that the wave problem can be written as</p>
+<div class="math notranslate nohighlight">
+\[
+(2-h^2k^2)u_i-u_{i-1}-u_{i+1} = 0
+\]</div>
+<p>if <span class="math notranslate nohighlight">\(x_i\)</span> is not 0 or 1, and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+u_i &amp;= 0
+&amp;&amp;\text{if }x_i=0,\\
+u_i &amp;= 1
+&amp;&amp;\text{if }x_i=1.
+\end{align*}
+\end{split}\]</div>
+<p>This information can be used to re-write the problem as the matrix-vector problem
+<span class="math notranslate nohighlight">\(\mathrm{A}\mathbf{u}=\mathbf{f},\)</span>
+where <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is a known matrix, <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> is a known vector, and <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> is an unknown vector that we want to compute.
+The entries of
+<span class="math notranslate nohighlight">\(\mathbf{f}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\left[\mathbf{u}\right]_i &amp;= u_i,\\
+\left[\mathbf{f}\right]_i &amp;= \begin{cases}
+1&amp;\text{if }i=N,\\
+0&amp;\text{otherwise}.
+\end{cases}
+\end{align*}
+\end{split}\]</div>
+<p>The rows of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[\mathrm{A}\right]_{i,j} = 
+\begin{cases}
+1&amp;\text{if }i=j,\\
+0&amp;\text{otherwise},
+\end{cases}
+\end{split}\]</div>
+<p>if <span class="math notranslate nohighlight">\(i=0\)</span> or <span class="math notranslate nohighlight">\(i=N\)</span>; and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[\mathrm{A}\right]_{i, j} = 
+\begin{cases}
+2-h^2k^2&amp;\text{if }j=i,\\
+-1&amp;\text{if }j=i+1,\\
+-1&amp;\text{if }j=i-1.\\
+0&amp;\text{otherwise},
+\end{cases}
+\end{split}\]</div>
+<p>otherwise.</p>
+<p><strong>Write a Python function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input and returns the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> and vector <span class="math notranslate nohighlight">\(\mathrm{f}\)</span></strong>.
+You should use an appropriate sparse storage format for the matrix <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> can be used to solve a sparse matrix-vector problem. Use this to <strong>compute
+the approximate solution for your problem for <span class="math notranslate nohighlight">\(N=10\)</span>, <span class="math notranslate nohighlight">\(N=100\)</span>, and <span class="math notranslate nohighlight">\(N=1000\)</span></strong>. Use <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (or any other plotting library)
+to <strong>plot the solutions for these three values of <span class="math notranslate nohighlight">\(N\)</span></strong>.</p>
+<p><strong>Briefly (1-2 sentences) comment on your plots</strong>: How different are they to each other? Which do you expect to be closest to the
+actual solution of the wave problem?</p>
+<p>This wave problem was carefully chosen so that its exact solution is known: this solution is
+<span class="math notranslate nohighlight">\(u_\text{exact}(x) = \sin(kx)\)</span>. (You can check this by differentiating this twice and substituting, but you
+do not need to do this part of this assignment.)</p>
+<p>A possible approximate measure of the error in your solution can be found by computing</p>
+<div class="math notranslate nohighlight">
+\[
+\max_i\left|u_i-u_\text{exact}(x_i)\right|.
+\]</div>
+<p><strong>Compute this error for a range of values for <span class="math notranslate nohighlight">\(N\)</span> of your choice, for the method you wrote above</strong>. On axes that both use log scales,
+<strong>plot <span class="math notranslate nohighlight">\(N\)</span> against the error in your solution</strong>. You should pick a range of values for <span class="math notranslate nohighlight">\(N\)</span> so that this plot will give you useful information about the
+methods.</p>
+<p>For the same values of <span class="math notranslate nohighlight">\(N\)</span>, <strong>measure the time taken to compute your approximation for your function</strong>. On axes that both use log scales,
+<strong>plot <span class="math notranslate nohighlight">\(N\)</span> against the time taken to compute a solution</strong>.</p>
+<p>We now want to compute an approximate solution where the measure of error is <span class="math notranslate nohighlight">\(10^{-8}\)</span> or less. By looking at your plots, <strong>pick a value of <span class="math notranslate nohighlight">\(N\)</span>
+that you would expect to give error of <span class="math notranslate nohighlight">\(10^{-8}\)</span> or less</strong>. <strong>Briefly (1-2 sentences) explain how you picked your value of <span class="math notranslate nohighlight">\(N\)</span>
+and predict how long the computation will take</strong>.</p>
+<p><strong>Compute the approximate solution with your value of <span class="math notranslate nohighlight">\(N\)</span></strong>. Measure the time taken and the error, and <strong>briefly (1-2 sentences) comment
+on how these compare to your predictions</strong>. Your error may turn out to be higher than <span class="math notranslate nohighlight">\(10^{-8}\)</span> for your value of <span class="math notranslate nohighlight">\(N\)</span>: if so, you can still get full marks for commenting on
+why your prediction was not correct. Depending on your implementation and your prediction,
+a valid conclusion in the section could be “My value of <span class="math notranslate nohighlight">\(N\)</span> is too large for it to be feasible to complete this computation in a reasonable amount of time / without running out of memory”.</p>
 </section>
-<section id="sparse-iterative-solvers">
-<h3>Sparse iterative solvers<a class="headerlink" href="#sparse-iterative-solvers" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><a class="reference external" href="https://www.scipy.org/">Scipy</a> has a good selection of sparse iterative solvers built in. For medium sized matrix problems it is a very good choice.</p></li>
-<li><p><a class="reference external" href="https://www.mcs.anl.gov/petsc/">Petsc</a> is a parallel sparse solver library with a range of built-in iterative solvers.</p></li>
-<li><p><a class="reference external" href="https://trilinos.github.io/belos.html">Belos</a> is part of Trilinos and provides a number of parallel iterative solvers.</p></li>
-<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> not only has sparse direct but also several iterative solvers built in.</p></li>
-</ul>
-<p>Multigrid solvers</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://developer.nvidia.com/amgx">AmgX</a> is an algebraic multigrid library for Nvidia GPUs.</p></li>
-<li><p><a class="reference external" href="https://github.com/pyamg/pyamg">PyAMG</a> is a Python based algebraic multigrid package.</p></li>
-<li><p><a class="reference external" href="https://trilinos.github.io/ml.html">ML</a> is the multigrid solver as part of the Trilinos package.</p></li>
-</ul>
-<p>Most of the above packages are written in C/C++. But many of them have Python bindings. In the following sessions we will discuss sparse direct solvers, iterative solvers, and multigrid in more detail, and then give examples using some of the above software packages.</p>
+<section id="part-2-solving-the-heat-equation-with-gpu-acceleration">
+<h3>Part 2: Solving the heat equation with GPU acceleration<a class="headerlink" href="#part-2-solving-the-heat-equation-with-gpu-acceleration" title="Permalink to this heading">#</a></h3>
+<p>In this part of the assignment, we want to solve the heat equation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\frac{\mathrm{d}u}{\mathrm{d}t} &amp;= \frac{1}{1000}\frac{\mathrm{d}^2u}{\mathrm{d}x^2}&amp;&amp;\text{for }x\in(0,1),\\
+u(x, 0) &amp;= 0,&amp;&amp;\text{if }x\not=0\text{ and }x\not=1\\
+u(0,t) &amp;= 10,\\
+u(1,t) &amp;= 10.
+\end{align*}
+\end{split}\]</div>
+<p>This represents a rod that starts at 0 temperature which is heated to a temperature of 10 at both ends.</p>
+<p>Again, we will approximately solve this by taking an evenly spaced values
+<span class="math notranslate nohighlight">\(x_0=0, x_1, x_2, ..., x_N=1\)</span>.
+Additionally, we will take a set of evenly spaced times
+<span class="math notranslate nohighlight">\(t_0=0,t_1=h, t_2=2h, t_3=3h, ...\)</span>, where <span class="math notranslate nohighlight">\(h=1/N\)</span>.
+We will write <span class="math notranslate nohighlight">\(u^{(j)}_{i}\)</span> for the approximate value of <span class="math notranslate nohighlight">\(u\)</span> at point <span class="math notranslate nohighlight">\(x_i\)</span> and time <span class="math notranslate nohighlight">\(t_j\)</span>
+(ie <span class="math notranslate nohighlight">\(u^{(j)}_{i}\approx u(x_i, t_j)\)</span>).</p>
+<p>Approximating both derivatives (similar to what we did in part 1), and doing some algebra, we can rewrite the
+heat equation as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+u^{(j + 1)}_i&amp;=u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h},\\
+u^{(0)}_i &amp;= 0,\\
+u^{(j)}_{0}&amp;=10,\\
+u^{(j)}_{N}&amp;=10.
+\end{align*}
+\end{split}\]</div>
+<p>This leads us to an iterative method for solving this problem: first, at <span class="math notranslate nohighlight">\(t=0\)</span>, we set</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u^{(0)}_i =
+\begin{cases}
+10 &amp;\text{if }i=0\text{ or }i=N,\\
+0 &amp;\text{otherwise};
+\end{cases}
+\end{split}\]</div>
+<p>then for all later values of time, we set</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u^{(j+1)}_i =
+\begin{cases}
+10 &amp;\text{if }i=0\text{ or }i=N,\\
+\displaystyle u^{(j)}_i + \frac{u^{(j)}_{i-1}-2u^{(j)}_i+u^{(j)}_{i+1}}{1000h} &amp;\text{otherwise}.
+\end{cases}
+\end{split}\]</div>
+<p><strong>Implement this iterative scheme in Python</strong>. You should implement this as a function that takes <span class="math notranslate nohighlight">\(N\)</span> as an input.</p>
+<p>Using a sensible value of <span class="math notranslate nohighlight">\(N\)</span>, <strong>plot the temperature of the rod at <span class="math notranslate nohighlight">\(t=1\)</span>, <span class="math notranslate nohighlight">\(t=2\)</span> and <span class="math notranslate nohighlight">\(t=10\)</span></strong>. <strong>Briefly (1-2 sentences)
+comment on how you picked a value for <span class="math notranslate nohighlight">\(N\)</span></strong>.</p>
+<p><strong>Use <code class="docutils literal notranslate"><span class="pre">numba.cuda</span></code> to parallelise your implementation on a GPU</strong>.
+You should think carefully about when data needs to be copied, and be careful not to copy data to/from the GPU when not needed.</p>
+<p><strong>Use your code to estimate the time at which the temperature of the midpoint of the rod first exceeds a temperature of 9.8</strong>.
+<strong>Briefly (2-3 sentences) describe how you estimated this time</strong>. You may choose to use a plot or diagram to aid your description,
+but it is not essential to include a plot.</p>
 </section>
 </section>
 </section>
@@ -428,16 +561,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "conda-env-dev-py"
+            mode: "python"
         },
         kernelOptions: {
-            name: "conda-env-dev-py",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'conda-env-dev-py'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -450,20 +583,20 @@ document.write(`
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="sparse_data_structures.html"
+       href="2023-assignment_1.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Sparse Matrix data structures</p>
+        <p class="prev-next-title">Assignment 1 - Matrix-matrix multiplication</p>
       </div>
     </a>
     <a class="right-next"
-       href="it_solvers1.html"
+       href="2022_matrices_and_simultaneous_equations.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Iterative Solvers 1 - Krylov subspaces, Arnoldi Iteration and the Full Orthogonalisation Method</p>
+        <p class="prev-next-title">Matrices and simultaneous equations</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -482,9 +615,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-for-sparse-solvers">Software for sparse solvers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-direct-solver-packages">Sparse direct solver packages</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-iterative-solvers">Sparse iterative solvers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-solving-a-wave-problem-with-sparse-matrices">Part 1: Solving a wave problem with sparse matrices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-solving-the-heat-equation-with-gpu-acceleration">Part 2: Solving the heat equation with GPU acceleration</a></li>
 </ul>
 </li>
 </ul>
