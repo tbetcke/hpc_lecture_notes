@@ -38,7 +38,7 @@ parts:
 - caption: Assignments
   chapters:
   - file: 2023-assignment_1
-#  - file: 2022-assignment_2
+  - file: 2023-assignment_2
 #  - file: 2022-assignment_3
 #  - file: 2022-assignment_4
 #- caption: LSA
