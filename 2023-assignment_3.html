@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Class 3 (Monday 24 October) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>Assignment 3 - Sparse matrices &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
   
   
   
@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '2022-class_3';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2023-assignment_3';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -268,7 +268,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/2022-class_3.md" target="_blank"
+      <li><a href="_sources/2023-assignment_3.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -350,7 +350,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Class 3 (Monday 24 October)</h1>
+    <h1>Assignment 3 - Sparse matrices</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -360,11 +360,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-some-waves">Plotting some waves</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gpu-acceleration">GPU acceleration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-gpu-and-cpu-acceleration">Comparing GPU and CPU acceleration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-task">Extension task</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-implementing-a-csr-matrix">Part 1: Implementing a CSR matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-implementing-a-custom-matrix">Part 2: Implementing a custom matrix</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -376,115 +376,99 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="class-3-monday-24-october">
-<h1>Class 3 (Monday 24 October)<a class="headerlink" href="#class-3-monday-24-october" title="Permalink to this heading">#</a></h1>
-<p>These tasks are designed to be worked on in the practical class on Monday 24 October.</p>
-<p>In this class, we’ll be running code on a GPU using Cuda. To see if you have a device available, you can run:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">cuda</span>
-<span class="n">cuda</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>If you don’t have a suitable device on your own computer, you should
-use Google Colab this week: you can use a GPU in Colab by selecting <strong>Runtime -&gt; Change Runtime Type</strong> and selecting <strong>GPU</strong>.</p>
-<p>During this class, you may wish to use the <a class="reference internal" href="rbf_evaluation.html"><span class="doc std std-doc">GPU accelerated evaluation of particle sums</span></a> section of the lecture notes, where a
-similar example is worked through using a radial basis function kernel.</p>
-<section id="background">
-<h2>Background<a class="headerlink" href="#background" title="Permalink to this heading">#</a></h2>
-<p>In lots of applications, it is useful to calculate the sum</p>
-<div class="math notranslate nohighlight">
-\[\sum_jc_jg(\mathbf{x}, \mathbf{y}_j),\]</div>
-<p>where <span class="math notranslate nohighlight">\(g\)</span> is a “kernel” function, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is a point in <span class="math notranslate nohighlight">\(\mathbb{R}^3\)</span>,
-<span class="math notranslate nohighlight">\(\mathbf{y}_0,...,\mathbf{y}_{n-1}\)</span> are (known) points in <span class="math notranslate nohighlight">\(\mathbb{R}^3\)</span>, and
-<span class="math notranslate nohighlight">\(c_0,...,c_{n-1}\)</span> are (known) values in <span class="math notranslate nohighlight">\(\mathbb{C}\)</span>.</p>
-<p>In this class, we’re going to use the acoustic Green’s function</p>
-<div class="math notranslate nohighlight">
-\[g(\mathbf{x},\mathbf{y})=\mathrm{e}^{-\mathrm{i}k\left|\mathbf{x}-\mathbf{y}\right|}/\left(4\mathrm{\pi}\left|\mathbf{x}-\mathbf{y}\right|\right),\]</div>
-<p>where <span class="math notranslate nohighlight">\(k\)</span> is the wavenumber of the wave.
-This is the acoustic wave due to a point source: if there are point sources at points <span class="math notranslate nohighlight">\(\mathbf{y}_0,...,\mathbf{y}_{n-1}\)</span> of sizes
-<span class="math notranslate nohighlight">\(c_0,...,c_{n-1}\)</span>, then the sum above can be used to compute the magnitude of a (time-harmonic) acoustic wave at each point.</p>
-</section>
-<section id="plotting-some-waves">
-<h2>Plotting some waves<a class="headerlink" href="#plotting-some-waves" title="Permalink to this heading">#</a></h2>
-<p>There is a point source with wavenumber 10 at the point <span class="math notranslate nohighlight">\((-1.2, 0, 0)\)</span> with magnitude 1.
-The following code plots a slice through the wave due to this source in the plane <span class="math notranslate nohighlight">\(z=0\)</span> with <span class="math notranslate nohighlight">\(0\leqslant x\leqslant 3\)</span> and <span class="math notranslate nohighlight">\(-\frac32\leqslant y\leqslant \frac32\)</span>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="n">k</span> <span class="o">=</span> <span class="mf">10.</span>
-
-
-<span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate real part of the acoustic Green&#39;s function.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
-
-
-<span class="n">sources</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]])</span>
-<span class="n">magnitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span>
-
-<span class="n">img_size</span> <span class="o">=</span> <span class="mi">250</span>
-<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">img_size</span><span class="p">,</span> <span class="n">img_size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;complex128&quot;</span><span class="p">)</span>
-
-<span class="n">xmin</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">xmax</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="n">ymin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span>
-<span class="n">ymax</span> <span class="o">=</span> <span class="mf">1.5</span>
-
-<span class="c1"># plt.imshow interprets data as the colour of pixels starting at the top left then </span>
-<span class="c1"># row by row. For example, if an image was 5 pixels wide, the order of the pixels</span>
-<span class="c1"># would be:</span>
-<span class="c1"># 0 1 2 3 4</span>
-<span class="c1"># 5 6 7 8 9</span>
-<span class="c1"># etc</span>
-<span class="c1"># Due to this ordering, the y values here might at first glance appear to be backwards</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img_size</span><span class="p">):</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">ymax</span> <span class="o">+</span> <span class="p">(</span><span class="n">ymin</span> <span class="o">-</span> <span class="n">ymax</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="n">img_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img_size</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">xmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">*</span> <span class="n">j</span> <span class="o">/</span> <span class="p">(</span><span class="n">img_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">magnitudes</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
-            <span class="n">v</span> <span class="o">+=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">g</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
-        <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>     
-
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Adapt this code so that it plots the real part of a wave due to two point sources with magnitude 1 at the points
-<span class="math notranslate nohighlight">\((-1.2, 0.5, 0)\)</span> and <span class="math notranslate nohighlight">\((-1.2, -0.5, 0)\)</span>.</p>
-<p>Adapt this code so that it plots the real part of a wave due to four point sources with random magnitudes between 0 and 1
-at the points random points in the area <span class="math notranslate nohighlight">\(x=-1.2\)</span>, <span class="math notranslate nohighlight">\(-1\leqslant y\leqslant1\)</span>, <span class="math notranslate nohighlight">\(-1\leqslant z\leqslant1\)</span>.</p>
-</section>
-<section id="gpu-acceleration">
-<h2>GPU acceleration<a class="headerlink" href="#gpu-acceleration" title="Permalink to this heading">#</a></h2>
-<p>Write a new version of the code for four sources that runs on a GPU using Numba’s Cuda functionality.
-You should use blocks of 16 by 4 threads (I picked 4 as this is the number of sources), and an appropriately sized grid so that
-there is a thread for each point you want to compute the wave at.</p>
-<p>You may use the function <code class="docutils literal notranslate"><span class="pre">rbf_evaluation_cuda</span></code> from the lecture notes section <a class="reference internal" href="rbf_evaluation.html"><span class="doc std std-doc">GPU accelerated evaluation of particle sums</span></a>)
-as inspiration for your function. The function in the lecture notes uses the following features of <code class="docutils literal notranslate"><span class="pre">numba.cuda</span></code> that we didn’t use in the lecture:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="assignment-3-sparse-matrices">
+<h1>Assignment 3 - Sparse matrices<a class="headerlink" href="#assignment-3-sparse-matrices" title="Permalink to this heading">#</a></h1>
+<p>This assignment makes up 30% of the overall marks for the course. The deadline for submitting this assignment is <strong>5pm on Thursday 30 November 2023</strong>.</p>
+<p>Coursework is to be submitted using the link on Moodle. You should submit a single pdf file containing your code, the output when you run your code, and your answers
+to any text questions included in the assessment. The easiest ways to create this file are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cuda.shared.array</span></code> creates a shared array. This array can then be used by threads in the same block.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cuda.grid</span></code> returns the current thread’s absolute position in entire grid of threads. For a two-dimensional</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cuda.syncthreads</span></code> synchronises all the threads in the same block. This allows you to ensure that all the threads are ready to perform the next operation at the same time
-(which is important as a GPU will perform best if all the threads in a block are performing the same operation).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cuda.threadIdx.x</span></code> and <code class="docutils literal notranslate"><span class="pre">cuda.threadIdx.y</span></code> get the position of the current thread in the current block of threads.</p></li>
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
 </ul>
-<p>You may wish to create an array of points that you want to evaluate the wave at rather than computing <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> inside the loops, you could
-do this either by using two for loops to generate the points or by using <code class="docutils literal notranslate"><span class="pre">np.mgrid</span></code> and <code class="docutils literal notranslate"><span class="pre">ravel</span></code> as done in the <a class="reference internal" href="rbf_evaluation.html"><span class="doc std std-doc">GPU accelerated evaluation of particle sums</span></a>) section.</p>
-<p>Create a plot using single precision floating points numbers using your Cuda-accelerated function and a plot using double precision numbers using the standard Python code above.
-Visually compare the two plots: can you see any differences?</p>
+<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this heading">#</a></h2>
+<section id="part-1-implementing-a-csr-matrix">
+<h3>Part 1: Implementing a CSR matrix<a class="headerlink" href="#part-1-implementing-a-csr-matrix" title="Permalink to this heading">#</a></h3>
+<p>Scipy allows you to define your own objects that can be used with their sparse solvers. You can do this
+by creating a subclass of <code class="docutils literal notranslate"><span class="pre">scipy.sparse.LinearOperator</span></code>. In the first part of this assignment, you are going to
+implement your own CSR matrix format.</p>
+<p>The following code snippet shows how you can define your own matrix-like operator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">LinearOperator</span>
+
+
+<span class="k">class</span> <span class="nc">CSRMatrix</span><span class="p">(</span><span class="n">LinearOperator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coo_matrix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="c1"># You&#39;ll need to put more code here</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the CSR matrix other to this matrix.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a matrix-vector product.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Make a copy of this code snippet and <strong>implement the methods <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code>.</strong>
+The method <code class="docutils literal notranslate"><span class="pre">__init__</span></code> takes a COO matrix as input and will initialise the CSR matrix: it currently includes one line
+that will store the shape of the input matrix. You should add code here that extracts important data from a Scipy COO to and computes and stores the appropriate data
+for a CSR matrix. You may use any functionality of Python and various libraries in your code, but you should not use an library’s implementation of a CSR matrix.
+The method <code class="docutils literal notranslate"><span class="pre">__add__</span></code> will overload <code class="docutils literal notranslate"><span class="pre">+</span></code> and so allow you to add two of your CSR matrices together.
+The <code class="docutils literal notranslate"><span class="pre">__add__</span></code> method should avoid converting any matrices to dense matrices. You could implement this in one of two ways: you could convert both matrices to COO matrices,
+compute the sum, then pass this into <code class="docutils literal notranslate"><span class="pre">CSRMatrix()</span></code>; or you could compute the data, indices and indptr for the sum, and use these to create a SciPy CSR matrix.
+The method <code class="docutils literal notranslate"><span class="pre">matvec</span></code> will define a matrix-vector product: Scipy will use this when you tell it to use a sparse solver on your operator.</p>
+<p><strong>Write tests to check that the <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code> methods that you have written are correct.</strong> These test should use appropriate <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements.</p>
+<p>For a collection of sparse matrices of your choice and a random vector, <strong>measure the time taken to perform a <code class="docutils literal notranslate"><span class="pre">matvec</span></code> product</strong>. Convert the same matrices to dense matrices and <strong>measure
+the time taken to compute a dense matrix-vector product using Numpy</strong>. <strong>Create a plot showing the times of <code class="docutils literal notranslate"><span class="pre">matvec</span></code> and Numpy for a range of matrix sizes</strong> and
+<strong>briefly (1-2 sentence) comment on what your plot shows</strong>.</p>
+<p>For a matrix of your choice and a random vector, <strong>use Scipy’s <code class="docutils literal notranslate"><span class="pre">gmres</span></code> and <code class="docutils literal notranslate"><span class="pre">cg</span></code> sparse solvers to solve a matrix problem using your CSR matrix</strong>.
+Check if the two solutions obtained are the same.
+<strong>Briefly comment (1-2 sentences) on why the solutions are or are not the same (or are nearly but not exactly the same).</strong></p>
 </section>
-<section id="comparing-gpu-and-cpu-acceleration">
-<h2>Comparing GPU and CPU acceleration<a class="headerlink" href="#comparing-gpu-and-cpu-acceleration" title="Permalink to this heading">#</a></h2>
-<p>Write a version of the code that uses <code class="docutils literal notranslate"><span class="pre">numba.njit(parallel=True)</span></code> and <code class="docutils literal notranslate"><span class="pre">numba.prange</span></code> to create the plot in parallel on a CPU. (You may want to use the function <code class="docutils literal notranslate"><span class="pre">rbf_evaluation</span></code>
-from the lecture notes section <a class="reference internal" href="rbf_evaluation.html"><span class="doc std std-doc">GPU accelerated evaluation of particle sums</span></a>) as inspiration for your function.)</p>
-<p>Time your GPU and CPU functions. (For your GPU function, you might want to copy a small array to the device (eg <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">cuda.to_device(np.array([1.])</span></code>) before you start timing
-to be sure that the time waiting for the GPU to become available on Colab is not included in your timing.) Which is faster?</p>
+<section id="part-2-implementing-a-custom-matrix">
+<h3>Part 2: Implementing a custom matrix<a class="headerlink" href="#part-2-implementing-a-custom-matrix" title="Permalink to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> by a <span class="math notranslate nohighlight">\(2n\)</span> by <span class="math notranslate nohighlight">\(2n\)</span> matrix with the following structure:</p>
+<ul class="simple">
+<li><p>The top left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is a diagonal matrix</p></li>
+<li><p>The top right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
+<li><p>The bottom left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
+<li><p>The bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is dense (but has a special structure defined below)</p></li>
+</ul>
+<p>In other words, <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> looks like this, where <span class="math notranslate nohighlight">\(*\)</span> represents a non-zero value</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathrm{A}=\begin{pmatrix}
+*&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+0&amp;*&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+0&amp;0&amp;*&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;0&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;*&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\[3mm]
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;\vdots&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*
+\end{pmatrix}
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> be the bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.
+Suppose that <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> is a matrix that can be written as</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mathrm{A}} = \mathrm{T}\mathrm{W},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> is a <span class="math notranslate nohighlight">\(n\)</span> by 2 matrix (a tall matrix);
+and
+where <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> is a 2 by <span class="math notranslate nohighlight">\(n\)</span> matrix (a wide matrix).</p>
+<p><strong>Implement a Scipy <code class="docutils literal notranslate"><span class="pre">LinearOperator</span></code> for matrices of this form</strong>. Your implementation must include a matrix-vector product (<code class="docutils literal notranslate"><span class="pre">matvec</span></code>) and the shape of the matrix (<code class="docutils literal notranslate"><span class="pre">self.shape</span></code>), but
+does not need to include an <code class="docutils literal notranslate"><span class="pre">__add__</span></code> function. In your implementation of <code class="docutils literal notranslate"><span class="pre">matvec</span></code>, you should be careful to ensure that the product does not have more computational complexity then necessary.</p>
+<p>For a range of values of <span class="math notranslate nohighlight">\(n\)</span>, <strong>create matrices where the entries on the diagonal of the top-left block and in the matrices <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> are random numbers</strong>.
+For each of these matrices, <strong>compute matrix-vector products using your implementation and measure the time taken to compute these</strong>. Create an alternative version of each matrix,
+stored using a Scipy or Numpy format of your choice,
+and <strong>measure the time taken to compute matrix-vector products using this format</strong>. <strong>Make a plot showing time taken against <span class="math notranslate nohighlight">\(n\)</span></strong>. <strong>Comment (2-4 sentences) on what your plot shows, and why you think
+one of these methods is faster than the other</strong> (or why they take the same amount of time if this is the case).</p>
 </section>
-<section id="extension-task">
-<h2>Extension task<a class="headerlink" href="#extension-task" title="Permalink to this heading">#</a></h2>
-<p>Time your two functions for higher and low numbers of points at which you compute the wave. Create a plot showing the time taken for the two functions
-as you vary the number of points.</p>
 </section>
 </section>
 
@@ -533,11 +517,11 @@ as you vary the number of points.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-some-waves">Plotting some waves</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gpu-acceleration">GPU acceleration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-gpu-and-cpu-acceleration">Comparing GPU and CPU acceleration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extension-task">Extension task</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-implementing-a-csr-matrix">Part 1: Implementing a CSR matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-implementing-a-custom-matrix">Part 2: Implementing a custom matrix</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
