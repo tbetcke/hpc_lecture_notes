@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Class 4 (Monday 31 October) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>LSA Assignment 1 - Matrix-matrix multiplication &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
   
   
   
@@ -64,10 +64,12 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '2022-class_4';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2023-assignment_1-lsa';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LSA Assignment 2 - GPU Accelerated solution of Poisson problems" href="2023-assignment_2-lsa.html" />
+    <link rel="prev" title="Further topics" href="further_topics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -207,8 +209,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Late Summmer Assessments</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="2023-assignment_1-lsa.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_2-lsa.html">LSA Assignment 2 - GPU Accelerated solution of Poisson problems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_3-lsa.html">LSA Assignment 3 - Sparse matrices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_4-lsa.html">LSA Assignment 4 - Time-dependent problems</a></li>
@@ -271,7 +273,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/2022-class_4.md" target="_blank"
+      <li><a href="_sources/2023-assignment_1-lsa.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -355,7 +357,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Class 4 (Monday 31 October)</h1>
+    <h1>LSA Assignment 1 - Matrix-matrix multiplication</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -365,9 +367,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">Comparing dense and sparse storage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-sparse-formats">Comparing sparse formats</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">When is a sparse matrix worth it?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-a-better-function">Part 1: a better function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-speeding-it-up-with-numba">Part 2: speeding it up with Numba</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -379,66 +383,80 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="class-4-monday-31-october">
-<h1>Class 4 (Monday 31 October)<a class="headerlink" href="#class-4-monday-31-october" title="Permalink to this heading">#</a></h1>
-<p>These tasks are designed to be worked on in the practical class on Monday 31 October.</p>
-<p>In this class, we will make heavy use of the <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">finite difference code for solving a Poisson problem</a>
-that we wrote in lectures. You can find this code <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">here</a>.</p>
-<section id="comparing-dense-and-sparse-storage">
-<h2>Comparing dense and sparse storage<a class="headerlink" href="#comparing-dense-and-sparse-storage" title="Permalink to this heading">#</a></h2>
-<p>Copy the codes we that wrote to generate the matrix in dense and sparse formats.</p>
-<p>For a sensible range of <span class="math notranslate nohighlight">\(N\)</span>, measure how much memory a dense matrix and a COO matrix use.
-You can print the amount of memory a dense matrix uses by running:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="lsa-assignment-1-matrix-matrix-multiplication">
+<h1>LSA Assignment 1 - Matrix-matrix multiplication<a class="headerlink" href="#lsa-assignment-1-matrix-matrix-multiplication" title="Permalink to this heading">#</a></h1>
+<p>The deadline for submitting this assignment is <strong>Midnight Friday 30 August 2024</strong>.</p>
+<p>The easiest ways to create this file are:</p>
+<ul class="simple">
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
+</ul>
+<p>Tasks you are required to carry out and questions you are required to answer are shown in bold below.</p>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this heading">#</a></h2>
+<p>In this assignment, we will look at computing the product <span class="math notranslate nohighlight">\(AB\)</span> of two matrices <span class="math notranslate nohighlight">\(A,B\in\mathbb{R}^{n\times n}\)</span>. The following snippet of code defines a function that computes the
+product of two matrices. As an example, the product of two 10 by 10 matrices is printed. The final line prints <code class="docutils literal notranslate"><span class="pre">matrix1</span> <span class="pre">&#64;</span> <span class="pre">matrix2</span></code> - the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol denotes matrix multiplication, and
+Python will get Numpy to compute the product of two matrices. By looking at the output, it’s possible to check that the two results are the same.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>You can print the amount of memory a COO matrix uses by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
 
-<span class="n">b</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">slow_matrix_product</span><span class="p">(</span><span class="n">mat1</span><span class="p">,</span> <span class="n">mat2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply two matrices.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">mat1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">mat2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">value</span> <span class="o">+=</span> <span class="n">mat1</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">mat2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+
+<span class="n">matrix1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">matrix2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">slow_matrix_product</span><span class="p">(</span><span class="n">matrix1</span><span class="p">,</span> <span class="n">matrix2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">matrix1</span> <span class="o">@</span> <span class="n">matrix2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Create a plot that shows the memory used by the dense and COO sparse format against <span class="math notranslate nohighlight">\(N\)</span>.
-What do you notice?</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code> to solve the problem for a range of values of <span class="math notranslate nohighlight">\(N\)</span>.
-Plot the time both solution methods taks against <span class="math notranslate nohighlight">\(N\)</span>.
-What do you notice?</p>
+<p>The function in this snippet isn’t very good.</p>
+<section id="part-1-a-better-function">
+<h3>Part 1: a better function<a class="headerlink" href="#part-1-a-better-function" title="Permalink to this heading">#</a></h3>
+<p><strong>Write your own function called <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> that computes the product of two matrices more efficiently than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong>
+Your function may use functions from Numpy (eg <code class="docutils literal notranslate"><span class="pre">np.dot</span></code>) to complete part of its calculation, but your function should not use <code class="docutils literal notranslate"><span class="pre">np.dot</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> to compute
+the full matrix-matrix product.</p>
+<p>Before you look at the performance of your function, you should check that it is computing the correct results. <strong>Write a Python script using an <code class="docutils literal notranslate"><span class="pre">assert</span></code>
+statement that checks that your function gives the same result as using <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for random 2 by 2, 3 by 3, 4 by 4, and 5 by 5 matrices.</strong></p>
+<p>In a text box, <strong>give two brief reasons (1-2 sentences for each) why your function is better than <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code>.</strong> At least one of your
+reasons should be related to the time you expect the two functions to take.</p>
+<p>Next, we want to compare the speed of <code class="docutils literal notranslate"><span class="pre">slow_matrix_product</span></code> and <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code>. <strong>Write a Python script that runs the two functions for matrices of a range of sizes,
+and use <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> to create a plot showing the time taken for different sized matrices for both functions.</strong> You should be able to run the functions for matrices
+of size up to around 1000 by 1000 (but if you’re using an older/slower computer, you may decide to decrease the maximums slightly). You do not need to run your functions for
+every size between your minimum and maximum, but should choose a set of 10-15 values that will give you an informative plot.</p>
 </section>
-<section id="comparing-sparse-formats">
-<h2>Comparing sparse formats<a class="headerlink" href="#comparing-sparse-formats" title="Permalink to this heading">#</a></h2>
-<p>SciPy can convert between different sparse formats, for example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
+<section id="part-2-speeding-it-up-with-numba">
+<h3>Part 2: speeding it up with Numba<a class="headerlink" href="#part-2-speeding-it-up-with-numba" title="Permalink to this heading">#</a></h3>
+<p>In the second part of this assignment, you’re going to use Numba to speed up your function.</p>
+<p><strong>Create a copy of your function <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> that is just-in-time (JIT) compiled using Numba.</strong> To demonstrate the speed improvement acheived by using Numba,
+<strong>make a plot (similar to that you made in the first part) that shows the times taken to multiply matrices using <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code>, <code class="docutils literal notranslate"><span class="pre">faster_matrix_product</span></code> with
+Numba JIT compilation, and Numpy (<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>).</strong> Numpy’s matrix-matrix multiplication is highly optimised, so you should not expect to be as fast is it.</p>
+<p>You may be able to achieve further speed up of your function by adjusting the memory layout used. The function <code class="docutils literal notranslate"><span class="pre">np.asfortanarray</span></code> will make a copy of an array that uses
+Fortran-style ordering, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">fortran_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfortranarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span>, measure how much storage space is needed to store the matrix for the Poisson problem if the matrix is stored as
-a COO matrix, a CSR matrix, or a CSC matrix.
-For a CSR matrix, the amount of memory used can be printed by running</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indptr</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Make a plot showing the amount of memory needed vs <span class="math notranslate nohighlight">\(N\)</span>. Which format is the most memory efficient?</p>
-<p>Optional extension: Scipy also supports LIL, DIA, DOK, and BSR sparse formats. Add these to your plot.</p>
+<p><strong>Make a plot that compares the times taken by your JIT compiled function when the inputs have different combinations of C-style and Fortran-style ordering</strong>
+(ie the plot should have lines for when both inputs are C-style, when the first is C-style and the second is Fortran-style, and so on). Focusing on the fact
+that it is more efficient to access memory that is close to previous accesses, <strong>comment (in 1-2 sentences) on why one of these orderings appears to be fastest that the others</strong>.
+(Numba can do a lot of different things when compiling code, so depending on your function there may or may not be a large difference: if there is little change in speeds
+for your function, you can comment on which ordering you might expect to be faster and why, but conclude that Numba is doing something more advanced.)</p>
 </section>
-<section id="when-is-a-sparse-matrix-worth-it">
-<h2>When is a sparse matrix worth it?<a class="headerlink" href="#when-is-a-sparse-matrix-worth-it" title="Permalink to this heading">#</a></h2>
-<p>In this section, we will investigate how many zeros we need a matrix to have for sparse storage to be worth doing.</p>
-<p>Create a 10 by 10 matrix which is all zeros except for <span class="math notranslate nohighlight">\(M\)</span> random numbers in random positions.
-Measure the amount of memory needed to store this as a dense and different sparse matrix formats.
-Make a plot showing the amount of memory needed against <span class="math notranslate nohighlight">\(M\)</span>.
-What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
-<p>Repeat this with a 40 by 40 matrix.
-What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
 </section>
 </section>
 
@@ -472,6 +490,24 @@ What proportion of the matrix needs to be zeros for sparse storage to use less s
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="further_topics.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Further topics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="2023-assignment_2-lsa.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">LSA Assignment 2 - GPU Accelerated solution of Poisson problems</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -487,9 +523,11 @@ What proportion of the matrix needs to be zeros for sparse storage to use less s
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">Comparing dense and sparse storage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-sparse-formats">Comparing sparse formats</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">When is a sparse matrix worth it?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-a-better-function">Part 1: a better function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-speeding-it-up-with-numba">Part 2: speeding it up with Numba</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

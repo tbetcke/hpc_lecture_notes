@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Class 4 (Monday 31 October) &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
+    <title>LSA Assignment 3 - Sparse matrices &#8212; Techniques of High-Performance Computing - Lecture Notes</title>
   
   
   
@@ -64,10 +64,12 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '2022-class_4';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2023-assignment_3-lsa';</script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LSA Assignment 4 - Time-dependent problems" href="2023-assignment_4-lsa.html" />
+    <link rel="prev" title="LSA Assignment 2 - GPU Accelerated solution of Poisson problems" href="2023-assignment_2-lsa.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -207,10 +209,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="further_topics.html">Further topics</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Late Summmer Assessments</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_1-lsa.html">LSA Assignment 1 - Matrix-matrix multiplication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_2-lsa.html">LSA Assignment 2 - GPU Accelerated solution of Poisson problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2023-assignment_3-lsa.html">LSA Assignment 3 - Sparse matrices</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">LSA Assignment 3 - Sparse matrices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2023-assignment_4-lsa.html">LSA Assignment 4 - Time-dependent problems</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional notes from 2022</span></p>
@@ -271,7 +273,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/2022-class_4.md" target="_blank"
+      <li><a href="_sources/2023-assignment_3-lsa.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -355,7 +357,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Class 4 (Monday 31 October)</h1>
+    <h1>LSA Assignment 3 - Sparse matrices</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -365,9 +367,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">Comparing dense and sparse storage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-sparse-formats">Comparing sparse formats</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">When is a sparse matrix worth it?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-implementing-a-csr-matrix">Part 1: Implementing a CSR matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-implementing-a-custom-matrix">Part 2: Implementing a custom matrix</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -379,66 +383,97 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="class-4-monday-31-october">
-<h1>Class 4 (Monday 31 October)<a class="headerlink" href="#class-4-monday-31-october" title="Permalink to this heading">#</a></h1>
-<p>These tasks are designed to be worked on in the practical class on Monday 31 October.</p>
-<p>In this class, we will make heavy use of the <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">finite difference code for solving a Poisson problem</a>
-that we wrote in lectures. You can find this code <a class="reference external" href="https://gist.github.com/mscroggs/45ab606d6e69b811122b2697821267b1">here</a>.</p>
-<section id="comparing-dense-and-sparse-storage">
-<h2>Comparing dense and sparse storage<a class="headerlink" href="#comparing-dense-and-sparse-storage" title="Permalink to this heading">#</a></h2>
-<p>Copy the codes we that wrote to generate the matrix in dense and sparse formats.</p>
-<p>For a sensible range of <span class="math notranslate nohighlight">\(N\)</span>, measure how much memory a dense matrix and a COO matrix use.
-You can print the amount of memory a dense matrix uses by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="lsa-assignment-3-sparse-matrices">
+<h1>LSA Assignment 3 - Sparse matrices<a class="headerlink" href="#lsa-assignment-3-sparse-matrices" title="Permalink to this heading">#</a></h1>
+<p>The deadline for submitting this assignment is <strong>Midnight Friday 30 August 2024</strong>.</p>
+<p>The easiest ways to create this file are:</p>
+<ul class="simple">
+<li><p>Write your code and answers in a Jupyter notebook, then select File -&gt; Download as -&gt; PDF via LaTeX (.pdf).</p></li>
+<li><p>Write your code and answers on Google Colab, then select File -&gt; Print, and print it as a pdf.</p></li>
+</ul>
+<section id="the-assignment">
+<h2>The assignment<a class="headerlink" href="#the-assignment" title="Permalink to this heading">#</a></h2>
+<section id="part-1-implementing-a-csr-matrix">
+<h3>Part 1: Implementing a CSR matrix<a class="headerlink" href="#part-1-implementing-a-csr-matrix" title="Permalink to this heading">#</a></h3>
+<p>Scipy allows you to define your own objects that can be used with their sparse solvers. You can do this
+by creating a subclass of <code class="docutils literal notranslate"><span class="pre">scipy.sparse.LinearOperator</span></code>. In the first part of this assignment, you are going to
+implement your own CSR matrix format.</p>
+<p>The following code snippet shows how you can define your own matrix-like operator.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">LinearOperator</span>
 
-<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">CSRMatrix</span><span class="p">(</span><span class="n">LinearOperator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coo_matrix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="c1"># You&#39;ll need to put more code here</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the CSR matrix other to this matrix.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a matrix-vector product.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
 </pre></div>
 </div>
-<p>You can print the amount of memory a COO matrix uses by running:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">b</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Create a plot that shows the memory used by the dense and COO sparse format against <span class="math notranslate nohighlight">\(N\)</span>.
-What do you notice?</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.linalg.solve</span></code> to solve the problem for a range of values of <span class="math notranslate nohighlight">\(N\)</span>.
-Plot the time both solution methods taks against <span class="math notranslate nohighlight">\(N\)</span>.
-What do you notice?</p>
+<p>Make a copy of this code snippet and <strong>implement the methods <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code>.</strong>
+The method <code class="docutils literal notranslate"><span class="pre">__init__</span></code> takes a COO matrix as input and will initialise the CSR matrix: it currently includes one line
+that will store the shape of the input matrix. You should add code here that extracts important data from a Scipy COO to and computes and stores the appropriate data
+for a CSR matrix. You may use any functionality of Python and various libraries in your code, but you should not use an library’s implementation of a CSR matrix.
+The method <code class="docutils literal notranslate"><span class="pre">__add__</span></code> will overload <code class="docutils literal notranslate"><span class="pre">+</span></code> and so allow you to add two of your CSR matrices together.
+The <code class="docutils literal notranslate"><span class="pre">__add__</span></code> method should avoid converting any matrices to dense matrices. You could implement this in one of two ways: you could convert both matrices to COO matrices,
+compute the sum, then pass this into <code class="docutils literal notranslate"><span class="pre">CSRMatrix()</span></code>; or you could compute the data, indices and indptr for the sum, and use these to create a SciPy CSR matrix.
+The method <code class="docutils literal notranslate"><span class="pre">matvec</span></code> will define a matrix-vector product: Scipy will use this when you tell it to use a sparse solver on your operator.</p>
+<p><strong>Write tests to check that the <code class="docutils literal notranslate"><span class="pre">__add__</span></code> and <code class="docutils literal notranslate"><span class="pre">matvec</span></code> methods that you have written are correct.</strong> These test should use appropriate <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements.</p>
+<p>For a collection of sparse matrices of your choice and a random vector, <strong>measure the time taken to perform a <code class="docutils literal notranslate"><span class="pre">matvec</span></code> product</strong>. Convert the same matrices to dense matrices and <strong>measure
+the time taken to compute a dense matrix-vector product using Numpy</strong>. <strong>Create a plot showing the times of <code class="docutils literal notranslate"><span class="pre">matvec</span></code> and Numpy for a range of matrix sizes</strong> and
+<strong>briefly (1-2 sentence) comment on what your plot shows</strong>.</p>
+<p>For a matrix of your choice and a random vector, <strong>use Scipy’s <code class="docutils literal notranslate"><span class="pre">gmres</span></code> and <code class="docutils literal notranslate"><span class="pre">cg</span></code> sparse solvers to solve a matrix problem using your CSR matrix</strong>.
+Check if the two solutions obtained are the same.
+<strong>Briefly comment (1-2 sentences) on why the solutions are or are not the same (or are nearly but not exactly the same).</strong></p>
 </section>
-<section id="comparing-sparse-formats">
-<h2>Comparing sparse formats<a class="headerlink" href="#comparing-sparse-formats" title="Permalink to this heading">#</a></h2>
-<p>SciPy can convert between different sparse formats, for example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>For a range of values of <span class="math notranslate nohighlight">\(N\)</span>, measure how much storage space is needed to store the matrix for the Poisson problem if the matrix is stored as
-a COO matrix, a CSR matrix, or a CSC matrix.
-For a CSR matrix, the amount of memory used can be printed by running</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">coo_matrix</span>
-
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">coo_matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">csr_mat</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">indptr</span><span class="o">.</span><span class="n">nbytes</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Make a plot showing the amount of memory needed vs <span class="math notranslate nohighlight">\(N\)</span>. Which format is the most memory efficient?</p>
-<p>Optional extension: Scipy also supports LIL, DIA, DOK, and BSR sparse formats. Add these to your plot.</p>
+<section id="part-2-implementing-a-custom-matrix">
+<h3>Part 2: Implementing a custom matrix<a class="headerlink" href="#part-2-implementing-a-custom-matrix" title="Permalink to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> by a <span class="math notranslate nohighlight">\(2n\)</span> by <span class="math notranslate nohighlight">\(2n\)</span> matrix with the following structure:</p>
+<ul class="simple">
+<li><p>The top left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is a diagonal matrix</p></li>
+<li><p>The top right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
+<li><p>The bottom left <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is zero</p></li>
+<li><p>The bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> is dense (but has a special structure defined below)</p></li>
+</ul>
+<p>In other words, <span class="math notranslate nohighlight">\(\mathrm{A}\)</span> looks like this, where <span class="math notranslate nohighlight">\(*\)</span> represents a non-zero value</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathrm{A}=\begin{pmatrix}
+*&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+0&amp;*&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+0&amp;0&amp;*&amp;\cdots&amp;0&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;0&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;*&amp;\hspace{3mm}0&amp;0&amp;\cdots&amp;0\\[3mm]
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*\\
+\vdots&amp;\vdots&amp;\vdots&amp;\ddots&amp;\vdots&amp;\hspace{3mm}\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;0&amp;\hspace{3mm}*&amp;*&amp;\cdots&amp;*
+\end{pmatrix}
+\end{split}\]</div>
+<p>Let <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> be the bottom right <span class="math notranslate nohighlight">\(n\)</span> by <span class="math notranslate nohighlight">\(n\)</span> block of <span class="math notranslate nohighlight">\(\mathrm{A}\)</span>.
+Suppose that <span class="math notranslate nohighlight">\(\tilde{\mathrm{A}}\)</span> is a matrix that can be written as</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mathrm{A}} = \mathrm{T}\mathrm{W},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> is a <span class="math notranslate nohighlight">\(n\)</span> by 2 matrix (a tall matrix);
+and
+where <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> is a 2 by <span class="math notranslate nohighlight">\(n\)</span> matrix (a wide matrix).</p>
+<p><strong>Implement a Scipy <code class="docutils literal notranslate"><span class="pre">LinearOperator</span></code> for matrices of this form</strong>. Your implementation must include a matrix-vector product (<code class="docutils literal notranslate"><span class="pre">matvec</span></code>) and the shape of the matrix (<code class="docutils literal notranslate"><span class="pre">self.shape</span></code>), but
+does not need to include an <code class="docutils literal notranslate"><span class="pre">__add__</span></code> function. In your implementation of <code class="docutils literal notranslate"><span class="pre">matvec</span></code>, you should be careful to ensure that the product does not have more computational complexity then necessary.</p>
+<p>For a range of values of <span class="math notranslate nohighlight">\(n\)</span>, <strong>create matrices where the entries on the diagonal of the top-left block and in the matrices <span class="math notranslate nohighlight">\(\mathrm{T}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{W}\)</span> are random numbers</strong>.
+For each of these matrices, <strong>compute matrix-vector products using your implementation and measure the time taken to compute these</strong>. Create an alternative version of each matrix,
+stored using a Scipy or Numpy format of your choice,
+and <strong>measure the time taken to compute matrix-vector products using this format</strong>. <strong>Make a plot showing time taken against <span class="math notranslate nohighlight">\(n\)</span></strong>. <strong>Comment (2-4 sentences) on what your plot shows, and why you think
+one of these methods is faster than the other</strong> (or why they take the same amount of time if this is the case).</p>
 </section>
-<section id="when-is-a-sparse-matrix-worth-it">
-<h2>When is a sparse matrix worth it?<a class="headerlink" href="#when-is-a-sparse-matrix-worth-it" title="Permalink to this heading">#</a></h2>
-<p>In this section, we will investigate how many zeros we need a matrix to have for sparse storage to be worth doing.</p>
-<p>Create a 10 by 10 matrix which is all zeros except for <span class="math notranslate nohighlight">\(M\)</span> random numbers in random positions.
-Measure the amount of memory needed to store this as a dense and different sparse matrix formats.
-Make a plot showing the amount of memory needed against <span class="math notranslate nohighlight">\(M\)</span>.
-What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
-<p>Repeat this with a 40 by 40 matrix.
-What proportion of the matrix needs to be zeros for sparse storage to use less space? When are different sparse formats more efficient?</p>
 </section>
 </section>
 
@@ -472,6 +507,24 @@ What proportion of the matrix needs to be zeros for sparse storage to use less s
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="2023-assignment_2-lsa.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">LSA Assignment 2 - GPU Accelerated solution of Poisson problems</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="2023-assignment_4-lsa.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">LSA Assignment 4 - Time-dependent problems</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -487,9 +540,11 @@ What proportion of the matrix needs to be zeros for sparse storage to use less s
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-dense-and-sparse-storage">Comparing dense and sparse storage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-sparse-formats">Comparing sparse formats</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-a-sparse-matrix-worth-it">When is a sparse matrix worth it?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-assignment">The assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-implementing-a-csr-matrix">Part 1: Implementing a CSR matrix</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-implementing-a-custom-matrix">Part 2: Implementing a custom matrix</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
