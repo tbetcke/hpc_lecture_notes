@@ -34,7 +34,6 @@ parts:
 - caption: Conclusions
   chapters:
   - file: further_topics
-
 - caption: Late Summmer Assessments
   chapters:
   - file: 2023-assignment_1-lsa
