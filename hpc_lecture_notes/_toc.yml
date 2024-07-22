@@ -40,7 +40,7 @@ parts:
   - file: 2023-assignment_1-lsa
   - file: 2023-assignment_2-lsa
   - file: 2023-assignment_3-lsa
-  - file: 2023-assignment_4-sa
+  - file: 2023-assignment_4-lsa
 #  - file: 2022-assignment_4
 #- caption: LSA
 #  chapters:
